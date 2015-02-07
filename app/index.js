@@ -9,6 +9,7 @@ var path = require('path');
 var exec = require('child_process').exec;
 var spawn = require('child_process').spawn;
 
+
 var AppGenerator = yeoman.generators.Base.extend({
 
     /**
@@ -132,6 +133,29 @@ module.exports = AppGenerator.extend({
 
         this.checkComposer();
 
+        //// Only instantiate the Gruntfile API when requested
+        //Object.defineProperty(this, 'gruntfile', {
+        //    get: function () {
+        //        if (!this.env.gruntfile) {
+        //            var gruntfile = this.fs.read(this.destinationPath('Gruntfile.js'), {
+        //                defaults: ''
+        //            });
+        //            this.env.gruntfile = gruntapi.init(gruntfile);
+        //        }
+        //
+        //        // Schedule the creation/update of the Gruntfile
+        //        this.env.runLoop.add('writing', function (done) {
+        //            this.fs.write(
+        //                this.destinationPath('Gruntfile.js'),
+        //                this.env.gruntfile.toString({indent_size: 4, indent_style: 'space'})
+        //            );
+        //            done();
+        //        }.bind(this), { once: 'gruntfile:write' });
+        //
+        //        return this.env.gruntfile;
+        //    }
+        //});
+
     },
 
 
@@ -220,7 +244,7 @@ module.exports = AppGenerator.extend({
             message: 'Would you like to use libsass? Read up more at \n' +
             chalk.green('https://github.com/andrew/node-sass#node-sass'),
             default: true
-        }, {
+        }/*, {
             type: 'list',
             name: 'loader',
             message: 'Which module loader would you like to use?',
@@ -228,7 +252,7 @@ module.exports = AppGenerator.extend({
                 {name: 'RequireJS', value: 'requirejs', checked: true},
                 {name: 'Browserify', value: 'browserify'}
             ]
-        }];
+        }*/];
 
         this.prompt(prompts, function (props) {
             var has = _.partial(hasFeature, props);
@@ -251,8 +275,8 @@ module.exports = AppGenerator.extend({
             this.includeRubySass = this.useSass && !props.libsass;
 
             var useLoader = _.partial(has, 'loader');
-            this.useRequirejs = useLoader('requirejs');
-            this.useBrowserify = useLoader('browserify');
+            this.useRequirejs = true;//useLoader('requirejs');
+            //this.useBrowserify = useLoader('browserify');
 
              done();
         }.bind(this));
@@ -288,7 +312,7 @@ module.exports = AppGenerator.extend({
                     done();
                 }
             );
-        },
+        }
 
         ///**
         // * remove unwanted files
@@ -314,6 +338,7 @@ module.exports = AppGenerator.extend({
     writing: {
         app: function () {
             this.template('_package.json', 'package.json');
+            this.template('Gruntfile.js', 'Gruntfile.js');
 
             var bower = {
                 name: this._.slugify(this.appname),
@@ -355,6 +380,7 @@ module.exports = AppGenerator.extend({
             );
 
             this.write('bower.json', JSON.stringify(bower, null, 2));
+
         },
 
         projectfiles: function () {
@@ -368,11 +394,6 @@ module.exports = AppGenerator.extend({
             );
         },
 
-        gruntfile: function () {
-            this.template('Gruntfile.js', 'Gruntfile.js');
-
-            //   this.gruntfile.insertConfig("compass", "{ watch: { watch: true } }");
-        },
 
         gitInit: function gitInit() {
             var cb = this.async();

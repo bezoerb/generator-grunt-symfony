@@ -1,9 +1,9 @@
 // Generated on <%= (new Date).toISOString().split('T')[0] %> using
 // <%= pkg.name %> <%= pkg.version %>
-module.exports = function (grunt) {
+module.exports = function(grunt) {
     require('jit-grunt')(grunt);
-
-    var LessPluginAutoPrefix = require('less-plugin-autoprefix');
+    <% if (useLess) { %>
+    var LessPluginAutoPrefix = require('less-plugin-autoprefix');<% } %>
     var parseurl = require('parseurl');
     var path = require('path');
     var php = require('php-proxy-middleware');
@@ -15,8 +15,8 @@ module.exports = function (grunt) {
     };
 
     var phpMiddleware = php({
-        address: '127.0.0.1', // which interface to bind to
-        ini: {max_execution_time: 60, variables_order: 'EGPCS'},
+        address: '0.0.0.0', // which interface to bind to
+        ini: {max_execution_time: 60, error_log: '...'},
         root: appConfig.dist,
         router: path.join(appConfig.dist, 'app_dev.php')
     });
@@ -34,10 +34,32 @@ module.exports = function (grunt) {
             sfcl: 'php app/console cache:clear -e prod'
         },
 
-
         /**
          * CSS
-         */
+         */<% if (useSass) { %>
+        sass: {
+            all: {
+                files: {
+                    '.tmp/styles/main.css': '<%%= config.app %>/styles/main.scss'
+                }
+            }
+        },
+        autoprefixer: {
+            options: {
+                browsers: ['> 5%', 'last 2 versions', 'ie 9'],
+                map: {
+                    prev: '.tmp/styles/'
+                }
+            },
+            dist: {
+                files: [{
+                    expand: true,
+                    cwd: '.tmp/styles/',
+                    src: '{,*/}*.css',
+                    dest: '.tmp/styles/'
+                }]
+            }
+        },<% } else if (useLess) { %>
         less: {
             dist: {
                 options: {
@@ -50,15 +72,33 @@ module.exports = function (grunt) {
                     ]
                 },
                 src: "<%%= config.app %>/styles/main.less",
-                dest: ".tmp/styles/all.css"
+                dest: ".tmp/styles/main.css"
             }
-        },
+        },<% } else if (useStylus) { %>
+        stylus: {
+            compile: {
+                files: {
+                    '.tmp/styles/main.css': '<%%= config.app %>/styles/main.styl'
+                },
+                options: {
+                    use: [
+                        require('nib'),      //  that is compiled. These might be findable based on values you gave
+                        function() { return require('autoprefixer-stylus')({
+                            browsers: ['> 5%', 'last 2 versions', 'ie 9']
+                        }); }
+                    ],
+                    dest: '.tmp' // Grunt ignores this, but it's required to produce the
+                    // correct relative paths, see stylus issue #1669
+                }
+            }
+        },<% } %>
         cssmin: {
             dist: {
-                src: '<%%= less.dist.dest %>',
-                dest: 'web/styles/all.css'
+                src: '.tmp/styles/main.css',
+                dest: 'web/styles/main.css'
             }
         },
+
         'string-replace': {
             dist: {
                 files: [{
@@ -69,11 +109,11 @@ module.exports = function (grunt) {
                 }],
                 options: {
                     replacements: [{
-                        pattern: /\/all\.[\w\d]+\.css/,
-                        replacement: '/all.css'
-                    }, {
-                        pattern: /\/all\.[\w\d]+\.js/,
-                        replacement: '/all.js'
+                        pattern: /\/main\.[\w\d]+\.css/,
+                        replacement: '/main.css'
+                    },{
+                        pattern: /\/main\.[\w\d]+\.js/,
+                        replacement: '/main.js'
                     }]
                 }
             }
@@ -100,8 +140,8 @@ module.exports = function (grunt) {
 
         watch: {
             styles: {
-                files: ['<%%= config.app %>/styles/{,*/}*.less'],
-                tasks: ['less']
+                files: ['<%%= config.app %>/styles/{,*/}*.<% if (useLess) { %>less<% } else if (useStylus) { %>styl<% } else if (useSass) { %>{scss,sass}<% } %>'],
+                tasks: ['<% if (useLess) { %>less<% } else if (useStylus) { %>stylus<% } else if (useSass) { %>sass','autoprefixer<% } %>']
             },
             scripts: {
                 files: ['<%%= config.app %>/scripts/**/*.js'],
@@ -118,7 +158,7 @@ module.exports = function (grunt) {
             all: [
                 '<%%= config.app %>/scripts/**/*.js'
             ]
-        },
+        },<% if (useRequirejs) { %>
         bowerRequirejs: {
             options: {
                 exclude: ['modernizr', 'requirejs', 'almond'],
@@ -134,7 +174,7 @@ module.exports = function (grunt) {
                     baseUrl: 'bower_components',
                     name: 'almond/almond',
                     include: 'config',
-                    out: '<%%= config.dist %>/scripts/all.js',
+                    out: '<%%= config.dist %>/scripts/main.js',
                     mainConfigFile: '<%%= config.app %>/scripts/config.js',
                     preserveLicenseComments: false,
                     useStrict: true,
@@ -143,7 +183,49 @@ module.exports = function (grunt) {
                     generateSourceMaps: true
                 }
             }
-        },
+        },<% } else if (useBrowserify) { %>
+        browserify: {
+            options: {
+                browserifyOptions: {
+                    standalone: 'main'
+                },
+                preBundleCB: function (b) {
+                    b.plugin(remapify, [
+                        {
+                            src: './**/*.js',
+                            expose: 'modules',
+                            cwd: __dirname + '/' + appConfig.app + '/scripts/modules'
+                        },
+                        {
+                            src: './**/*.js',
+                            expose: 'component',
+                            cwd: __dirname + '/' + appConfig.app + '/scripts/component'
+                        },
+                        {
+                            src: './**/*.js',
+                            expose: 'library',
+                            cwd: __dirname + '/' + appConfig.app + '/scripts/library'
+                        }
+                    ]);
+                },
+                transform: ['6to5ify','debowerify', 'deglobalify', 'deamdify']
+            },
+            dist: {
+                src: '<%%= config.app %>/scripts/app.js',
+                    dest: '.tmp/browserify/main.js'
+            },
+            dev: {
+                src: '<%%= config.app %>/scripts/app.js',
+                    dest: '.tmp/scripts/main.js',
+                    options: {
+                    watch: true,
+                        browserifyOptions: {
+                        standalone: 'main',
+                            debug: true
+                    }
+                }
+            }
+        },<% } %>
 
         // Server
         browserSync: {
@@ -160,7 +242,7 @@ module.exports = function (grunt) {
                     server: {
                         baseDir: ['.tmp', appConfig.app, './', appConfig.dist],
                         middleware: [
-                            function (req, res, next) {
+                            function(req, res, next) {
                                 var obj = parseurl(req);
                                 if (!/\.\w{2,4}$/.test(obj.pathname) || /\.php/.test(obj.pathname)) {
                                     phpMiddleware(req, res, next);
@@ -198,6 +280,8 @@ module.exports = function (grunt) {
     grunt.registerTask('assets', ['js', 'css', 'rev', 'exec:sfcl']);
 
     grunt.registerTask('build', ['assets', 'exec:sfcl']);
+
+
 
 
 };
