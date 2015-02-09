@@ -38,6 +38,9 @@ module.exports = function(grunt) {
          * CSS
          */<% if (useSass) { %>
         sass: {
+            options: {
+                includePaths: ['bower_components']
+            },
             all: {
                 files: {
                     '.tmp/styles/main.css': '<%%= config.app %>/styles/main.scss'
@@ -81,6 +84,7 @@ module.exports = function(grunt) {
                     '.tmp/styles/main.css': '<%%= config.app %>/styles/main.styl'
                 },
                 options: {
+                    paths: ['bower_components'],
                     use: [
                         require('nib'),      //  that is compiled. These might be findable based on values you gave
                         function() { return require('autoprefixer-stylus')({
@@ -269,6 +273,7 @@ module.exports = function(grunt) {
     });
 
     grunt.registerTask('serve', [
+        '<% if (useLess) { %>less<% } else if (useStylus) { %>stylus<% } else if (useSass) { %>sass','autoprefixer<% } %>',
         'browserSync:dist', // Using the php middleware
         'watch'             // Any other watch tasks you want to run
     ]);

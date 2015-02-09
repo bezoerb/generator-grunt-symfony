@@ -1,0 +1,123 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <% if (useBootstrap) { %>
+    <div class="container">
+        <div class="header">
+            <ul class="nav nav-pills pull-right">
+                <li class="active"><a href="#">Home</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+            <h3 class="text-muted"><%= appname %></h3>
+        </div>
+
+        <div class="jumbotron">
+            <div class="row">
+                <div class="col-lg-6 col-lg-push-6">
+                    <img class="yeoman-team" src="/img/yo-grunt-bower-symfony.png" alt=""/>
+                </div>
+                <div class="col-lg-6 col-lg-pull-6">
+                    <h1>'Allo, 'Allo!</h1>
+                    <p class="lead">Always a pleasure scaffolding your apps.</p>
+                    <p><a class="btn btn-lg btn-success" href="#">Splendid! <span class="glyphicon glyphicon-ok"></span></a></p>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row marketing">
+            <div class="col-lg-6">
+                <h4>Symfony</h4>
+                <p>High Performance PHP Framework for Web Development</p>
+                <h4>Browsersync</h4>
+                <p>Keep multiple browsers & devices in sync when building websites.</p>
+
+                <% if (useLess) { %><h4>Less</h4>
+                <p>Less is a mature, stable, and powerful professional grade CSS extension language.</p>
+                <% } else if (useSass) { %><h4>Sass</h4>
+                <p>Sass is a mature, stable, and powerful professional grade CSS extension language.</p>
+                <% } else if (useStylus) { %><h4>Stylus</h4>
+                <p>Stylus is a revolutionary new language, providing an efficient, dynamic, and expressive way to generate CSS. Supporting both an indented syntax and regular CSS style.</p>
+                <% } %>
+
+                <h4>Bootstrap</h4>
+                <p>Sleek, intuitive, and powerful mobile first front-end framework for faster and easier web development.</p>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><span class="glyphicon glyphicon-heart"></span> from the Yeoman team</p>
+        </div>
+
+    </div>
+    <% } else if (useFoundation) { % >
+    <div class="container">
+            <div class="header">
+                <nav class="top-bar" data-topbar role="navigation">
+                    <ul class="title-area">
+                        <li class="name">
+                            <h1><a href="#"><%= appname %></a></h1>
+                        </li>
+                        <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
+                        <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+                    </ul>
+
+                    <section class="top-bar-section">
+                        <!-- Right Nav Section -->
+                        <ul class="right">
+                            <li class="active"><a href="#">Home</a></li>
+                            <li><a href="#">About</a></li>
+                            <li><a href="#">Contact</a></li>
+                        </ul>
+
+                        <!-- Left Nav Section -->
+                        <ul class="left">
+
+                        </ul>
+                    </section>
+                </nav>
+
+            </div>
+
+            <div class="panel">
+                <div class="row">
+                    <div class="medium-6 medium-push-6 columns">
+                        <img class="yeoman-team" src="/img/yo-grunt-bower-symfony.png" alt=""/>
+                    </div>
+                    <div class="medium-6 medium-pull-6 columns">
+                        <h1>'Allo, 'Allo!</h1>
+                        <p class="lead">Always a pleasure scaffolding your apps.</p>
+                        <p><a class="button success" href="#">Splendid! <span class="fi-check"></span></a></p>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row marketing">
+                <div class="col-lg-6">
+                    <h4>Symfony</h4>
+                    <p>High Performance PHP Framework for Web Development</p>
+                    <h4>Browsersync</h4>
+                    <p>Keep multiple browsers & devices in sync when building websites.</p>
+
+                    <% if (useLess) { %><h4>Less</h4>
+                    <p>Less is a mature, stable, and powerful professional grade CSS extension language.</p>
+                    <% } else if (useSass) { %><h4>Sass</h4>
+                    <p>Sass is a mature, stable, and powerful professional grade CSS extension language.</p>
+                    <% } else if (useStylus) { %><h4>Stylus</h4>
+                    <p>Stylus is a revolutionary new language, providing an efficient, dynamic, and expressive way to generate CSS. Supporting both an indented syntax and regular CSS style.</p>
+                    <% } %>
+
+                    <h4>Foundation</h4>
+                    <p>Sleek, intuitive, and powerful mobile first front-end framework for faster and easier web development.</p>
+                </div>
+            </div>
+
+            <div class="row footer">
+                <p><span class="fi-heart"></span> from the Yeoman team</p>
+            </div>
+
+        </div>
+    <% } %>
+{% endblock %}

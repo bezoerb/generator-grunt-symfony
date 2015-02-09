@@ -1,0 +1,15 @@
+<% if (useBootstrap) { %> @import "bootstrap-sass-official/assets/stylesheets/_bootstrap"; <% } else if (useFoundation) { %>
+$fi-path: "/fonts";
+@import "foundation/scss/foundation";
+@import "foundation-icon-fonts/_foundation-icons";<% } %>
+
+.header {
+    height: 50px;
+}
+
+.yeoman-team {
+    max-width: 90%;
+    display:block;
+    margin: 20px 0 50px;
+
+}

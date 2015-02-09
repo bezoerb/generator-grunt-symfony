@@ -4,10 +4,12 @@ var chalk = require('chalk');
 var yosay = require('yosay');
 var fs = require('fs');
 var _ = require('lodash');
-var util = require('util');
+//var util = require('util');
 var path = require('path');
 var exec = require('child_process').exec;
-var spawn = require('child_process').spawn;
+var yaml = require('js-yaml');
+var rimraf = require('rimraf');
+var fse = require('fs-extra');
 
 
 var AppGenerator = yeoman.generators.Base.extend({
@@ -94,24 +96,120 @@ var AppGenerator = yeoman.generators.Base.extend({
     },
 
 
-    updateAppKernel: function updateAppKernel() {
-        this.log('Updating AppKernel ...');
-        var appKernelPath = "app/AppKernel.php";
-        var appKernelContents = this.readFileAsString(appKernelPath);
-        var replaceValue = this.read("symfony/AppKernel.php");
-        appKernelContents = appKernelContents.replace("return $bundles;", replaceValue);
-        this.write(appKernelPath, appKernelContents);
+    /**
+     * remove assetic
+     */
+    cleanComposer: function () {
+        var done = this.async();
+
+        var composerContents = this.readFileAsString('composer.json');
+        var composerParse = JSON.parse(composerContents);
+        delete composerParse.require['symfony/assetic-bundle'];
+        var data = JSON.stringify(composerParse, null, 4);
+
+        rimraf(this.templatePath('composer.json'),function(){
+            fs.writeFileSync('composer.json', data);
+            done();
+        });
     },
 
-    updateComposerFile: function updateComposerFile() {
-        this.log('Updating composer.json ...');
-        var appKernelPath = "composer.json";
-        var appKernelContents = this.readFileAsString(appKernelPath);
-        var replaceValue = this.read("symfony/composer.json");
-        appKernelContents = appKernelContents.replace('"require": {', replaceValue);
-        this.write(appKernelPath, appKernelContents);
-    }
+    cleanConfig: function () {
+        var done = this.async();
 
+        var confDev = yaml.safeLoad(fs.readFileSync('app/config/config_dev.yml'));
+        delete confDev.assetic;
+        var newConfDev = yaml.dump(confDev, {indent: 4});
+        fs.unlinkSync(this.destinationPath('app/config/config_dev.yml'));
+        fs.writeFileSync('app/config/config_dev.yml', newConfDev);
+
+        var conf = yaml.safeLoad(fs.readFileSync('app/config/config.yml'));
+        delete conf.assetic;
+        var newConf = yaml.dump(conf, {indent: 4});
+        fs.unlinkSync(this.destinationPath('app/config/config.yml'));
+        fs.writeFileSync('app/config/config.yml', newConf);
+
+        fs.unlinkSync(this.destinationPath('app/config/routing.yml'));
+        fse.copySync(this.templatePath('symfony/routing.yml'),'app/config/routing.yml');
+
+        done();
+    },
+
+    /**
+     * remove assetic
+     */
+    updateAppKernel: function () {
+        var appKernelPath = 'app/AppKernel.php';
+        var appKernelContents = this.readFileAsString(appKernelPath);
+
+        var newAppKernelContents = appKernelContents.replace('new Symfony\\Bundle\\AsseticBundle\\AsseticBundle(),', '');
+        fs.unlinkSync(appKernelPath);
+        fs.writeFileSync(appKernelPath, newAppKernelContents);
+    },
+
+    updateView: function() {
+        var cb = this.async();
+
+        rimraf(this.destinationPath('app/Resources/views/*'),function() {
+            this.mkdir(this.destinationPath('app/Resources/views/controller/default'));
+
+            // copy base template
+            var templateContent =  this.readFileAsString(this.templatePath('symfony/base.html.twig'));
+            fs.writeFileSync('app/Resources/views/base.html.twig',  this.engine(templateContent,this));
+
+
+            // copy default action template
+            var actionContent =  this.readFileAsString(this.templatePath('symfony/index.html.twig'));
+            fs.writeFileSync('app/Resources/views/controller/default/index.html.twig',  this.engine(actionContent,this));
+
+
+            fse.copySync(this.templatePath('img'),'app/Resources/public/img/');
+            cb();
+        }.bind(this));
+
+    },
+
+    updateController: function updateControler() {
+        var controllerPath = 'src/AppBundle/Controller/DefaultController.php';
+        if (fs.existsSync(controllerPath)) {
+            fs.unlinkSync(controllerPath);
+        }
+
+        fse.copySync(this.templatePath('symfony/DefaultController.php'),controllerPath);
+
+    },
+
+
+    addScripts: function addScripts(){
+        // copy scripts
+        this.mkdir(this.destinationPath('app/Resources/public/scripts'));
+        if (this.useRequirejs) {
+            _.forEach(['app.js','main.js','config.js'],function(file) {
+                fse.copySync(this.templatePath('scripts/requirejs/' + file),'app/Resources/public/scripts/' + file);
+            },this);
+        }
+    },
+
+
+    addStyles: function addScripts(){
+        // copy styles
+        this.mkdir(this.destinationPath('app/Resources/public/styles'));
+        var styles = [];
+        if (this.useSass) {
+            styles.push('main.scss');
+        } else if (this.useLess) {
+            styles.push('main.less');
+        } else if (this.useStylus) {
+            styles.push('main.styl');
+        } else {
+            styles.push('main.css');
+        }
+
+        _.forEach(styles,function(file) {
+            // copy default action template
+            var content =  this.readFileAsString(this.templatePath('styles/' + file));
+            fs.writeFileSync(this.destinationPath('app/Resources/public/styles/' + file),  this.engine(content,this));
+        },this);
+    }
 });
 
 
@@ -132,30 +230,6 @@ module.exports = AppGenerator.extend({
         ));
 
         this.checkComposer();
-
-        //// Only instantiate the Gruntfile API when requested
-        //Object.defineProperty(this, 'gruntfile', {
-        //    get: function () {
-        //        if (!this.env.gruntfile) {
-        //            var gruntfile = this.fs.read(this.destinationPath('Gruntfile.js'), {
-        //                defaults: ''
-        //            });
-        //            this.env.gruntfile = gruntapi.init(gruntfile);
-        //        }
-        //
-        //        // Schedule the creation/update of the Gruntfile
-        //        this.env.runLoop.add('writing', function (done) {
-        //            this.fs.write(
-        //                this.destinationPath('Gruntfile.js'),
-        //                this.env.gruntfile.toString({indent_size: 4, indent_style: 'space'})
-        //            );
-        //            done();
-        //        }.bind(this), { once: 'gruntfile:write' });
-        //
-        //        return this.env.gruntfile;
-        //    }
-        //});
-
     },
 
 
@@ -163,6 +237,24 @@ module.exports = AppGenerator.extend({
         var context = this;
         var done = this.async();
 
+   /*     // set symfony repository and demoBundle option
+        this.symfonyDistribution = this.symfonyDefaults;
+
+        this.noFramework = false;
+        this.useBootstrap = true;
+        this.usePure = false;
+        this.useFoundation = false;
+
+        this.noPreprocessor = false;
+        this.useLess = false;
+        this.useSass = true;
+        this.useStylus = false;
+        this.includeLibSass = true;
+        this.includeRubySass = false;
+
+        this.useRequirejs = true;
+        done(); return;
+*/
         var symfonyCustom = function (answers) {
             return !_.result(answers, 'symfonyStandard');
         };
@@ -207,13 +299,13 @@ module.exports = AppGenerator.extend({
             message: 'Commit (commit/branch/tag)',
             default: this.symfonyDefaults.commit,
             when: symfonyCustom
-        }, {
+        },/* {
             type: 'confirm',
             name: 'symfonyAcme',
             message: 'Would you like to include the Acme/DemoBundle',
             default: false,
             when: this.showSymfonyRepo
-        }, {
+        }, */{
             type: 'list',
             name: 'framework',
             message: function () {
@@ -282,64 +374,11 @@ module.exports = AppGenerator.extend({
         }.bind(this));
     },
 
-    configuring: {
-        enforceFolderName: function () {
-            var appName = _.kebabCase(_.deburr(this.appname));
-            var destName = _.last(this.destinationRoot().split(path.sep));
-
-            if (appName !== _.kebabCase(_.deburr(destName))) {
-                this.destinationRoot(this.appname);
-            }
-            this.config.save();
-        },
-
-        /**
-         * install symfony base system
-         */
-        symfonyBase: function() {
-            var done = this.async();
-            var appPath = this.destinationRoot();
-
-            this.remote(
-                this.symfonyDistribution.username,
-                this.symfonyDistribution.repository,
-                this.symfonyDistribution.commit,
-                function (err, remote) {
-                    if (err) {
-                        return done(err);
-                    }
-                    remote.directory('.', path.join(appPath, '.'));
-                    done();
-                }
-            );
-        }
-
-        ///**
-        // * remove unwanted files
-        // */
-        //symfonyClear: function symfonyClear() {
-        //    var cb = this.async();
-        //    var custom = [
-        //        'web/app_dev.php',
-        //        'app/Resources/views/base.html.twig',
-        //        'src/Acme/DemoBundle/Resources/views/layout.html.twig'
-        //    ];
-        //    custom.forEach(function (file) {
-        //        if (fs.existsSync(path.join(this.destinationRoot(), file))) {
-        //            fs.unlinkSync(path.join(this.destinationRoot(), file));
-        //        }
-        //    }.bind(this));
-        //    cb();
-        //}
-
-
-    },
-
     writing: {
         app: function () {
             this.template('_package.json', 'package.json');
             this.template('Gruntfile.js', 'Gruntfile.js');
-
+            console.log('writing app');
             var bower = {
                 name: this._.slugify(this.appname),
                 private: true,
@@ -358,6 +397,7 @@ module.exports = AppGenerator.extend({
                 }
             } else if (this.useFoundation) {
                 bower.dependencies.foundation = '~5.5.1';
+                bower.dependencies['foundation-icon-fonts'] = '*';
             } else if (this.usePure) {
                 bower.dependencies.pure = '~0.5.0';
                 bower.dependencies.jquery = '~2.1.3';
@@ -395,39 +435,33 @@ module.exports = AppGenerator.extend({
         },
 
 
-        gitInit: function gitInit() {
-            var cb = this.async();
-            spawn('git', ['init']).on('exit', function () {
-                cb();
-            });
-        }
+        //gitInit: function gitInit() {
+        //    var cb = this.async();
+        //    spawn('git', ['init']).on('exit', function () {
+        //        cb();
+        //    });
+        //},
 
-        //updateAppKernel: function updateAppKernel() {
-        //    console.log('This will add the custom bundles to the AppKernel');
-        //    var appKernelPath = "app/AppKernel.php";
-        //    var appKernelContents = this.readFileAsString(appKernelPath);
-        //    var replaceValue = this.read("symfony/AppKernel.php");
-        //    appKernelContents = appKernelContents.replace("return $bundles;", replaceValue);
-        //    this.write(appKernelPath, appKernelContents);
-        //},
-        //
-        //updateComposerFile: function updateComposerFile() {
-        //    console.log('This will add the custom includes to the composer.json file');
-        //    var appKernelPath = "composer.json";
-        //    var appKernelContents = this.readFileAsString(appKernelPath);
-        //    var replaceValue = this.read("symfony/composer.json");
-        //    appKernelContents = appKernelContents.replace('"require": {', replaceValue);
-        //    this.write(appKernelPath, appKernelContents);
-        //},
-        //
-        //updateConfigDev: function updateConfigDev() {
-        //    console.log('This will enable live reload in the development environment');
-        //    var configDevPath = "app/config/config_dev.yml";
-        //    var configDevContents = this.readFileAsString(configDevPath);
-        //    var extraContents = this.read("symfony/config_dev.yml");
-        //    configDevContents += extraContents;
-        //    this.write(configDevPath, configDevContents);
-        //}
+        /**
+         * install symfony base system
+         */
+        symfonyBase: function symfonyBase() {
+            var done = this.async();
+            var appPath = this.destinationRoot();
+
+            this.remote(
+                this.symfonyDistribution.username,
+                this.symfonyDistribution.repository,
+                this.symfonyDistribution.commit,
+                function (err, remote) {
+                    if (err) {
+                        return done(err);
+                    }
+                    remote.directory('.', path.join(appPath, '.'));
+                    done();
+                }
+            );
+        }
     },
 
     install: function () {
@@ -435,13 +469,28 @@ module.exports = AppGenerator.extend({
             skipInstall: this.options['skip-install'],
             skipMessage: this.options['skip-install-message'],
             callback: function () {
-                this.log('Getting the composer dependencies');
-                //if (this.globalComposer) {
-                //    spawn('composer', ['install']);
-                //} else {
-                //    spawn('php', ['composer.phar', 'install']);
-                //}
+
+                if (!this.options['skip-install']) {
+                    this.log('Getting the composer dependencies');
+                    if (this.globalComposer) {
+                        this.spawnCommand('composer', ['install']);
+                    } else {
+                        this.spawnCommand('php', ['composer.phar', 'install']);
+                    }
+                }
             }.bind(this)
         });
+    },
+
+    end: function () {
+        this.cleanComposer();
+        this.cleanConfig();
+        this.updateController();
+        this.updateAppKernel();
+        this.updateView();
+
+
+        this.addScripts();
+        this.addStyles();
     }
 });
