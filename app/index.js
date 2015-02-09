@@ -349,7 +349,7 @@ module.exports = AppGenerator.extend({
             name: 'preprocessor',
             message: 'Would you like to use a CSS preprocessor?',
             choices: [
-                {name: 'No Preprocessor', value: 'nopreprocessor'},
+         //       {name: 'No Preprocessor', value: 'nopreprocessor'},
                 {name: 'Less', value: 'less'},
                 {name: 'Sass', value: 'sass', checked: true},
                 {name: 'Stylus', value: 'stylus'}
