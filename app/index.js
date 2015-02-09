@@ -229,7 +229,9 @@ var AppGenerator = yeoman.generators.Base.extend({
             }
         }
 
-        fse.copySync(fontpath, dest);
+        if (fs.existsSync(fontpath)) {
+            fse.copySync(fontpath, dest);
+        }
     }
 });
 
