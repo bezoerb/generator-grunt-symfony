@@ -1,3 +1,9 @@
-<% if (useBootstrap) { %> @import "bootstrap/dist/css/bootstrap.css" <% }  else if (useFoundation) { %>
-@import "foundation/css/foundation.css";
-<% } %>
+.header {
+    height: 50px;
+}
+
+.yeoman-team {
+    max-width: 90%;
+    display:block;
+    margin: 20px 0 50px;
+}

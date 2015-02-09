@@ -216,22 +216,20 @@ var AppGenerator = yeoman.generators.Base.extend({
         var dest = this.destinationPath('app/Resources/public/fonts');
         this.mkdir(dest);
         var src = this.destinationPath('bower_components');
+
+        var fontpath = path.join(src, 'sass-bootstrap-glyphicons', 'fonts');
+
         if (this.useBootstrap) {
-            var fontpath = path.join(src, 'bootstrap', 'fonts');
             if (this.useSass) {
                 fontpath = path.join(src, 'bootstrap-sass-official', 'assets', 'fonts');
             } else if (this.useStylus) {
                 fontpath = path.join(src, 'bootstrap-stylus', 'fonts');
+            } else {
+                fontpath = path.join(src, 'bootstrap', 'fonts');
             }
-            fse.copySync(fontpath, dest);
-        } else {
-            glob(src+'/sass-bootstrap-glyphicons/fonts/*.{eot,otf,svg,ttf,woff}', function (er, files) {
-                _.forEach(files,function(file){
-                    fse.copySync(file,dest + '/');
-                });
-
-            });
         }
+
+        fse.copySync(fontpath, dest);
     }
 });
 
@@ -337,16 +335,16 @@ module.exports = AppGenerator.extend({
             },
             choices: [
                 {name: 'No Framework', value: 'noframework'},
-                {name: 'Twitter Bootstrap', value: 'bootstrap'},
+                {name: 'Twitter Bootstrap', value: 'bootstrap', checked: true},
                 {name: 'PureCSS', value: 'pure'},
-                {name: 'Foundation', value: 'foundation', checked: true}
+                {name: 'Foundation', value: 'foundation'}
             ]
         }, {
             type: 'list',
             name: 'preprocessor',
             message: 'Would you like to use a CSS preprocessor?',
             choices: [
-         //       {name: 'No Preprocessor', value: 'nopreprocessor'},
+                {name: 'No Preprocessor', value: 'nopreprocessor'},
                 {name: 'Less', value: 'less'},
                 {name: 'Sass', value: 'sass', checked: true},
                 {name: 'Stylus', value: 'stylus'}

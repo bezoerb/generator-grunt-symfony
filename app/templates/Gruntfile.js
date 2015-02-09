@@ -36,7 +36,32 @@ module.exports = function(grunt) {
 
         /**
          * CSS
-         */<% if (useSass) { %>
+         */<% if (noPreprocessor) { %>
+        concat: {
+            css: {
+                src: [
+                    '<% if (useBootstrap) { %>bower_components/bootstrap/dist/css/bootstrap.css<% } else if (useFoundation) { %>bower_components/foundation/css/foundation.css<% } else if (usePure) { %>bower_components/pure/pure.css<% } %>',
+                    <% if (!useBootstrap) { %>'bower_components/sass-bootstrap-glyphicons/css/bootstrap-glyphicons.css',
+                    <% } %>'<%%= config.app %>/styles/{,*/}*.css'],
+                dest: '.tmp/styles/main.css'
+            }
+        },
+        autoprefixer: {
+            options: {
+                browsers: ['> 5%', 'last 2 versions', 'ie 9'],
+                map: {
+                    prev: '.tmp/styles/'
+                }
+            },
+            dist: {
+                files: [{
+                    expand: true,
+                    cwd: '.tmp/styles/',
+                    src: '{,*/}*.css',
+                    dest: '.tmp/styles/'
+                }]
+            }
+        },<% } else if (useSass) { %>
         sass: {
             options: {
                 includePaths: ['bower_components']
@@ -144,8 +169,8 @@ module.exports = function(grunt) {
 
         watch: {
             styles: {
-                files: ['<%%= config.app %>/styles/{,*/}*.<% if (useLess) { %>less<% } else if (useStylus) { %>styl<% } else if (useSass) { %>{scss,sass}<% } %>'],
-                tasks: ['<% if (useLess) { %>less<% } else if (useStylus) { %>stylus<% } else if (useSass) { %>sass','autoprefixer<% } %>']
+                files: ['<%%= config.app %>/styles/{,*/}*.<% if (useLess) { %>less<% } else if (useStylus) { %>styl<% } else if (useSass) { %>{scss,sass}<% } else if (noPreprocessor) { %>css<% } %>'],
+                tasks: ['<% if (useLess) { %>less<% } else if (useStylus) { %>stylus<% } else if (useSass) { %>sass','autoprefixer<% } else if (noPreprocessor) { %>concat:css','autoprefixer<% } %>']
             },
             scripts: {
                 files: ['<%%= config.app %>/scripts/**/*.js'],
@@ -177,7 +202,7 @@ module.exports = function(grunt) {
                 options: {
                     baseUrl: 'bower_components',
                     name: 'almond/almond',
-                    include: 'config',
+                    include: 'main',
                     out: '<%%= config.dist %>/scripts/main.js',
                     mainConfigFile: '<%%= config.app %>/scripts/config.js',
                     preserveLicenseComments: false,
@@ -273,12 +298,12 @@ module.exports = function(grunt) {
     });
 
     grunt.registerTask('serve', [
-        '<% if (useLess) { %>less<% } else if (useStylus) { %>stylus<% } else if (useSass) { %>sass','autoprefixer<% } %>',
+        '<% if (useLess) { %>less<% } else if (useStylus) { %>stylus<% } else if (useSass) { %>sass','autoprefixer<% } else if (noPreprocessor) { %>concat:css','autoprefixer<% } %>',
         'browserSync:dist', // Using the php middleware
         'watch'             // Any other watch tasks you want to run
     ]);
 
-    grunt.registerTask('css', ['clean:css', 'less', 'cssmin']);
+    grunt.registerTask('css', ['clean:css','<% if (useLess) { %>less<% } else if (useStylus) { %>stylus<% } else if (useSass) { %>sass','autoprefixer<% } else if (noPreprocessor) { %>concat:css','autoprefixer<% } %>', 'cssmin']);
     grunt.registerTask('js', ['clean:js', 'jshint', 'bowerRequirejs', 'requirejs']);
     grunt.registerTask('rev', ['string-replace', 'filerev', 'usemin']);
 
