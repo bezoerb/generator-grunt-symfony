@@ -1,7 +1,5 @@
-<% if (useBootstrap) { %> @import "bootstrap-sass-official/assets/stylesheets/_bootstrap"; <% } else if (useFoundation) { %>
-$fi-path: "/fonts";
-@import "foundation/scss/foundation";
-@import "foundation-icon-fonts/_foundation-icons";<% } %>
+<% if (useBootstrap) { %> @import "bootstrap-sass-official/assets/stylesheets/_bootstrap";<% } else if (useFoundation) { %>@import "foundation/scss/foundation";<% } %>
+<% if (!useBootstrap) { %>@import "/sass-bootstrap-glyphicons/scss/bootstrap-glyphicons";<% } %>
 
 .header {
     height: 50px;

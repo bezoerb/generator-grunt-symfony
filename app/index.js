@@ -224,13 +224,10 @@ var AppGenerator = yeoman.generators.Base.extend({
                 fontpath = path.join(src, 'bootstrap-stylus', 'fonts');
             }
             fse.copySync(fontpath, dest);
-        }
-
-        if (this.useFoundation) {
-            var fontpath = path.join('bower_components', 'foundation-icon-fonts');
-            glob(src+'/foundation-icon-fonts/*.{eot,svg,ttf,woff}', function (er, files) {
+        } else {
+            glob(src+'/sass-bootstrap-glyphicons/fonts/*.{eot,otf,svg,ttf,woff}', function (er, files) {
                 _.forEach(files,function(file){
-                    fse.copySync(dest,file);
+                    fse.copySync(file,dest + '/');
                 });
 
             });
@@ -423,12 +420,15 @@ module.exports = AppGenerator.extend({
                 }
             } else if (this.useFoundation) {
                 bower.dependencies.foundation = '~5.5.1';
-                bower.dependencies['foundation-icon-fonts'] = '*';
             } else if (this.usePure) {
                 bower.dependencies.pure = '~0.5.0';
                 bower.dependencies.jquery = '~2.1.3';
             }
 
+            // add standalone glyphicons if bootstrap is not used
+            if (!this.useBootstrap) {
+                bower.dependencies['sass-bootstrap-glyphicons'] = '~1.0.0';
+            }
 
             if (this.useRequirejs) {
                 bower.dependencies.requirejs = '2.1.15';

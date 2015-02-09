@@ -244,7 +244,7 @@ module.exports = function(grunt) {
                 },
                 options: {
                     server: {
-                        baseDir: ['.tmp', appConfig.app, './', appConfig.dist],
+                        baseDir: ['.tmp', appConfig.app, './', 'bower_components', appConfig.dist],
                         middleware: [
                             function(req, res, next) {
                                 var obj = parseurl(req);
