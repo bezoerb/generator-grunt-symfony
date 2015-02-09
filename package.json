@@ -25,6 +25,7 @@
   "dependencies": {
     "chalk": "^0.5.0",
     "fs-extra": "^0.16.3",
+    "glob": "^4.3.5",
     "gruntfile-api": "0.0.9",
     "gruntfile-editor": "^0.2.0",
     "inquirer": "^0.8.0",

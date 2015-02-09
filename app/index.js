@@ -9,6 +9,7 @@ var path = require('path');
 var exec = require('child_process').exec;
 var yaml = require('js-yaml');
 var rimraf = require('rimraf');
+var glob = require("glob");
 var fse = require('fs-extra');
 
 
@@ -107,7 +108,7 @@ var AppGenerator = yeoman.generators.Base.extend({
         delete composerParse.require['symfony/assetic-bundle'];
         var data = JSON.stringify(composerParse, null, 4);
 
-        rimraf(this.templatePath('composer.json'),function(){
+        rimraf(this.templatePath('composer.json'), function () {
             fs.writeFileSync('composer.json', data);
             done();
         });
@@ -129,7 +130,7 @@ var AppGenerator = yeoman.generators.Base.extend({
         fs.writeFileSync('app/config/config.yml', newConf);
 
         fs.unlinkSync(this.destinationPath('app/config/routing.yml'));
-        fse.copySync(this.templatePath('symfony/routing.yml'),'app/config/routing.yml');
+        fse.copySync(this.templatePath('symfony/routing.yml'), 'app/config/routing.yml');
 
         done();
     },
@@ -146,23 +147,23 @@ var AppGenerator = yeoman.generators.Base.extend({
         fs.writeFileSync(appKernelPath, newAppKernelContents);
     },
 
-    updateView: function() {
+    updateView: function () {
         var cb = this.async();
 
-        rimraf(this.destinationPath('app/Resources/views/*'),function() {
+        rimraf(this.destinationPath('app/Resources/views/*'), function () {
             this.mkdir(this.destinationPath('app/Resources/views/controller/default'));
 
             // copy base template
-            var templateContent =  this.readFileAsString(this.templatePath('symfony/base.html.twig'));
-            fs.writeFileSync('app/Resources/views/base.html.twig',  this.engine(templateContent,this));
+            var templateContent = this.readFileAsString(this.templatePath('symfony/base.html.twig'));
+            fs.writeFileSync('app/Resources/views/base.html.twig', this.engine(templateContent, this));
 
 
             // copy default action template
-            var actionContent =  this.readFileAsString(this.templatePath('symfony/index.html.twig'));
-            fs.writeFileSync('app/Resources/views/controller/default/index.html.twig',  this.engine(actionContent,this));
+            var actionContent = this.readFileAsString(this.templatePath('symfony/index.html.twig'));
+            fs.writeFileSync('app/Resources/views/controller/default/index.html.twig', this.engine(actionContent, this));
 
 
-            fse.copySync(this.templatePath('img'),'app/Resources/public/img/');
+            fse.copySync(this.templatePath('img'), 'app/Resources/public/img/');
             cb();
         }.bind(this));
 
@@ -174,23 +175,23 @@ var AppGenerator = yeoman.generators.Base.extend({
             fs.unlinkSync(controllerPath);
         }
 
-        fse.copySync(this.templatePath('symfony/DefaultController.php'),controllerPath);
+        fse.copySync(this.templatePath('symfony/DefaultController.php'), controllerPath);
 
     },
 
 
-    addScripts: function addScripts(){
+    addScripts: function addScripts() {
         // copy scripts
         this.mkdir(this.destinationPath('app/Resources/public/scripts'));
         if (this.useRequirejs) {
-            _.forEach(['app.js','main.js','config.js'],function(file) {
-                fse.copySync(this.templatePath('scripts/requirejs/' + file),'app/Resources/public/scripts/' + file);
-            },this);
+            _.forEach(['app.js', 'main.js', 'config.js'], function (file) {
+                fse.copySync(this.templatePath('scripts/requirejs/' + file), 'app/Resources/public/scripts/' + file);
+            }, this);
         }
     },
 
 
-    addStyles: function addScripts(){
+    addStyles: function addScripts() {
         // copy styles
         this.mkdir(this.destinationPath('app/Resources/public/styles'));
         var styles = [];
@@ -204,11 +205,36 @@ var AppGenerator = yeoman.generators.Base.extend({
             styles.push('main.css');
         }
 
-        _.forEach(styles,function(file) {
+        _.forEach(styles, function (file) {
             // copy default action template
-            var content =  this.readFileAsString(this.templatePath('styles/' + file));
-            fs.writeFileSync(this.destinationPath('app/Resources/public/styles/' + file),  this.engine(content,this));
-        },this);
+            var content = this.readFileAsString(this.templatePath('styles/' + file));
+            fs.writeFileSync(this.destinationPath('app/Resources/public/styles/' + file), this.engine(content, this));
+        }, this);
+    },
+
+    copyFonts: function copyFonts() {
+        var dest = this.destinationPath('app/Resources/public/fonts');
+        this.mkdir(dest);
+        var src = this.destinationPath('bower_components');
+        if (this.useBootstrap) {
+            var fontpath = path.join(src, 'bootstrap', 'fonts');
+            if (this.useSass) {
+                fontpath = path.join(src, 'bootstrap-sass-official', 'assets', 'fonts');
+            } else if (this.useStylus) {
+                fontpath = path.join(src, 'bootstrap-stylus', 'fonts');
+            }
+            fse.copySync(fontpath, dest);
+        }
+
+        if (this.useFoundation) {
+            var fontpath = path.join('bower_components', 'foundation-icon-fonts');
+            glob(src+'/foundation-icon-fonts/*.{eot,svg,ttf,woff}', function (er, files) {
+                _.forEach(files,function(file){
+                    fse.copySync(dest,file);
+                });
+
+            });
+        }
     }
 });
 
@@ -237,24 +263,24 @@ module.exports = AppGenerator.extend({
         var context = this;
         var done = this.async();
 
-   /*     // set symfony repository and demoBundle option
-        this.symfonyDistribution = this.symfonyDefaults;
+        /*     // set symfony repository and demoBundle option
+         this.symfonyDistribution = this.symfonyDefaults;
 
-        this.noFramework = false;
-        this.useBootstrap = true;
-        this.usePure = false;
-        this.useFoundation = false;
+         this.noFramework = false;
+         this.useBootstrap = true;
+         this.usePure = false;
+         this.useFoundation = false;
 
-        this.noPreprocessor = false;
-        this.useLess = false;
-        this.useSass = true;
-        this.useStylus = false;
-        this.includeLibSass = true;
-        this.includeRubySass = false;
+         this.noPreprocessor = false;
+         this.useLess = false;
+         this.useSass = true;
+         this.useStylus = false;
+         this.includeLibSass = true;
+         this.includeRubySass = false;
 
-        this.useRequirejs = true;
-        done(); return;
-*/
+         this.useRequirejs = true;
+         done(); return;
+         */
         var symfonyCustom = function (answers) {
             return !_.result(answers, 'symfonyStandard');
         };
@@ -299,13 +325,13 @@ module.exports = AppGenerator.extend({
             message: 'Commit (commit/branch/tag)',
             default: this.symfonyDefaults.commit,
             when: symfonyCustom
-        },/* {
-            type: 'confirm',
-            name: 'symfonyAcme',
-            message: 'Would you like to include the Acme/DemoBundle',
-            default: false,
-            when: this.showSymfonyRepo
-        }, */{
+        }, /* {
+         type: 'confirm',
+         name: 'symfonyAcme',
+         message: 'Would you like to include the Acme/DemoBundle',
+         default: false,
+         when: this.showSymfonyRepo
+         }, */{
             type: 'list',
             name: 'framework',
             message: function () {
@@ -337,14 +363,14 @@ module.exports = AppGenerator.extend({
             chalk.green('https://github.com/andrew/node-sass#node-sass'),
             default: true
         }/*, {
-            type: 'list',
-            name: 'loader',
-            message: 'Which module loader would you like to use?',
-            choices: [
-                {name: 'RequireJS', value: 'requirejs', checked: true},
-                {name: 'Browserify', value: 'browserify'}
-            ]
-        }*/];
+         type: 'list',
+         name: 'loader',
+         message: 'Which module loader would you like to use?',
+         choices: [
+         {name: 'RequireJS', value: 'requirejs', checked: true},
+         {name: 'Browserify', value: 'browserify'}
+         ]
+         }*/];
 
         this.prompt(prompts, function (props) {
             var has = _.partial(hasFeature, props);
@@ -370,7 +396,7 @@ module.exports = AppGenerator.extend({
             this.useRequirejs = true;//useLoader('requirejs');
             //this.useBrowserify = useLoader('browserify');
 
-             done();
+            done();
         }.bind(this));
     },
 
@@ -492,5 +518,12 @@ module.exports = AppGenerator.extend({
 
         this.addScripts();
         this.addStyles();
+
+        // copy fonts
+        if (!this.skipInstall) {
+            this.copyFonts();
+        }
+
+
     }
 });

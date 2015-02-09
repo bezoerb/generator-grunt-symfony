@@ -1,0 +1,14 @@
+<% if (useBootstrap) { %> @import "bootstrap/dist/css/bootstrap.css" <% }  else if (useFoundation) { %>
+@import "foundation/css/foundation.css";
+@import "foundation-icon-fonts/foundation-icons.css";
+@font-face
+font-family: "foundation-icons";
+    src: url("/fonts/foundation-icons.eot");
+    src: url("/fonts/foundation-icons.eot?#iefix") format("embedded-opentype"),
+    url("/fonts/foundation-icons.woff") format("woff"),
+    url("/fonts/foundation-icons.ttf") format("truetype"),
+    url("/fonts/foundation-icons.svg#fontcustom") format("svg");
+    font-weight: normal;
+    font-style: normal;
+
+<% } %>
