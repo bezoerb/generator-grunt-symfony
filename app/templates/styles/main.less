@@ -1,5 +1,5 @@
-<% if (useBootstrap) { %>@import "bootstrap/less/bootstrap"; <% } else if (useFoundation) { %>@include "/foundation/css/foundation.css";<% }  else if (usePure) { %>@include "pure/pure.css";
-@include "suit-utils-layout/lib/layout.css";<% } %>
+<% if (useBootstrap) { %>@import "bootstrap/less/bootstrap"; <% } else if (useFoundation) { %>@import (inline) "/foundation/css/foundation.css";<% }  else if (usePure) { %>@import (inline) "pure/pure.css";
+@import (inline) "suit-utils-layout/lib/layout.css";<% } %>
 <% if (!useBootstrap) { %>@include "sass-bootstrap-glyphicons/less/bootstrap-glyphicons";<% } %>
 
 <% if (usePure) { %>
