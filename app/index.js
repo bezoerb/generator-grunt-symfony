@@ -136,7 +136,7 @@ var AppGenerator = yeoman.generators.Base.extend({
 
         fs.unlinkSync(this.destinationPath('web/app.php'));
         fse.copySync(this.templatePath('symfony/app.php'), 'web/app.php');
-        
+
         done();
     },
 
@@ -148,6 +148,7 @@ var AppGenerator = yeoman.generators.Base.extend({
         var appKernelContents = this.readFileAsString(appKernelPath);
 
         var newAppKernelContents = appKernelContents.replace('new Symfony\\Bundle\\AsseticBundle\\AsseticBundle(),', '');
+        newAppKernelContents = newAppKernelContents.replace('array(\'dev\', \'test\')','array(\'node\', \'dev\', \'test\')');
         fs.unlinkSync(appKernelPath);
         fs.writeFileSync(appKernelPath, newAppKernelContents);
     },
