@@ -48,6 +48,17 @@ var AppGenerator = yeoman.generators.Base.extend({
     },
 
     /**
+     * Check for installed jspm
+     */
+    checkJspm: function checkJspm() {
+        // Check if jspm is installed globally
+        this.globalJspm = false;
+        exec('jspm', ['-v'], function (error) {
+            this.globalJspm = !error;
+        }.bind(this));
+    },
+
+    /**
      * show custom repo if applicable
      * @param answers
      * @returns {boolean} true
@@ -148,7 +159,7 @@ var AppGenerator = yeoman.generators.Base.extend({
         var appKernelContents = this.readFileAsString(appKernelPath);
 
         var newAppKernelContents = appKernelContents.replace('new Symfony\\Bundle\\AsseticBundle\\AsseticBundle(),', '');
-        newAppKernelContents = newAppKernelContents.replace('array(\'dev\', \'test\')','array(\'node\', \'dev\', \'test\')');
+        newAppKernelContents = newAppKernelContents.replace('array(\'dev\', \'test\')', 'array(\'node\', \'dev\', \'test\')');
         fs.unlinkSync(appKernelPath);
         fs.writeFileSync(appKernelPath, newAppKernelContents);
     },
@@ -192,6 +203,11 @@ var AppGenerator = yeoman.generators.Base.extend({
         if (this.useRequirejs) {
             _.forEach(['app.js', 'main.js', 'config.js'], function (file) {
                 fse.copySync(this.templatePath('scripts/requirejs/' + file), 'app/Resources/public/scripts/' + file);
+            }, this);
+        } else if (this.useJspm) {
+            _.forEach(['main.js', 'config.js'], function (file) {
+                var content = this.readFileAsString(this.templatePath('scripts/jspm/' + file));
+                fs.writeFileSync(this.destinationPath('app/Resources/public/scripts/' + file), this.engine(content, this));
             }, this);
         }
     },
@@ -258,6 +274,7 @@ module.exports = AppGenerator.extend({
             'Welcome to the priceless ' + chalk.red('GruntSymfony') + ' generator!'
         ));
 
+        this.checkJspm();
         this.checkComposer();
     },
 
@@ -365,15 +382,16 @@ module.exports = AppGenerator.extend({
             message: 'Would you like to use libsass? Read up more at \n' +
             chalk.green('https://github.com/andrew/node-sass#node-sass'),
             default: true
-        }/*, {
-         type: 'list',
-         name: 'loader',
-         message: 'Which module loader would you like to use?',
-         choices: [
-         {name: 'RequireJS', value: 'requirejs', checked: true},
-         {name: 'Browserify', value: 'browserify'}
-         ]
-         }*/];
+        }, {
+            type: 'list',
+            name: 'loader',
+            message: 'Which module loader would you like to use?',
+            when: function(){ return this.globalJspm;}.bind(this),
+            choices: [
+                {name: 'RequireJS', value: 'requirejs', checked: true},
+                {name: 'SystemJS (jspm)', value: 'jspm'}
+            ]
+        }];
 
         this.prompt(prompts, function (props) {
             var has = _.partial(hasFeature, props);
@@ -396,8 +414,9 @@ module.exports = AppGenerator.extend({
             this.includeRubySass = this.useSass && !props.libsass;
 
             var useLoader = _.partial(has, 'loader');
-            this.useRequirejs = true;//useLoader('requirejs');
-            //this.useBrowserify = useLoader('browserify');
+            this.useRequirejs = !this.globalJspm || useLoader('requirejs');
+            this.useJspm = this.globalJspm && useLoader('jspm');
+            this.useBrowserify = useLoader('browserify');
 
             done();
         }.bind(this));
@@ -407,7 +426,7 @@ module.exports = AppGenerator.extend({
         app: function () {
             this.template('_package.json', 'package.json');
             this.template('Gruntfile.js', 'Gruntfile.js');
-            console.log('writing app');
+
             var bower = {
                 name: this._.slugify(this.appname),
                 private: true,
@@ -510,6 +529,11 @@ module.exports = AppGenerator.extend({
                     } else {
                         this.spawnCommand('php', ['composer.phar', 'install']);
                     }
+
+                    if (this.useJspm) {
+                        this.log('Getting the jspm dependencies');
+                        this.spawnCommand('jspm', ['install']);
+                    }
                 }
             }.bind(this)
         });
@@ -531,6 +555,8 @@ module.exports = AppGenerator.extend({
             this.copyFonts();
         }
 
-
+        this.log('');
+        this.log('I\'m finally all done. Run \'grunt serve\' to start your development server');
+        this.log('');
     }
 });

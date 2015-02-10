@@ -40,5 +40,18 @@
         "grunt-string-replace": "^1.0.0",
         "parseurl": "^1.3.0",
         "php-proxy-middleware": "^1.0.1"
-    }
+    }<% if (useJspm) { %>,
+    "jspm": {
+        "directories": {
+            "baseURL": "app/Resources/public",
+            "lib": "app/Resources/public/scripts",
+            "packages": "jspm_packages"
+        },
+        "configFile": "app/Resources/public/scripts/config.js",
+        "dependencies": {
+            "jquery": "^2.1.3",
+            "loglevel": "npm:loglevel@^1.2.0",
+            "picturefill": "npm:picturefill@^2.2.1"
+        }
+    }<% } %>
 }
