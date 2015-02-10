@@ -1,29 +1,37 @@
 # generator-grunt-symfony [![Build Status](https://secure.travis-ci.org/bezoerb/generator-grunt-symfony.png?branch=master)](https://travis-ci.org/bezoerb/generator-grunt-symfony)
 
-## THIS IS A WIP VERSION
+This [Yeoman](http://yeoman.io) generator scaffolds a ssymfony2 app with full featured frontend tooling. 
+Just scaffold your app, run `grunt serve` and you are ready to go. This is still WiP and not feature complete yet but it's making more progress every day ;)
 
-> [Yeoman](http://yeoman.io) generator
+![The Team](https://raw.github.com/bezoerb/generator-grunt-symfony/master/app/templates/img/yo-grunt-bower-symfony.png)
 
+## Features
+* Symfony2 Framework
+* Twig Templating enging
+* Assetic removed
+* Browsersync dev server with Livereload
+* Choose the CSS Preprocessor which fits your needs
+** Sass
+** Less
+** Stylus
+** or no preprocessor at all
+* Choose CSS Framework
+** Bootstrap
+** Foundation
+** PureCSS + Suit
+* Javascript module loader
+** RequireJS
+** System.js (JSPM/ES6)
+* File revving
+
+## Things to come
+* Optimize your assets with
+** uncss (automatically strip off unused css)
+** imagemin (optimize your images for production use)
+** phpunit
+** ... feel free to add feature requests ;)
 
 ## Getting Started
-
-### What is Yeoman?
-
-Trick question. It's not a thing. It's this guy:
-
-![](http://i.imgur.com/JHaAlBJ.png)
-
-Basically, he wears a top hat, lives in your computer, and waits for you to tell him what kind of application you wish to create.
-
-Not every new computer comes with a Yeoman pre-installed. He lives in the [npm](https://npmjs.org) package repository. You only have to ask for him once, then he packs up and moves into your hard drive. *Make sure you clean up, he likes new and shiny things.*
-
-```bash
-npm install -g yo
-```
-
-### Yeoman Generators
-
-Yeoman travels light. He didn't pack any generators when he moved in. You can think of a generator like a plug-in. You get to choose what type of application you wish to create, such as a Backbone application or even a Chrome extension.
 
 To install generator-grunt-symfony from npm, run:
 
@@ -36,6 +44,28 @@ Finally, initiate the generator:
 ```bash
 yo grunt-symfony
 ```
+
+### Environments
+The browsersync server uses it's own symfony environment to prevent asset loading conflicts with the environment loaded via apache2. 
+
+### Directory structure
+The directory structure is based on the [Symfony Best Practices](http://symfony.com/doc/current/best_practices/index.html)
+#### Dev
+* Assets are located in `app/Resources/public` 
+* Templates can be found in `app/Resources/views` 
+#### Production
+* All production assets are located in the `web` folder.
+* 
+Run `grunt build` to compile, optimize and rev your assets for production.
+
+### Use with JSPM 
+To use this generator with jspm you need to install jspm globally
+```bash
+npm install -g jspm
+```
+When the generator detects a globally installed jspm version it will offer you to choose between jspm and requirejs.
+A basic js setup 
+
 
 ### Getting To Know Yeoman
 
