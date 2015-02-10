@@ -1,6 +1,6 @@
 # generator-grunt-symfony [![Build Status](https://secure.travis-ci.org/bezoerb/generator-grunt-symfony.png?branch=master)](https://travis-ci.org/bezoerb/generator-grunt-symfony)
 
-## THIS IS A PRE-ALPHA VERSION
+## THIS IS A WIP VERSION
 
 > [Yeoman](http://yeoman.io) generator
 
