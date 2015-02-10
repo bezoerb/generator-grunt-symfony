@@ -1,5 +1,21 @@
-<% if (useBootstrap) { %> @import "/bootstrap-stylus/bootstrap" <% } else if (useFoundation) { %>@import "/foundation/css/foundation.css";<% } %>
+<% if (useBootstrap) { %> @import "/bootstrap-stylus/bootstrap" <% } else if (useFoundation) { %>@import "/foundation/css/foundation.css";<% } else if (usePure) { %>@import "/pure/pure.css";
+@import "/suit-utils-layout/lib/layout.css";<% } %>
 <% if (!useBootstrap) { %> @import "/sass-bootstrap-glyphicons/css/bootstrap-glyphicons.css"; <% } %>
+
+<% if (usePure) { %>
+.pure-g
+    padding: 15px 20px;
+
+.button-success
+    background: rgb(28, 184, 65);
+
+.hero
+    background: #eee;
+
+.container
+    max-width: 1024px;
+    margin: 0 auto;
+<% } %>
 
 .header
     height: 50px;

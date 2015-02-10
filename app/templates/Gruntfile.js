@@ -45,7 +45,8 @@ module.exports = function(grunt) {
             css: {
                 src: [
                     '<% if (useBootstrap) { %>bower_components/bootstrap/dist/css/bootstrap.css<% } else if (useFoundation) { %>bower_components/foundation/css/foundation.css<% } else if (usePure) { %>bower_components/pure/pure.css<% } %>',
-                    <% if (!useBootstrap) { %>'bower_components/sass-bootstrap-glyphicons/css/bootstrap-glyphicons.css',
+                    <% if (usePure) { %>'bower_components/suit-utils-layout/lib/layout.css',
+                    <% } %><% if (!useBootstrap) { %>'bower_components/sass-bootstrap-glyphicons/css/bootstrap-glyphicons.css',
                     <% } %>'<%%= config.app %>/styles/{,*/}*.css'],
                 dest: '.tmp/styles/main.css'
             }
@@ -114,6 +115,7 @@ module.exports = function(grunt) {
                 },
                 options: {
                     paths: ['bower_components'],
+                    'include css':true,
                     use: [
                         require('nib'),      //  that is compiled. These might be findable based on values you gave
                         function() { return require('autoprefixer-stylus')({

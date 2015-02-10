@@ -1,5 +1,24 @@
-<% if (useBootstrap) { %>@import "bootstrap/less/bootstrap"; <% } else if (useFoundation) { %>@include "/foundation/css/foundation.css";<% } %>
+<% if (useBootstrap) { %>@import "bootstrap/less/bootstrap"; <% } else if (useFoundation) { %>@include "/foundation/css/foundation.css";<% }  else if (usePure) { %>@include "pure/pure.css";
+@include "suit-utils-layout/lib/layout.css";<% } %>
 <% if (!useBootstrap) { %>@include "sass-bootstrap-glyphicons/less/bootstrap-glyphicons";<% } %>
+
+<% if (usePure) { %>
+.pure-g {
+    padding: 15px 20px;
+}
+
+.button-success {
+    background: rgb(28, 184, 65);
+}
+
+.hero {
+    background: #eee;
+}
+
+.container {
+    max-width: 1024px;
+    margin: 0 auto;
+}<% } %>
 
 .header {
     height: 50px;

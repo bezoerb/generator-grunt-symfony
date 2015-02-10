@@ -119,5 +119,60 @@
             </div>
 
         </div>
+    <% } else if (usePure) { %>
+        <div class="container">
+            <div class="header">
+                <div class="pure-menu pure-menu-open pure-menu-horizontal u-cf">
+                    <a href="#" class="pure-menu-heading"><%= appname %></a>
+
+                    <ul class="u-floatRight">
+                        <li class="pure-menu-selected"><a href="#">Home</a></li>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="pure-g hero">
+                <div class="pure-u-1-2">
+                    <h1>'Allo, 'Allo!</h1>
+                    <p class="lead">Always a pleasure scaffolding your apps.</p>
+                    <p><a class="button-success pure-button" href="#">Splendid! <span class="glyphicon glyphicon-ok"></span></a></p>
+                </div>
+                <div class="pure-u-1-2">
+                    <img class="yeoman-team" src="/img/yo-grunt-bower-symfony.png" alt=""/>
+                </div>
+            </div>
+
+            <div class="pure-g marketing">
+                <div class="pure-u-1-2">
+                    <h4>Symfony</h4>
+                    <p>High Performance PHP Framework for Web Development</p>
+                    <h4>Browsersync</h4>
+                    <p>Keep multiple browsers & devices in sync when building websites.</p>
+
+                    <% if (useLess) { %><h4>Less</h4>
+                    <p>Less is a mature, stable, and powerful professional grade CSS extension language.</p>
+                    <% } else if (useSass) { %><h4>Sass</h4>
+                    <p>Sass is a mature, stable, and powerful professional grade CSS extension language.</p>
+                    <% } else if (useStylus) { %><h4>Stylus</h4>
+                    <p>Stylus is a revolutionary new language, providing an efficient, dynamic, and expressive way to generate CSS. Supporting both an indented syntax and regular CSS style.</p>
+                    <% } %>
+
+                    <h4>PureCSS</h4>
+                    <p>A set of small, responsive CSS modules with a minimal footprint</p>
+
+                    <h4>Suit</h4>
+                    <p>Modular style tools for UI components</p>
+                </div>
+            </div>
+
+            <div class="pure-g footer">
+                <div class="pure-u-1-2">
+                <p><span class="glyphicon glyphicon-heart"></span> from the Yeoman team</p>
+                </div>
+            </div>
+
+        </div>
     <% } %>
 {% endblock %}
