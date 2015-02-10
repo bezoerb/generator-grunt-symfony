@@ -4,19 +4,23 @@
         <meta charset="UTF-8" />
         <title>{% block title %}Welcome!{% endblock %}</title>
         {% block stylesheets %}
-            <link rel="stylesheet" href="styles/main.css"/>
+            {% if app.environment == 'node' %}
+                <link rel="stylesheet" href="styles/main.css?no-rev"/>
+            {% else %}
+                <link rel="stylesheet" href="styles/main.css"/>
+            {% endif %}
         {% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     </head>
     <body>
         {% block body %}{% endblock %}
-        {% block javascripts %}<% if (useRequirejs) { %>
-            {% if app.environment == 'dev' %}
+        {% block javascripts %}
+            {% if app.environment == 'node' %}
                 <script type="text/javascript" src="scripts/config.js"></script>
                 <script type="text/javascript" data-main="main" src="bower_components/requirejs/require.js"></script>
             {% else %}
-                <script type="text/javascript" src="/scripts/all.js"></script>
+                <script type="text/javascript" src="/scripts/main.js"></script>
             {% endif %}
-        <% } %>{% endblock %}
+        {% endblock %}
     </body>
 </html>

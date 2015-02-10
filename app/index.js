@@ -132,6 +132,11 @@ var AppGenerator = yeoman.generators.Base.extend({
         fs.unlinkSync(this.destinationPath('app/config/routing.yml'));
         fse.copySync(this.templatePath('symfony/routing.yml'), 'app/config/routing.yml');
 
+        fse.copySync(this.templatePath('symfony/config_node.yml'), 'app/config/config_node.yml');
+
+        fs.unlinkSync(this.destinationPath('web/app.php'));
+        fse.copySync(this.templatePath('symfony/app.php'), 'web/app.php');
+        
         done();
     },
 

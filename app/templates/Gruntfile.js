@@ -16,10 +16,14 @@ module.exports = function(grunt) {
 
     var phpMiddleware = php({
         address: '0.0.0.0', // which interface to bind to
-        ini: {max_execution_time: 60, error_log: '...'},
+        ini: {max_execution_time: 60, variables_order:'EGPCS'},
         root: appConfig.dist,
-        router: path.join(appConfig.dist, 'app_dev.php')
+        router: path.join(appConfig.dist, 'app.php')
     });
+
+    // Set env to detect browsersync webserver in symfony
+    process.env['SYMFONY_ENV'] = 'node';
+    process.env['SYMFONY_DEBUG'] = 1;
 
     // Project configuration.
     grunt.initConfig({
@@ -161,7 +165,7 @@ module.exports = function(grunt) {
         usemin: {
             css: ['web/styles/**/*.css'],
             js: ['web/scripts/**/*.js'],
-            html: 'app/Resources/views/base.html.twig',
+            html: 'app/Resources/views/**/*.html.twig',
             options: {
                 assetsDirs: ['web']
             }
