@@ -23,11 +23,11 @@ Just scaffold your app, run `grunt serve` and you are ready to go. This is still
 ** RequireJS
 ** System.js (JSPM/ES6)
 * File revving
+* Image optimization
 
 ## Things to come
 * Optimize your assets with
 ** uncss (automatically strip off unused css)
-** imagemin (optimize your images for production use)
 ** phpunit
 ** ... feel free to add feature requests ;)
 
