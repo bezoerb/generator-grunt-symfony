@@ -21,21 +21,26 @@ module.exports = function(grunt) {
         router: path.join(appConfig.dist, 'app.php')
     });
 
-    // Set env to detect browsersync webserver in symfony
-    process.env['SYMFONY_ENV'] = 'node';
-    process.env['SYMFONY_DEBUG'] = 1;
 
     // Project configuration.
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         config: appConfig,
         clean: {
-            css: ['web/styles'],
-            js: ['web/scripts']
+            css: ['<%%= config.dist %>/styles'],
+            js: ['<%%= config.dist %>/scripts'],
+            img: ['<%%= config.dist %>/img']
         },
 
-        exec: {
-            sfcl: 'php app/console cache:clear -e prod'
+        watch: {
+            styles: {
+                files: ['<%%= config.app %>/styles/{,*/}*.<% if (useLess) { %>less<% } else if (useStylus) { %>styl<% } else if (useSass) { %>{scss,sass}<% } else if (noPreprocessor) { %>css<% } %>'],
+                tasks: ['<% if (useLess) { %>less<% } else if (useStylus) { %>stylus<% } else if (useSass) { %>sass','autoprefixer<% } else if (noPreprocessor) { %>concat:css','autoprefixer<% } %>']
+            },
+            scripts: {
+                files: ['<%%= config.app %>/scripts/**/*.js'],
+                tasks: ['jshint']
+            }
         },
 
         /**
@@ -144,11 +149,8 @@ module.exports = function(grunt) {
                 }],
                 options: {
                     replacements: [{
-                        pattern: /\/main\.[\w\d]+\.css/,
-                        replacement: '/main.css'
-                    },{
-                        pattern: /\/main\.[\w\d]+\.js/,
-                        replacement: '/main.js'
+                        pattern: /\.[\w\d]{8}\.(css|js|jpg|jpeg|gif|png|webp)/,
+                        replacement: '.$1'
                     }]
                 }
             }
@@ -158,8 +160,8 @@ module.exports = function(grunt) {
             dist: {
                 src: [
                     'web/img/**/*.{jpg,jpeg,gif,png,webp}',
-                    'web/styles/*.css',
-                    'web/scripts/*.js'
+                    'web/styles/main.css',
+                    'web/scripts/main.js'
                 ]
             }
         },
@@ -170,17 +172,6 @@ module.exports = function(grunt) {
             html: 'app/Resources/views/**/*.html.twig',
             options: {
                 assetsDirs: ['web']
-            }
-        },
-
-        watch: {
-            styles: {
-                files: ['<%%= config.app %>/styles/{,*/}*.<% if (useLess) { %>less<% } else if (useStylus) { %>styl<% } else if (useSass) { %>{scss,sass}<% } else if (noPreprocessor) { %>css<% } %>'],
-                tasks: ['<% if (useLess) { %>less<% } else if (useStylus) { %>stylus<% } else if (useSass) { %>sass','autoprefixer<% } else if (noPreprocessor) { %>concat:css','autoprefixer<% } %>']
-            },
-            scripts: {
-                files: ['<%%= config.app %>/scripts/**/*.js'],
-                tasks: ['jshint']
             }
         },
 
@@ -261,10 +252,57 @@ module.exports = function(grunt) {
                 }
             }
         },<% } %>
-
+        exec: {
+            sfcl: 'php app/console cache:clear -e prod'<% if (useJspm) { %>,
+            jspm: 'jspm bundle-sfx scripts/main .tmp/scripts/main.js'<% } %>
+        },<% if (useJspm) { %>
+        uglify: {
+            dist: {
+                files: {
+                    '<%%= config.dist %>/scripts/main.js': ['.tmp/scripts/main.js']
+                }
+            }
+        },<% } %>
+        // image optimization
+        imagemin: {
+            dist: {
+                files: [{
+                    expand: true,
+                    cwd: '<%%= config.app %>/img',
+                    src: ['**/*.{png,jpg,gif}'],
+                    dest: '<%%= config.dist %>/img'
+                }]
+            }
+        },
+        svgmin: {
+            dist: {
+                files: [{
+                    expand: true,
+                    cwd: '<%%= config.app %>/img',
+                    src: '{,*/}*.svg',
+                    dest: '<%%= config.dist %>/img'
+                }]
+            }
+        },
+        // Copies remaining files to places other tasks can use
+        copy: {
+            dist: {
+                files: [{
+                    expand: true,
+                    dot: true,
+                    cwd: '<%%= config.app %>',
+                    dest: '<%%= config.dist %>',
+                    src: [
+                        '*.{ico,png,txt}',
+                        'img/{,*/}*.webp',
+                        'fonts/{,*/}*.*'
+                    ]
+                }]
+            }
+        },
         // Server
         browserSync: {
-            dist: {
+            dev: {
                 bsFiles: {
                     src: [
                         appConfig.app + '/scripts/**/*.js',
@@ -275,7 +313,7 @@ module.exports = function(grunt) {
                 },
                 options: {
                     server: {
-                        baseDir: ['.tmp', appConfig.app, './', 'bower_components', appConfig.dist],
+                        baseDir: ['.tmp', appConfig.app, './', 'bower_components',appConfig.dist],
                         middleware: [
                             function(req, res, next) {
                                 var obj = parseurl(req);
@@ -292,7 +330,34 @@ module.exports = function(grunt) {
                     notify: true,
                     open: true,
                     ghostMode: {
-                        clicks: true,
+                    clicks: true,
+                        scroll: true,
+                        links: true,
+                        forms: true
+                    }
+                }
+            },
+            dist: {
+                options: {
+                    server: {
+                        baseDir: [appConfig.dist],
+                        middleware: [
+                            function(req, res, next) {
+                                var obj = parseurl(req);
+                                if (!/\.\w{2,4}$/.test(obj.pathname) || /\.php/.test(obj.pathname)) {
+                                    phpMiddleware(req, res, next);
+                                } else {
+                                    next();
+                                }
+                            }
+                        ]
+                    },
+                    port: 8000,
+                    watchTask: true,
+                    notify: true,
+                    open: true,
+                    ghostMode: {
+                    clicks: true,
                         scroll: true,
                         links: true,
                         forms: true
@@ -303,21 +368,33 @@ module.exports = function(grunt) {
 
     });
 
-    grunt.registerTask('serve', [
-        '<% if (useLess) { %>less<% } else if (useStylus) { %>stylus<% } else if (useSass) { %>sass','autoprefixer<% } else if (noPreprocessor) { %>concat:css','autoprefixer<% } %>',
-        'browserSync:dist', // Using the php middleware
-        'watch'             // Any other watch tasks you want to run
-    ]);
+
+    grunt.registerTask('serve', function(target) {
+        if (target === 'dist') {
+            grunt.task.run(['assets']);
+
+            // Set env to prod in symfony
+            process.env['SYMFONY_ENV'] = 'prod';
+            process.env['SYMFONY_DEBUG'] = 0;
+        } else {
+            target = 'dev';
+            grunt.task.run(['<% if (useLess) { %>less<% } else if (useStylus) { %>stylus<% } else if (useSass) { %>sass','autoprefixer<% } else if (noPreprocessor) { %>concat:css','autoprefixer<% } %>']);
+
+            // Set env to node in symfony for browsersync webserver
+            process.env['SYMFONY_ENV'] = 'node';
+            process.env['SYMFONY_DEBUG'] = 1;
+        }
+
+        grunt.task.run([
+            'browserSync:'+ target, // Using the php middleware
+            'watch'                 // Any other watch tasks you want to run
+        ]);
+    });
 
     grunt.registerTask('css', ['clean:css','<% if (useLess) { %>less<% } else if (useStylus) { %>stylus<% } else if (useSass) { %>sass','autoprefixer<% } else if (noPreprocessor) { %>concat:css','autoprefixer<% } %>', 'cssmin']);
-    grunt.registerTask('js', ['clean:js', 'jshint', 'bowerRequirejs', 'requirejs']);
+    grunt.registerTask('js', ['clean:js', 'jshint', '<% if (useRequirejs) { %>bowerRequirejs', 'requirejs<% } else if (useJspm) { %>exec:jspm', 'uglify:dist<% } %>']);
+    grunt.registerTask('img', ['clean:img','imagemin','svgmin']);
     grunt.registerTask('rev', ['string-replace', 'filerev', 'usemin']);
-
-    grunt.registerTask('assets', ['js', 'css', 'rev', 'exec:sfcl']);
-
-    grunt.registerTask('build', ['assets', 'exec:sfcl']);
-
-
-
-
+    grunt.registerTask('assets', ['js', 'css', 'img', 'rev', 'copy','exec:sfcl']);
+    grunt.registerTask('build', ['assets']);
 };
