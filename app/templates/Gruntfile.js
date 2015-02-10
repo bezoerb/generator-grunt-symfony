@@ -206,7 +206,7 @@ module.exports = function(grunt) {
                     useStrict: true,
                     wrap: true,
                     optimize: 'uglify2',
-                    generateSourceMaps: true
+                    generateSourceMaps: false
                 }
             }
         },<% } else if (useBrowserify) { %>
