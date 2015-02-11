@@ -163,26 +163,24 @@ var AppGenerator = yeoman.generators.Base.extend({
         fs.writeFileSync(appKernelPath, newAppKernelContents);
     },
 
-    updateParametersDist: function() {
-        if(this.useParameterDotNotation) {
-          // update parameters.yml.dist
-          var parametersDistPath = 'app/config/parameters.yml.dist';
-          var parametersDistContents = this.readFileAsString(parametersDistPath);
+    updateParametersDist: function () {
+        // update parameters.yml.dist
+        var parametersDistPath = 'app/config/parameters.yml.dist';
+        var parametersDistContents = this.readFileAsString(parametersDistPath);
 
-          var newparametersDistContents = parametersDistContents.replace(/(database|mailer)_(.*):/g, '$1.$2:');
+        var newparametersDistContents = parametersDistContents.replace(/(database|mailer)_(.*):/g, '$1.$2:');
 
-          fs.unlinkSync(parametersDistPath);
-          fs.writeFileSync(parametersDistPath, newparametersDistContents);
+        fs.unlinkSync(parametersDistPath);
+        fs.writeFileSync(parametersDistPath, newparametersDistContents);
 
-          // update config.yml
-          var configPath = 'app/config/config.yml';
-          var configContent = this.readFileAsString(configPath);
+        // update config.yml
+        var configPath = 'app/config/config.yml';
+        var configContent = this.readFileAsString(configPath);
 
-          var newconfigContent = configContent.replace(/%(database|mailer)_(.*)%/g, '%$1.$2%');
+        var newconfigContent = configContent.replace(/%(database|mailer)_(.*)%/g, '%$1.$2%');
 
-          fs.unlinkSync(configPath);
-          fs.writeFileSync(configPath, newconfigContent);
-        }
+        fs.unlinkSync(configPath);
+        fs.writeFileSync(configPath, newconfigContent);
     },
 
     updateView: function () {
@@ -366,11 +364,6 @@ module.exports = AppGenerator.extend({
             message: 'Commit (commit/branch/tag)',
             default: this.symfonyDefaults.commit,
             when: symfonyCustom
-        }, {
-            type: 'confirm',
-            name: 'useParameterDotNotation',
-            message: 'Would you like to use the dot notation in your parameters file for database and mailer options?',
-            default: false
         }, /* {
          type: 'confirm',
          name: 'symfonyAcme',
@@ -412,7 +405,9 @@ module.exports = AppGenerator.extend({
             type: 'list',
             name: 'loader',
             message: 'Which module loader would you like to use?',
-            when: function(){ return this.globalJspm;}.bind(this),
+            when: function () {
+                return this.globalJspm;
+            }.bind(this),
             choices: [
                 {name: 'RequireJS', value: 'requirejs', checked: true},
                 {name: 'SystemJS (jspm)', value: 'jspm'}
@@ -424,7 +419,6 @@ module.exports = AppGenerator.extend({
 
             // set symfony repository and demoBundle option
             this.setSymfonyDistribution(props);
-            this.useParameterDotNotation = props.useParameterDotNotation;
 
             var useFramework = _.partial(has, 'framework');
             this.noFramework = useFramework('noframework');
