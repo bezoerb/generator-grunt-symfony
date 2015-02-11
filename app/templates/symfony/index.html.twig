@@ -40,9 +40,12 @@
                 <% } else if (useStylus) { %><h4>Stylus</h4>
                 <p>Stylus is a revolutionary new language, providing an efficient, dynamic, and expressive way to generate CSS. Supporting both an indented syntax and regular CSS style.</p>
                 <% } %>
-
                 <h4>Bootstrap</h4>
                 <p>Sleek, intuitive, and powerful mobile first front-end framework for faster and easier web development.</p>
+                <% if (useRequirejs) { %><h4>RequireJS</h4>
+                <p>A JavaScript file and module loader optimized for in-browser use.</p><% } %>
+                <% if (useJspm) { %><h4>JSPM</h4>
+                <p>jspm is a package manager for the SystemJS universal module loader, built on top of the dynamic ES6 module loader</p><% } %>
             </div>
         </div>
 
@@ -108,9 +111,12 @@
                     <% } else if (useStylus) { %><h4>Stylus</h4>
                     <p>Stylus is a revolutionary new language, providing an efficient, dynamic, and expressive way to generate CSS. Supporting both an indented syntax and regular CSS style.</p>
                     <% } %>
-
                     <h4>Foundation</h4>
                     <p>Sleek, intuitive, and powerful mobile first front-end framework for faster and easier web development.</p>
+                    <% if (useRequirejs) { %><h4>RequireJS</h4>
+                    <p>A JavaScript file and module loader optimized for in-browser use.</p><% } %>
+                    <% if (useJspm) { %><h4>JSPM</h4>
+                    <p>jspm is a package manager for the SystemJS universal module loader, built on top of the dynamic ES6 module loader</p><% } %>
                 </div>
             </div>
 
@@ -158,12 +164,14 @@
                     <% } else if (useStylus) { %><h4>Stylus</h4>
                     <p>Stylus is a revolutionary new language, providing an efficient, dynamic, and expressive way to generate CSS. Supporting both an indented syntax and regular CSS style.</p>
                     <% } %>
-
                     <h4>PureCSS</h4>
                     <p>A set of small, responsive CSS modules with a minimal footprint</p>
-
                     <h4>Suit</h4>
                     <p>Modular style tools for UI components</p>
+                    <% if (useRequirejs) { %><h4>RequireJS</h4>
+                    <p>A JavaScript file and module loader optimized for in-browser use.</p><% } %>
+                    <% if (useJspm) { %><h4>JSPM</h4>
+                    <p>jspm is a package manager for the SystemJS universal module loader, built on top of the dynamic ES6 module loader</p><% } %>
                 </div>
             </div>
 
@@ -176,7 +184,7 @@
         </div>
     <% } else { %>
     <div class="container">
-            <h1><%%= appname %></h1>
+            <h1><%= appname %></h1>
 
             <div>
                 <h2>'Allo, 'Allo!</h2>
@@ -186,10 +194,10 @@
 
 
             <pre class="marketing">
-                <h4>Symfony</h4>
-                <p>High Performance PHP Framework for Web Development</p>
-                <h4>Browsersync</h4>
-                <p>Keep multiple browsers & devices in sync when building websites.</p>
+                 <h4>Symfony</h4>
+                 <p>High Performance PHP Framework for Web Development</p>
+                 <h4>Browsersync</h4>
+                 <p>Keep multiple browsers & devices in sync when building websites.</p>
 
                 <% if (useLess) { %><h4>Less</h4>
                 <p>Less is a mature, stable, and powerful professional grade CSS extension language.</p>
@@ -198,12 +206,10 @@
                 <% } else if (useStylus) { %><h4>Stylus</h4>
                 <p>Stylus is a revolutionary new language, providing an efficient, dynamic, and expressive way to generate CSS. Supporting both an indented syntax and regular CSS style.</p>
                 <% } %>
-
-                <h4>PureCSS</h4>
-                <p>A set of small, responsive CSS modules with a minimal footprint</p>
-
-                <h4>Suit</h4>
-                <p>Modular style tools for UI components</p>
+                <% if (useRequirejs) { %><h4>RequireJS</h4>
+                <p>A JavaScript file and module loader optimized for in-browser use.</p><% } %>
+                <% if (useJspm) { %><h4>JSPM</h4>
+                <p>jspm is a package manager for the SystemJS universal module loader, built on top of the dynamic ES6 module loader</p><% } %>
             </pre>
 
             <div class="footer">
