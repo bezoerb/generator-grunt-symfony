@@ -174,5 +174,43 @@
             </div>
 
         </div>
+    <% } else { %>
+    <div class="container">
+            <h1><%== appname %></h1>
+
+            <div>
+                <h2>'Allo, 'Allo!</h2>
+                <p class="lead">Always a pleasure scaffolding your apps.</p>
+            </div>
+            <img class="yeoman-team" src="/img/yo-grunt-bower-symfony.png" alt=""/>
+
+
+            <pre class="marketing">
+                <h4>Symfony</h4>
+                <p>High Performance PHP Framework for Web Development</p>
+                <h4>Browsersync</h4>
+                <p>Keep multiple browsers & devices in sync when building websites.</p>
+
+                <% if (useLess) { %><h4>Less</h4>
+                <p>Less is a mature, stable, and powerful professional grade CSS extension language.</p>
+                <% } else if (useSass) { %><h4>Sass</h4>
+                <p>Sass is a mature, stable, and powerful professional grade CSS extension language.</p>
+                <% } else if (useStylus) { %><h4>Stylus</h4>
+                <p>Stylus is a revolutionary new language, providing an efficient, dynamic, and expressive way to generate CSS. Supporting both an indented syntax and regular CSS style.</p>
+                <% } %>
+
+                <h4>PureCSS</h4>
+                <p>A set of small, responsive CSS modules with a minimal footprint</p>
+
+                <h4>Suit</h4>
+                <p>Modular style tools for UI components</p>
+            </pre>
+
+            <div class="footer">
+                    <p> from the Yeoman team</p>
+
+            </div>
+
+        </div>
     <% } %>
 {% endblock %}
