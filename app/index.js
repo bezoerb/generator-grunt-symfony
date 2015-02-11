@@ -9,7 +9,6 @@ var path = require('path');
 var exec = require('child_process').exec;
 var yaml = require('js-yaml');
 var rimraf = require('rimraf');
-var glob = require("glob");
 var fse = require('fs-extra');
 
 
