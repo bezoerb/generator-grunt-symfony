@@ -2,13 +2,13 @@
 0.0.6 / 2015-02-11
 ==================
 
+  * Fixed ruby-sass configuration
   * Minor tweaks
   * Cleanup, fixes #3
   * Added info to jspm & requirejs
   * Basic template for noframework option
-  * default to dot notation
-  * added some tests
-  * cleanup
+  * Default to dot notation
+  * Added some tests
   * Merge pull request #1 from futjikato/symfony-parameters-patch-1
   * Remove sourcemap generation for requirejs
   * Added choice to use dot-notation in parameters.
