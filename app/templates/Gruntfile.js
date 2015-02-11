@@ -48,8 +48,8 @@ module.exports = function(grunt) {
          */<% if (noPreprocessor) { %>
         concat: {
             css: {
-                src: [
-                    '<% if (useBootstrap) { %>bower_components/bootstrap/dist/css/bootstrap.css<% } else if (useFoundation) { %>bower_components/foundation/css/foundation.css<% } else if (usePure) { %>bower_components/pure/pure.css<% } %>',
+                src: [<% if (useBootstrap || useFoundation || usePure) { %>
+                    '<% if (useBootstrap) { %>bower_components/bootstrap/dist/css/bootstrap.css<% } else if (useFoundation) { %>bower_components/foundation/css/foundation.css<% } else if (usePure) { %>bower_components/pure/pure.css<% } %>',<% } %>
                     <% if (usePure) { %>'bower_components/suit-utils-layout/lib/layout.css',
                     <% } %><% if (!useBootstrap) { %>'bower_components/sass-bootstrap-glyphicons/css/bootstrap-glyphicons.css',
                     <% } %>'<%%= config.app %>/styles/{,*/}*.css'],
