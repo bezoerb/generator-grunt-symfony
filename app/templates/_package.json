@@ -8,7 +8,9 @@
         "grunt-contrib-clean": "^0.6.0",
         "grunt-contrib-copy": "^0.7.0",
         "grunt-contrib-cssmin": "^0.11.0",
-        "grunt-contrib-imagemin": "^0.9.2",
+        "grunt-contrib-imagemin": "^0.9.2",<% if (noPreprocessor) { %>
+        "grunt-contrib-concat": "^0.5.0",<% } if (useSass || noPreprocessor) { %>
+        "grunt-autoprefixer": "^1.0.0",<% } %>
         "grunt-contrib-jshint": "^0.11.0",<% if (includeRubySass) { %>
         "grunt-contrib-sass": "^0.7.3",<% } else if (includeLibSass) { %>
         "grunt-sass": "^0.17.0",<% } if (useLess) { %>
@@ -17,8 +19,6 @@
         "grunt-bower-requirejs": "^2.0.0",
         "grunt-contrib-requirejs": "^0.4.4",<% } else if (useBrowserify) { %>
         "browserify": "^8.1.3",
-        "grunt-contrib-concat": "^0.5.0",
-        "grunt-autoprefixer": "^1.0.0",
         "deamdify": "^0.1.1",
         "debowerify": "^1.2.0",
         "6to5ify": "^4.1.0",
