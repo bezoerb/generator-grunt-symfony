@@ -8,7 +8,6 @@ var _ = require('lodash');
 var path = require('path');
 var exec = require('child_process').exec;
 var yaml = require('js-yaml');
-var rimraf = require('rimraf');
 var fse = require('fs-extra');
 
 
@@ -118,10 +117,9 @@ var AppGenerator = yeoman.generators.Base.extend({
         delete composerParse.require['symfony/assetic-bundle'];
         var data = JSON.stringify(composerParse, null, 4);
 
-        rimraf(this.templatePath('composer.json'), function () {
-            fs.writeFileSync('composer.json', data);
-            done();
-        });
+        fse.deleteSync(this.templatePath('composer.json'));
+        fs.writeFileSync('composer.json', data);
+        done();
     },
 
     cleanConfig: function () {
@@ -186,22 +184,23 @@ var AppGenerator = yeoman.generators.Base.extend({
     updateView: function () {
         var cb = this.async();
 
-        rimraf(this.destinationPath('app/Resources/views/*'), function () {
-            this.mkdir(this.destinationPath('app/Resources/views/controller/default'));
+        fse.removeSync(this.destinationPath('app/Resources/views'));
+        fse.mkdirsSync(this.destinationPath('app/Resources/views/controller/default'));
 
-            // copy base template
-            var templateContent = this.readFileAsString(this.templatePath('symfony/base.html.twig'));
-            fs.writeFileSync('app/Resources/views/base.html.twig', this.engine(templateContent, this));
-
-
-            // copy default action template
-            var actionContent = this.readFileAsString(this.templatePath('symfony/index.html.twig'));
-            fs.writeFileSync('app/Resources/views/controller/default/index.html.twig', this.engine(actionContent, this));
+        // copy base template
+        var templateContent = this.readFileAsString(this.templatePath('symfony/base.html.twig'));
+        fs.writeFileSync('app/Resources/views/base.html.twig', this.engine(templateContent, this));
 
 
-            fse.copySync(this.templatePath('img'), 'app/Resources/public/img/');
-            cb();
-        }.bind(this));
+        // copy default action template
+        var actionContent = this.readFileAsString(this.templatePath('symfony/index.html.twig'));
+        fs.writeFileSync('app/Resources/views/controller/default/index.html.twig', this.engine(actionContent, this));
+
+
+        fse.copySync(this.templatePath('img'), 'app/Resources/public/img/');
+
+
+        cb();
 
     },
 
@@ -470,6 +469,8 @@ module.exports = AppGenerator.extend({
                 bower.dependencies.pure = '~0.5.0';
                 bower.dependencies.suit = '~0.6.0';
                 bower.dependencies.jquery = '~2.1.3';
+            } else {
+                bower.dependencies.jquery = '~2.1.3';
             }
 
             // add standalone glyphicons if bootstrap is not used
@@ -482,7 +483,6 @@ module.exports = AppGenerator.extend({
                 bower.dependencies.almond = '~0.3.0';
             }
 
-
             bower.dependencies.loglevel = '~1.2.0';
             bower.dependencies.picturefill = '~2.1.0';
             bower.dependencies.modernizr = '~2.8.3';
@@ -491,9 +491,7 @@ module.exports = AppGenerator.extend({
                 this.templatePath('bowerrc'),
                 this.destinationPath('.bowerrc')
             );
-
             this.write('bower.json', JSON.stringify(bower, null, 2));
-
         },
 
         projectfiles: function () {
@@ -505,6 +503,8 @@ module.exports = AppGenerator.extend({
                 this.templatePath('jshintrc'),
                 this.destinationPath('.jshintrc')
             );
+
+
         },
 
 
@@ -575,6 +575,15 @@ module.exports = AppGenerator.extend({
         // copy fonts
         if (!this.skipInstall) {
             this.copyFonts();
+        }
+
+        // add postinstall script here before Gruntfile is not available during initial bower install
+        if (this.useRequirejs) {
+            var bowerrc = fse.readJsonSync(this.destinationPath('.bowerrc'));
+            bowerrc.scripts = {
+                'postinstall': 'grunt bowerRequirejs'
+            };
+            fs.writeFileSync('.bowerrc', JSON.stringify(bowerrc, null, 2));
         }
 
         this.log('');

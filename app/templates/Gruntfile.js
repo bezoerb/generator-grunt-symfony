@@ -21,6 +21,34 @@ module.exports = function(grunt) {
         router: path.join(appConfig.dist, 'app.php')
     });
 
+    // just a helper to prevent double config
+    function bsOptions() {
+        return {
+            server: {
+                baseDir: Array.prototype.slice.call(arguments),
+                middleware: [
+                    function(req, res, next) {
+                        var obj = parseurl(req);
+                        if (!/\.\w{2,4}$/.test(obj.pathname) || /\.php/.test(obj.pathname)) {
+                            phpMiddleware(req, res, next);
+                        } else {
+                            next();
+                        }
+                    }
+                ]
+            },
+            port: 8000,
+            watchTask: true,
+            notify: true,
+            open: true,
+            ghostMode: {
+                clicks: true,
+                scroll: true,
+                links: true,
+                forms: true
+            }
+        };
+    }
 
     // Project configuration.
     grunt.initConfig({
@@ -48,30 +76,17 @@ module.exports = function(grunt) {
          */<% if (noPreprocessor) { %>
         concat: {
             css: {
-                src: [
-                    '<% if (useBootstrap) { %>bower_components/bootstrap/dist/css/bootstrap.css<% } else if (useFoundation) { %>bower_components/foundation/css/foundation.css<% } else if (usePure) { %>bower_components/pure/pure.css<% } %>',
-                    <% if (usePure) { %>'bower_components/suit-utils-layout/lib/layout.css',
-                    <% } %><% if (!useBootstrap) { %>'bower_components/sass-bootstrap-glyphicons/css/bootstrap-glyphicons.css',
-                    <% } %>'<%%= config.app %>/styles/{,*/}*.css'],
+                src: [<% if (useBootstrap) { %>
+                    'bower_components/bootstrap/dist/css/bootstrap.css',<% } else { %>
+                    'bower_components/sass-bootstrap-glyphicons/css/bootstrap-glyphicons.css',<% } if (useFoundation) { %>
+                    'bower_components/foundation/css/foundation.css',<% } if (usePure) { %>
+                    'bower_components/pure/pure.css',
+                    'bower_components/suit-utils-layout/lib/layout.css',<% } %>
+                    '<%%= config.app %>/styles/{,*/}*.css'
+                ],
                 dest: '.tmp/styles/main.css'
             }
-        },
-        autoprefixer: {
-            options: {
-                browsers: ['> 5%', 'last 2 versions', 'ie 9'],
-                map: {
-                    prev: '.tmp/styles/'
-                }
-            },
-            dist: {
-                files: [{
-                    expand: true,
-                    cwd: '.tmp/styles/',
-                    src: '{,*/}*.css',
-                    dest: '.tmp/styles/'
-                }]
-            }
-        },<% } else if (useSass) { %>
+        },<% } if (useSass) { %>
         sass: {
             options: {
                 includePaths: ['bower_components']
@@ -81,7 +96,7 @@ module.exports = function(grunt) {
                     '.tmp/styles/main.css': '<%%= config.app %>/styles/main.scss'
                 }
             }
-        },
+        },<% } if (noPreprocessor || useSass) { %>
         autoprefixer: {
             options: {
                 browsers: ['> 5%', 'last 2 versions', 'ie 9'],
@@ -97,7 +112,7 @@ module.exports = function(grunt) {
                     dest: '.tmp/styles/'
                 }]
             }
-        },<% } else if (useLess) { %>
+        },<% } if (useLess) { %>
         less: {
             dist: {
                 options: {
@@ -122,13 +137,12 @@ module.exports = function(grunt) {
                     paths: ['bower_components'],
                     'include css':true,
                     use: [
-                        require('nib'),      //  that is compiled. These might be findable based on values you gave
+                        require('nib'),
                         function() { return require('autoprefixer-stylus')({
                             browsers: ['> 5%', 'last 2 versions', 'ie 9']
                         }); }
                     ],
-                    dest: '.tmp' // Grunt ignores this, but it's required to produce the
-                    // correct relative paths, see stylus issue #1669
+                    dest: '.tmp'
                 }
             }
         },<% } %>
@@ -138,8 +152,8 @@ module.exports = function(grunt) {
                 dest: 'web/styles/main.css'
             }
         },
-
-        'string-replace': {
+        // revert rev before revving to prevent revrev
+        replace: {
             dist: {
                 files: [{
                     expand: true,
@@ -149,13 +163,12 @@ module.exports = function(grunt) {
                 }],
                 options: {
                     replacements: [{
-                        pattern: /\.[\w\d]{8}\.(css|js|jpg|jpeg|gif|png|webp)/,
+                        match: /\.[\w\d]{8}\.(css|js|jpg|jpeg|gif|png|webp)/,
                         replacement: '.$1'
                     }]
                 }
             }
         },
-
         filerev: {
             dist: {
                 src: [
@@ -311,58 +324,10 @@ module.exports = function(grunt) {
                         '.tmp/styles/*.css'
                     ]
                 },
-                options: {
-                    server: {
-                        baseDir: ['.tmp', appConfig.app, './', 'bower_components',appConfig.dist],
-                        middleware: [
-                            function(req, res, next) {
-                                var obj = parseurl(req);
-                                if (!/\.\w{2,4}$/.test(obj.pathname) || /\.php/.test(obj.pathname)) {
-                                    phpMiddleware(req, res, next);
-                                } else {
-                                    next();
-                                }
-                            }
-                        ]
-                    },
-                    port: 8000,
-                    watchTask: true,
-                    notify: true,
-                    open: true,
-                    ghostMode: {
-                    clicks: true,
-                        scroll: true,
-                        links: true,
-                        forms: true
-                    }
-                }
+                options: bsOptions('.tmp', appConfig.app, './', 'bower_components', appConfig.dist)
             },
             dist: {
-                options: {
-                    server: {
-                        baseDir: [appConfig.dist],
-                        middleware: [
-                            function(req, res, next) {
-                                var obj = parseurl(req);
-                                if (!/\.\w{2,4}$/.test(obj.pathname) || /\.php/.test(obj.pathname)) {
-                                    phpMiddleware(req, res, next);
-                                } else {
-                                    next();
-                                }
-                            }
-                        ]
-                    },
-                    port: 8000,
-                    watchTask: true,
-                    notify: true,
-                    open: true,
-                    ghostMode: {
-                    clicks: true,
-                        scroll: true,
-                        links: true,
-                        forms: true
-                    }
-                }
+                options: bsOptions(appConfig.dist)
             }
         }
 
@@ -394,7 +359,7 @@ module.exports = function(grunt) {
     grunt.registerTask('css', ['clean:css','<% if (useLess) { %>less<% } else if (useStylus) { %>stylus<% } else if (useSass) { %>sass','autoprefixer<% } else if (noPreprocessor) { %>concat:css','autoprefixer<% } %>', 'cssmin']);
     grunt.registerTask('js', ['clean:js', 'jshint', '<% if (useRequirejs) { %>bowerRequirejs', 'requirejs<% } else if (useJspm) { %>exec:jspm', 'uglify:dist<% } %>']);
     grunt.registerTask('img', ['clean:img','imagemin','svgmin']);
-    grunt.registerTask('rev', ['string-replace', 'filerev', 'usemin']);
+    grunt.registerTask('rev', ['replace', 'filerev', 'usemin']);
     grunt.registerTask('assets', ['js', 'css', 'img', 'rev', 'copy','exec:sfcl']);
     grunt.registerTask('build', ['assets']);
 };

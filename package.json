@@ -32,7 +32,6 @@
     "inquirer": "^0.8.0",
     "js-yaml": "^3.2.6",
     "lodash": "^3.1.0",
-    "rimraf": "^2.2.8",
     "yeoman-generator": "^0.18.0",
     "yosay": "^0.3.0"
   },
