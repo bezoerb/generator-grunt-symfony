@@ -587,7 +587,7 @@ module.exports = AppGenerator.extend({
         }
 
         this.log('');
-        this.log('I\'m finally all done. Run \'grunt serve\' to start your development server');
+        this.log('I\'m finally all done. Run \'grunt serve\' to start your development server or \'grunt serve:dist\' to check your prod environment');
         this.log('');
     }
 });
