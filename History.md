@@ -1,4 +1,19 @@
 
+0.0.6 / 2015-02-11
+==================
+
+  * Minor tweaks
+  * Cleanup, fixes #3
+  * Added info to jspm & requirejs
+  * Basic template for noframework option
+  * default to dot notation
+  * added some tests
+  * cleanup
+  * Merge pull request #1 from futjikato/symfony-parameters-patch-1
+  * Remove sourcemap generation for requirejs
+  * Added choice to use dot-notation in parameters.
+  * Added `grunt serve:dist` configuration
+
 0.0.5 / 2015-02-11
 ==================
 
