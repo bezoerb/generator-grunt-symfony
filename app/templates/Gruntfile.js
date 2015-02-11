@@ -88,8 +88,9 @@ module.exports = function(grunt) {
             }
         },<% } if (useSass) { %>
         sass: {
-            options: {
-                includePaths: ['bower_components']
+            options: {<% if (includeLibSass) { %>
+                includePaths: ['bower_components']<% } else { %>
+                loadPath: 'bower_components'<% } %>
             },
             all: {
                 files: {
