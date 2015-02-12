@@ -1,4 +1,9 @@
 
+0.0.7 / 2015-02-12
+==================
+
+  * Fixed dependency issue in generated package.json
+
 0.0.6 / 2015-02-11
 ==================
 
