@@ -11,25 +11,25 @@ Just scaffold your app, run `grunt serve` and you are ready to go. This is still
 * Assetic removed
 * Browsersync dev server with Livereload
 * Choose the CSS Preprocessor which fits your needs
-** Sass
-** Less
-** Stylus
-** or no preprocessor at all
+  - [Sass](http://sass-lang.com/)
+  - [Less](http://lesscss.org)
+  - [Stylus](http://learnboost.github.io/stylus/)
+  - or no preprocessor at all
 * Choose CSS Framework
-** Bootstrap
-** Foundation
-** PureCSS + Suit
+  * [Bootstrap](http://getbootstrap.com)
+  * [Foundation](http://foundation.zurb.com)
+  * [PureCSS](http://purecss.io) + [Suit](https://suitcss.github.io)
 * Javascript module loader
-** RequireJS
-** System.js (JSPM/ES6)
+  * [RequireJS](http://requirejs.org/)
+  * [JSPM](http://jspm.io/) + [SystemJS](https://github.com/systemjs/systemjs) (ES6)
 * File revving
 * Image optimization
 
 ## Things to come
 * Optimize your assets with
-** uncss (automatically strip off unused css)
-** phpunit
-** ... feel free to add feature requests ;)
+  * [uncss](https://github.com/addyosmani/grunt-uncss) (automatically strip off unused css)
+  * phpunit
+  * ... feel free to add feature requests ;)
 
 ## Getting Started
 
