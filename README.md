@@ -6,11 +6,11 @@ Just scaffold your app, run `grunt serve` and you are ready to go. This is still
 ![The Team](https://raw.github.com/bezoerb/generator-grunt-symfony/master/app/templates/img/yo-grunt-bower-symfony.png)
 
 ## Features
-* Symfony2 Framework
-* Twig Templating enging
+* Symfony2 framework
+* Twig templating enging
 * Assetic removed
-* Browsersync dev server with Livereload
-* Choose the CSS Preprocessor which fits your needs
+* Browsersync dev/prod server with livereload
+* Choose the CSS preprocessor which fits your needs
   - [Sass](http://sass-lang.com/)
   - [Less](http://lesscss.org)
   - [Stylus](http://learnboost.github.io/stylus/)
@@ -19,6 +19,7 @@ Just scaffold your app, run `grunt serve` and you are ready to go. This is still
   * [Bootstrap](http://getbootstrap.com)
   * [Foundation](http://foundation.zurb.com)
   * [PureCSS](http://purecss.io) + [Suit](https://suitcss.github.io)
+  * no framework?
 * Javascript module loader
   * [RequireJS](http://requirejs.org/)
   * [JSPM](http://jspm.io/) + [SystemJS](https://github.com/systemjs/systemjs) (ES6)
