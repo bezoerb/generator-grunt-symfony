@@ -1,47 +1,49 @@
 {
-    "name": "generator-grunt-symfony",
-    "version": "0.0.6",
-    "description": "Yeoman generator to scaffold Symfony PHP apps with full featured frontend tooling incl. browsersync",
-    "license": "MIT",
-    "main": "app/index.js",
-    "repository": "bezoerb/generator-grunt-symfony",
-    "author": {
-        "name": "Ben Zörb",
-        "email": "",
-        "url": "https://github.com/bezoerb"
-    },
-    "engines": {
-        "node": ">=0.10.0"
-    },
-    "scripts": {
-        "test": "mocha"
-    },
-    "files": [
-        "app"
-    ],
-    "keywords": [
-        "yeoman-generator",
-        "symfony",
-        "php",
-        "grunt",
-        "browsersync",
-        "jspm",
-        "requirejs",
-        "sass","less","stylus"
-    ],
-    "dependencies": {
-        "chalk": "^0.5.0",
-        "fs-extra": "^0.16.3",
-        "inquirer": "^0.8.0",
-        "js-yaml": "^3.2.6",
-        "lodash": "^3.1.0",
-        "yeoman-generator": "^0.18.0",
-        "yosay": "^0.3.0"
-    },
-    "devDependencies": {
-        "mocha": "*"
-    },
-    "peerDependencies": {
-        "yo": ">=1.0.0"
-    }
+  "name": "generator-grunt-symfony",
+  "version": "0.0.7",
+  "description": "Yeoman generator to scaffold Symfony PHP apps with full featured frontend tooling incl. browsersync",
+  "license": "MIT",
+  "main": "app/index.js",
+  "repository": "bezoerb/generator-grunt-symfony",
+  "author": {
+    "name": "Ben Zörb",
+    "email": "",
+    "url": "https://github.com/bezoerb"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "files": [
+    "app"
+  ],
+  "keywords": [
+    "yeoman-generator",
+    "symfony",
+    "php",
+    "grunt",
+    "browsersync",
+    "jspm",
+    "requirejs",
+    "sass",
+    "less",
+    "stylus"
+  ],
+  "dependencies": {
+    "chalk": "^0.5.0",
+    "fs-extra": "^0.16.3",
+    "inquirer": "^0.8.0",
+    "js-yaml": "^3.2.6",
+    "lodash": "^3.1.0",
+    "yeoman-generator": "^0.18.0",
+    "yosay": "^0.3.0"
+  },
+  "devDependencies": {
+    "mocha": "*"
+  },
+  "peerDependencies": {
+    "yo": ">=1.0.0"
+  }
 }
