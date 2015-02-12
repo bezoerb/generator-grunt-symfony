@@ -30,6 +30,7 @@ Just scaffold your app, run `grunt serve` and you are ready to go. This is still
 * Optimize your assets with
   * [uncss](https://github.com/addyosmani/grunt-uncss) (automatically strip off unused css)
   * phpunit
+  * js testsuite 
   * ... feel free to add feature requests ;)
 
 ## Getting Started
