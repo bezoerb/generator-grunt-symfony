@@ -2,6 +2,7 @@
 // <%= pkg.name %> <%= pkg.version %>
 module.exports = function(grunt) {
     require('jit-grunt')(grunt);
+    var phpMiddleware;
     <% if (useLess) { %>
     var LessPluginAutoPrefix = require('less-plugin-autoprefix');<% } %>
     var parseurl = require('parseurl');
@@ -13,13 +14,6 @@ module.exports = function(grunt) {
         app: 'app/Resources/public',
         dist: 'web'
     };
-
-    var phpMiddleware = php({
-        address: '0.0.0.0', // which interface to bind to
-        ini: {max_execution_time: 60, variables_order:'EGPCS'},
-        root: appConfig.dist,
-        router: path.join(appConfig.dist, 'app.php')
-    });
 
     // just a helper to prevent double config
     function bsOptions() {
@@ -350,6 +344,14 @@ module.exports = function(grunt) {
             process.env['SYMFONY_ENV'] = 'node';
             process.env['SYMFONY_DEBUG'] = 1;
         }
+
+        // start php middleware
+        phpMiddleware = php({
+            address: '127.0.0.1', // which interface to bind to
+            ini: {max_execution_time: 60, variables_order:'EGPCS'},
+            root: appConfig.dist,
+            router: path.join(appConfig.dist, 'app.php')
+        });
 
         grunt.task.run([
             'browserSync:'+ target, // Using the php middleware
