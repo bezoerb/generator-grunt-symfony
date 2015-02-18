@@ -21,7 +21,7 @@ var AppGenerator = yeoman.generators.Base.extend({
         var cb = this.async();
         // Check if composer is installed globally
         this.globalComposer = false;
-        exec('composser', ['-V'], function (error) {
+        exec('composer', ['-V'], function (error) {
             if (error != null && os.platform() !== 'win32') {
                 var prompts = [{
                     type: 'confirm',
