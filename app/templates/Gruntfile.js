@@ -51,7 +51,8 @@ module.exports = function(grunt) {
         clean: {
             css: ['<%%= config.dist %>/styles'],
             js: ['<%%= config.dist %>/scripts'],
-            img: ['<%%= config.dist %>/img']
+            img: ['<%%= config.dist %>/img'],
+            tmp: ['.tmp']
         },
 
         watch: {
@@ -330,6 +331,9 @@ module.exports = function(grunt) {
 
 
     grunt.registerTask('serve', function(target) {
+        // clean tmp
+        grunt.task.run(['clean:tmp']);
+
         if (target === 'dist') {
             grunt.task.run(['assets']);
 
@@ -364,5 +368,5 @@ module.exports = function(grunt) {
     grunt.registerTask('img', ['clean:img','imagemin','svgmin']);
     grunt.registerTask('rev', ['replace', 'filerev', 'usemin']);
     grunt.registerTask('assets', ['js', 'css', 'img', 'rev', 'copy','exec:sfcl']);
-    grunt.registerTask('build', ['assets']);
+    grunt.registerTask('build', ['assets','clean:tmp']);
 };
