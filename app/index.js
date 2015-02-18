@@ -2,6 +2,7 @@
 var yeoman = require('yeoman-generator');
 var chalk = require('chalk');
 var yosay = require('yosay');
+var os = require('os');
 var fs = require('fs');
 var _ = require('lodash');
 //var util = require('util');
@@ -20,8 +21,8 @@ var AppGenerator = yeoman.generators.Base.extend({
         var cb = this.async();
         // Check if composer is installed globally
         this.globalComposer = false;
-        exec('composer', ['-V'], function (error) {
-            if (error != null) {
+        exec('composser', ['-V'], function (error) {
+            if (error != null && os.platform() !== 'win32') {
                 var prompts = [{
                     type: 'confirm',
                     name: 'continue',
@@ -36,8 +37,13 @@ var AppGenerator = yeoman.generators.Base.extend({
                         this.log('See http://getcomposer.org for more details on composer.');
                         this.log('');
                         cb();
+                    } else {
+                        process.exit(1);
                     }
                 }.bind(this));
+            } else if (error != null) {
+                this.log('WARNING: No global composer installation found. Go to https://getcomposer.org/download/ and install first.');
+                    process.exit(1);
             } else {
                 this.globalComposer = true;
                 cb();
