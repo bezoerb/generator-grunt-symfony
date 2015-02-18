@@ -1,4 +1,12 @@
 
+0.0........8-02-18
+==================
+
+  * cleanup
+  * Fixed #5
+  * Add hint on missing composer for win32 user
+  * Update README.md
+
 0.0.7 / 2015-02-12
 ==================
 
