@@ -1,0 +1,28 @@
+/web/bundles/
+/app/bootstrap.php.cache
+/app/cache/*
+/app/config/parameters.yml
+/app/logs/*
+!app/cache/.gitkeep
+!app/logs/.gitkeep
+/app/phpunit.xml
+/build/
+/vendor/
+/bin/
+/composer.phar
+
+### Files compiled or processed by grunt ###
+/web/scripts
+/web/styles
+/web/img
+.tmp/
+
+### Node ###
+node_modules
+npm-debug.log
+
+### Bower ###
+bower_components
+<% if (useJspm) { %>
+### JSPM ###
+jspm_packages<% } %>

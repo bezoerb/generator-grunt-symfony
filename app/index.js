@@ -320,6 +320,12 @@ var AppGenerator = yeoman.generators.Base.extend({
 
         fse.deleteSync(this.templatePath('composer.json'));
         fs.writeFileSync('composer.json', data);
+    },
+
+    updateGitignore: function updateGitignore() {
+        var gitignore = this.readFileAsString(this.templatePath('gitignore'));
+        fs.unlinkSync(this.destinationPath('.gitignore'));
+        fs.writeFileSync(this.destinationPath('.gitignore'), this.engine(gitignore, this));
     }
 });
 
@@ -527,8 +533,6 @@ module.exports = AppGenerator.extend({
                 this.templatePath('jshintrc'),
                 this.destinationPath('.jshintrc')
             );
-
-
         },
 
         symfonyBase: function symfonyBase() {
@@ -553,13 +557,14 @@ module.exports = AppGenerator.extend({
     install: function () {
         this.addScripts();
         this.addStyles();
+        this.updateGitignore();
         this.updateConfig();
         this.updateParameters();
         this.updateController();
         this.updateView();
         this.updateAppKernel();
         this.updateApp();
-        
+
         this.cleanComposerJson();
 
 
