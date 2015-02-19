@@ -43,13 +43,29 @@ var AppGenerator = yeoman.generators.Base.extend({
                 }.bind(this));
             } else if (error != null) {
                 this.log('WARNING: No global composer installation found. Go to https://getcomposer.org/download/ and install first.');
-                    process.exit(1);
+                process.exit(1);
             } else {
                 this.globalComposer = true;
                 cb();
             }
         }.bind(this));
     },
+
+    composer: function (args, cb) {
+        if (!_.isFunction(cb)) {
+            cb = function () {
+            };
+        }
+
+        var cmd = 'composer';
+        if (!this.globalComposer) {
+            args.unshift('composer.phar');
+            cmd = 'php';
+        }
+        var command = this.spawnCommand(cmd, args, {}).on('error', cb).on('exit', cb);
+    },
+
+
 
     /**
      * Check for installed jspm
@@ -61,6 +77,21 @@ var AppGenerator = yeoman.generators.Base.extend({
             this.globalJspm = !error;
         }.bind(this));
     },
+
+    jspmInstall: function(cb){
+        if (this.useJspm) {
+            this.spawnCommand('jspm', ['install'] ,{}).on('error', cb).on('exit', cb);
+        } else {
+            cb();
+        }
+    },
+
+    composerUpdate: function(cb){
+        this.log('');
+        this.log('Running ' + chalk.bold.yellow('composer update') + ' for you to install the required dependencies.');
+        this.composer(['update'], cb || function(){} );
+    },
+
 
     /**
      * show custom repo if applicable
@@ -113,49 +144,64 @@ var AppGenerator = yeoman.generators.Base.extend({
 
 
     /**
-     * remove assetic
+     * Update symfony config
+     *
+     *  - remove assetic configuration
+     *  - update parameters to use proposed dot notation
+     *    @see http://symfony.com/doc/current/cookbook/configuration/external_parameters.html
      */
-    cleanComposer: function () {
-        var done = this.async();
-
-        var composerContents = this.readFileAsString('composer.json');
-        var composerParse = JSON.parse(composerContents);
-        delete composerParse.require['symfony/assetic-bundle'];
-        var data = JSON.stringify(composerParse, null, 4);
-
-        fse.deleteSync(this.templatePath('composer.json'));
-        fs.writeFileSync('composer.json', data);
-        done();
-    },
-
-    cleanConfig: function () {
-        var done = this.async();
-
+    updateConfig: function () {
+        // remove assetic from config_dev.yml
         var confDev = yaml.safeLoad(fs.readFileSync('app/config/config_dev.yml'));
         delete confDev.assetic;
         var newConfDev = yaml.dump(confDev, {indent: 4});
         fs.unlinkSync(this.destinationPath('app/config/config_dev.yml'));
         fs.writeFileSync('app/config/config_dev.yml', newConfDev);
 
+        // remove assetic from config_yml
         var conf = yaml.safeLoad(fs.readFileSync('app/config/config.yml'));
         delete conf.assetic;
         var newConf = yaml.dump(conf, {indent: 4});
+
+        // change parameter names to use dot notation
+        newConf = newConf.replace(/%(database|mailer)_(.*)%/g, '%$1.$2%');
         fs.unlinkSync(this.destinationPath('app/config/config.yml'));
         fs.writeFileSync('app/config/config.yml', newConf);
 
+        // update routing
         fs.unlinkSync(this.destinationPath('app/config/routing.yml'));
         fse.copySync(this.templatePath('symfony/routing.yml'), 'app/config/routing.yml');
 
+        // add node environment for browsersync
         fse.copySync(this.templatePath('symfony/config_node.yml'), 'app/config/config_node.yml');
-
-        fs.unlinkSync(this.destinationPath('web/app.php'));
-        fse.copySync(this.templatePath('symfony/app.php'), 'web/app.php');
-
-        done();
     },
 
     /**
-     * remove assetic
+     * update parameters.yml.dist to use dot notation
+     */
+    updateParameters: function updateParameters() {
+        var parametersDistPath = 'app/config/parameters.yml.dist';
+        var parametersDistContents = this.readFileAsString(parametersDistPath);
+        var newparametersDistContents = parametersDistContents.replace(/(database|mailer)_(.*):/g, '$1.$2:');
+        fs.unlinkSync(parametersDistPath);
+        fs.writeFileSync(parametersDistPath, newparametersDistContents);
+    },
+
+    /**
+     * update app.php to consider environment variables SYMFONY_ENV and SYMFONY_DEBUG
+     */
+    updateApp: function updateApp() {
+        fs.unlinkSync(this.destinationPath('web/app.php'));
+        fse.copySync(this.templatePath('symfony/app.php'), 'web/app.php');
+    },
+
+    /**
+     * Update AppKernel
+     *
+     *  - remove assetic
+     *  - add "node" as dev environment
+     *
+     * see http://symfony.com/doc/current/best_practices/web-assets.html
      */
     updateAppKernel: function () {
         var appKernelPath = 'app/AppKernel.php';
@@ -167,29 +213,11 @@ var AppGenerator = yeoman.generators.Base.extend({
         fs.writeFileSync(appKernelPath, newAppKernelContents);
     },
 
-    updateParametersDist: function () {
-        // update parameters.yml.dist
-        var parametersDistPath = 'app/config/parameters.yml.dist';
-        var parametersDistContents = this.readFileAsString(parametersDistPath);
 
-        var newparametersDistContents = parametersDistContents.replace(/(database|mailer)_(.*):/g, '$1.$2:');
-
-        fs.unlinkSync(parametersDistPath);
-        fs.writeFileSync(parametersDistPath, newparametersDistContents);
-
-        // update config.yml
-        var configPath = 'app/config/config.yml';
-        var configContent = this.readFileAsString(configPath);
-
-        var newconfigContent = configContent.replace(/%(database|mailer)_(.*)%/g, '%$1.$2%');
-
-        fs.unlinkSync(configPath);
-        fs.writeFileSync(configPath, newconfigContent);
-    },
-
+    /**
+     * Set template directories and templates
+     */
     updateView: function () {
-        var cb = this.async();
-
         fse.removeSync(this.destinationPath('app/Resources/views'));
         fse.mkdirsSync(this.destinationPath('app/Resources/views/controller/default'));
 
@@ -202,14 +230,12 @@ var AppGenerator = yeoman.generators.Base.extend({
         var actionContent = this.readFileAsString(this.templatePath('symfony/index.html.twig'));
         fs.writeFileSync('app/Resources/views/controller/default/index.html.twig', this.engine(actionContent, this));
 
-
         fse.copySync(this.templatePath('img'), 'app/Resources/public/img/');
-
-
-        cb();
-
     },
 
+    /**
+     * update default controller to use own template
+     */
     updateController: function updateControler() {
         var controllerPath = 'src/AppBundle/Controller/DefaultController.php';
         if (fs.existsSync(controllerPath)) {
@@ -217,10 +243,12 @@ var AppGenerator = yeoman.generators.Base.extend({
         }
 
         fse.copySync(this.templatePath('symfony/DefaultController.php'), controllerPath);
-
     },
 
 
+    /**
+     * Add scripts and init jspm if applicable
+     */
     addScripts: function addScripts() {
         // copy scripts
         this.mkdir(this.destinationPath('app/Resources/public/scripts'));
@@ -234,8 +262,9 @@ var AppGenerator = yeoman.generators.Base.extend({
                 fs.writeFileSync(this.destinationPath('app/Resources/public/scripts/' + file), this.engine(content, this));
             }, this);
         }
-    },
 
+
+    },
 
     addStyles: function addScripts() {
         // copy styles
@@ -278,6 +307,19 @@ var AppGenerator = yeoman.generators.Base.extend({
         if (fs.existsSync(fontpath)) {
             fse.copySync(fontpath, dest);
         }
+    },
+
+    /**
+     * remove assetic
+     */
+    cleanComposerJson: function () {
+        var composerContents = this.readFileAsString('composer.json');
+        var composerParse = JSON.parse(composerContents);
+        delete composerParse.require['symfony/assetic-bundle'];
+        var data = JSON.stringify(composerParse, null, 4);
+
+        fse.deleteSync(this.templatePath('composer.json'));
+        fs.writeFileSync('composer.json', data);
     }
 });
 
@@ -307,24 +349,6 @@ module.exports = AppGenerator.extend({
         var context = this;
         var done = this.async();
 
-        /*     // set symfony repository and demoBundle option
-         this.symfonyDistribution = this.symfonyDefaults;
-
-         this.noFramework = false;
-         this.useBootstrap = true;
-         this.usePure = false;
-         this.useFoundation = false;
-
-         this.noPreprocessor = false;
-         this.useLess = false;
-         this.useSass = true;
-         this.useStylus = false;
-         this.includeLibSass = true;
-         this.includeRubySass = false;
-
-         this.useRequirejs = true;
-         done(); return;
-         */
         var symfonyCustom = function (answers) {
             return !_.result(answers, 'symfonyStandard');
         };
@@ -369,13 +393,7 @@ module.exports = AppGenerator.extend({
             message: 'Commit (commit/branch/tag)',
             default: this.symfonyDefaults.commit,
             when: symfonyCustom
-        }, /* {
-         type: 'confirm',
-         name: 'symfonyAcme',
-         message: 'Would you like to include the Acme/DemoBundle',
-         default: false,
-         when: this.showSymfonyRepo
-         }, */{
+        }, {
             type: 'list',
             name: 'framework',
             message: function () {
@@ -513,17 +531,6 @@ module.exports = AppGenerator.extend({
 
         },
 
-
-        //gitInit: function gitInit() {
-        //    var cb = this.async();
-        //    spawn('git', ['init']).on('exit', function () {
-        //        cb();
-        //    });
-        //},
-
-        /**
-         * install symfony base system
-         */
         symfonyBase: function symfonyBase() {
             var done = this.async();
             var appPath = this.destinationRoot();
@@ -544,45 +551,48 @@ module.exports = AppGenerator.extend({
     },
 
     install: function () {
-        this.installDependencies({
-            skipInstall: this.options['skip-install'],
-            skipMessage: this.options['skip-install-message'],
-            callback: function () {
-
-                if (!this.options['skip-install']) {
-                    this.log('Getting the composer dependencies');
-                    if (this.globalComposer) {
-                        this.spawnCommand('composer', ['install']);
-                    } else {
-                        this.spawnCommand('php', ['composer.phar', 'install']);
-                    }
-
-                    if (this.useJspm) {
-                        this.log('Getting the jspm dependencies');
-                        this.spawnCommand('jspm', ['install']);
-                    }
-                }
-            }.bind(this)
-        });
-    },
-
-    end: function () {
-        this.cleanComposer();
-        this.cleanConfig();
-        this.updateController();
-        this.updateAppKernel();
-        this.updateParametersDist();
-        this.updateView();
-
-
         this.addScripts();
         this.addStyles();
+        this.updateConfig();
+        this.updateParameters();
+        this.updateController();
+        this.updateView();
+        this.updateAppKernel();
+        this.updateApp();
+        
+        this.cleanComposerJson();
+
 
         // copy fonts
         if (!this.skipInstall) {
             this.copyFonts();
         }
 
+        this.installDependencies({
+            skipInstall: this.options['skip-install'],
+            skipMessage: this.options['skip-install-message'] || this.options['skip-install'],
+            callback: function () {
+                if (!this.options['skip-install']) {
+                    this.jspmInstall(function(){
+                        this.composerUpdate(function(){
+                            if (!this.options['skip-install-message']) {
+                                this.log('');
+                                this.log('I\'m finally all done. Run ' + chalk.bold.green('grunt serve') + ' to start your development server or ' + chalk.bold.green('grunt serve:dist') + ' to check your prod environment.');
+                                this.log('');
+                            }
+                        }.bind(this))
+                    }.bind(this));
+
+                } else if (!this.options['skip-install-message']) {
+                    this.log('');
+                    this.log('I\'m all done. Just run ' + chalk.bold.yellow('npm install & bower install &' + ((this.useJspm)?' jspm install &':'') +' composer update') + '  to install the required dependencies.');
+                    this.log('');
+                }
+            }.bind(this)
+        });
+    },
+
+    end: function () {
         // add postinstall script here before Gruntfile is not available during initial bower install
         if (this.useRequirejs) {
             var bowerrc = fse.readJsonSync(this.destinationPath('.bowerrc'));
@@ -592,8 +602,5 @@ module.exports = AppGenerator.extend({
             fs.writeFileSync('.bowerrc', JSON.stringify(bowerrc, null, 2));
         }
 
-        this.log('');
-        this.log('I\'m finally all done. Run \'grunt serve\' to start your development server or \'grunt serve:dist\' to check your prod environment');
-        this.log('');
     }
 });
