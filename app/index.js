@@ -117,14 +117,7 @@ var AppGenerator = yeoman.generators.Base.extend({
      */
     cleanComposer: function () {
         var done = this.async();
-
-        var composerContents = this.readFileAsString('composer.json');
-        var composerParse = JSON.parse(composerContents);
-        delete composerParse.require['symfony/assetic-bundle'];
-        var data = JSON.stringify(composerParse, null, 4);
-
-        fse.deleteSync(this.templatePath('composer.json'));
-        fs.writeFileSync('composer.json', data);
+        exec('composer remove "symfony/assetic-bundle"');
         done();
     },
 
