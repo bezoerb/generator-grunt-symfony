@@ -1,7 +1,7 @@
 # generator-grunt-symfony [![Build Status](https://secure.travis-ci.org/bezoerb/generator-grunt-symfony.png?branch=master)](https://travis-ci.org/bezoerb/generator-grunt-symfony)
 
 This [Yeoman](http://yeoman.io) generator scaffolds a ssymfony2 app with full featured frontend tooling. 
-Just scaffold your app, run `grunt serve` and you are ready to go. This is still WiP and not feature complete yet but it's making more progress every day ;)
+Just scaffold your app, run `grunt serve` and you are ready to go. 
 
 ![The Team](https://raw.github.com/bezoerb/generator-grunt-symfony/master/app/templates/img/yo-grunt-bower-symfony.png)
 
