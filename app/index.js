@@ -529,10 +529,13 @@ module.exports = AppGenerator.extend({
                 this.templatePath('editorconfig'),
                 this.destinationPath('.editorconfig')
             );
-            this.fs.copy(
-                this.templatePath('jshintrc'),
-                this.destinationPath('.jshintrc')
-            );
+
+            this.template('jshintrc', '.jshintrc');
+            //
+            //this.fs.copy(
+            //    this.templatePath('jshintrc'),
+            //    this.destinationPath('.jshintrc')
+            //);
         },
 
         symfonyBase: function symfonyBase() {
