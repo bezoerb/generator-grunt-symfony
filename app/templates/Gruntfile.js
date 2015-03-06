@@ -323,6 +323,7 @@ module.exports = function(grunt) {
                 options: bsOptions('.tmp', appConfig.app, './', 'bower_components', appConfig.dist)
             },
             dist: {
+                bsFiles: { src: [] },
                 options: bsOptions(appConfig.dist)
             }
         }
