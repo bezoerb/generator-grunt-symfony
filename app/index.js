@@ -78,6 +78,17 @@ var AppGenerator = yeoman.generators.Base.extend({
         }.bind(this));
     },
 
+    /**
+     * Check for installed git
+     */
+    checkGit: function checkGit() {
+        // Check if jspm is installed globally
+        this.globalGit = false;
+        exec('git', ['--version'], function (error) {
+            this.globalGit = !error;
+        }.bind(this));
+    },
+
     jspmInstall: function(cb){
         if (this.useJspm) {
             this.log('');
@@ -349,6 +360,7 @@ module.exports = AppGenerator.extend({
         ));
 
         this.checkJspm();
+        this.checkGit();
         this.checkComposer();
     },
 
@@ -360,6 +372,14 @@ module.exports = AppGenerator.extend({
         var symfonyCustom = function (answers) {
             return !_.result(answers, 'symfonyStandard');
         };
+
+        var hasGit = function(){
+            return this.globalGit;
+        }.bind(this);
+
+        var hasJspm = function () {
+            return this.globalJspm;
+        }.bind(this);
 
         function hasFeature(answers, group, feature) {
             return !!feature && _.result(answers, group) === feature;
@@ -436,13 +456,18 @@ module.exports = AppGenerator.extend({
             type: 'list',
             name: 'loader',
             message: 'Which module loader would you like to use?',
-            when: function () {
-                return this.globalJspm;
-            }.bind(this),
+            when: hasJspm,
             choices: [
                 {name: 'RequireJS', value: 'requirejs', checked: true},
                 {name: 'SystemJS (jspm)', value: 'jspm'}
             ]
+        }, {
+            when: hasGit,
+            type: 'confirm',
+            name: 'initGit',
+            value: 'initGit',
+            message: 'Would you like to enable Git for this project?',
+            default: true
         }];
 
         this.prompt(prompts, function (props) {
@@ -551,6 +576,16 @@ module.exports = AppGenerator.extend({
                     done();
                 }
             );
+        },
+
+        gitInit: function gitInit() {
+            var done = this.async();
+            this.spawnCommand('git', ['init']).on('exit', function() {
+                var content = this.readFileAsString(this.templatePath('hooks/post-merge'));
+                fs.writeFileSync(this.destinationPath('.git/hooks/post-merge'), this.engine(content, this));
+                fs.chmodSync(this.destinationPath('.git/hooks/post-merge'),'0755');
+                done();
+            }.bind(this));
         }
     },
 
