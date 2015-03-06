@@ -66,15 +66,16 @@ var AppGenerator = yeoman.generators.Base.extend({
     },
 
 
-
     /**
      * Check for installed jspm
      */
     checkJspm: function checkJspm() {
         // Check if jspm is installed globally
         this.globalJspm = false;
-        exec('jspm', ['-v'], function (error) {
-            this.globalJspm = !error;
+        this.spawnCommand('jspm', ['-v']).on('exit', function () {
+            this.globalJspm = true;
+        }.bind(this)).on('error',function(){
+            this.globalJspm = false;
         }.bind(this));
     },
 
@@ -84,25 +85,28 @@ var AppGenerator = yeoman.generators.Base.extend({
     checkGit: function checkGit() {
         // Check if jspm is installed globally
         this.globalGit = false;
-        exec('git', ['--version'], function (error) {
-            this.globalGit = !error;
+        this.spawnCommand('git', ['--help']).on('exit', function () {
+            this.globalGit = true;
+        }.bind(this)).on('error',function(){
+            this.globalGit = false;
         }.bind(this));
     },
 
-    jspmInstall: function(cb){
+    jspmInstall: function (cb) {
         if (this.useJspm) {
             this.log('');
             this.log('Running ' + chalk.bold.yellow('jspm install') + ' for you to install the required dependencies.');
-            this.spawnCommand('jspm', ['install'] ,{}).on('error', cb).on('exit', cb);
+            this.spawnCommand('jspm', ['install'], {}).on('error', cb).on('exit', cb);
         } else {
             cb();
         }
     },
 
-    composerUpdate: function(cb){
+    composerUpdate: function (cb) {
         this.log('');
         this.log('Running ' + chalk.bold.yellow('composer update') + ' for you to install the required dependencies.');
-        this.composer(['update'], cb || function(){} );
+        this.composer(['update'], cb || function () {
+        });
     },
 
 
@@ -373,7 +377,7 @@ module.exports = AppGenerator.extend({
             return !_.result(answers, 'symfonyStandard');
         };
 
-        var hasGit = function(){
+        var hasGit = function () {
             return this.globalGit;
         }.bind(this);
 
@@ -495,6 +499,8 @@ module.exports = AppGenerator.extend({
             this.useJspm = this.globalJspm && useLoader('jspm');
             this.useBrowserify = useLoader('browserify');
 
+            this.useGit = !!props.initGit;
+
             done();
         }.bind(this));
     },
@@ -579,13 +585,15 @@ module.exports = AppGenerator.extend({
         },
 
         gitInit: function gitInit() {
-            var done = this.async();
-            this.spawnCommand('git', ['init']).on('exit', function() {
-                var content = this.readFileAsString(this.templatePath('hooks/post-merge'));
-                fs.writeFileSync(this.destinationPath('.git/hooks/post-merge'), this.engine(content, this));
-                fs.chmodSync(this.destinationPath('.git/hooks/post-merge'),'0755');
-                done();
-            }.bind(this));
+            if (this.useGit) {
+                var done = this.async();
+                this.spawnCommand('git', ['init']).on('exit', function () {
+                    var content = this.readFileAsString(this.templatePath('hooks/post-merge'));
+                    fs.writeFileSync(this.destinationPath('.git/hooks/post-merge'), this.engine(content, this));
+                    fs.chmodSync(this.destinationPath('.git/hooks/post-merge'), '0755');
+                    done();
+                }.bind(this));
+            }
         }
     },
 
@@ -603,8 +611,6 @@ module.exports = AppGenerator.extend({
         this.cleanComposerJson();
 
 
-
-
         this.installDependencies({
             skipInstall: this.options['skip-install'],
             skipMessage: this.options['skip-install-message'] || this.options['skip-install'],
@@ -615,8 +621,8 @@ module.exports = AppGenerator.extend({
                         this.copyFonts();
                     }
 
-                    this.jspmInstall(function(){
-                        this.composerUpdate(function(){
+                    this.jspmInstall(function () {
+                        this.composerUpdate(function () {
                             if (!this.options['skip-install-message']) {
                                 this.log('');
                                 this.log('I\'m finally all done. Run ' + chalk.bold.green('grunt serve') + ' to start your development server or ' + chalk.bold.green('grunt serve:dist') + ' to check your prod environment.');
@@ -627,7 +633,7 @@ module.exports = AppGenerator.extend({
 
                 } else if (!this.options['skip-install-message']) {
                     this.log('');
-                    this.log('I\'m all done. Just run ' + chalk.bold.yellow('npm install & bower install &' + ((this.useJspm)?' jspm install &':'') +' composer update') + '  to install the required dependencies.');
+                    this.log('I\'m all done. Just run ' + chalk.bold.yellow('npm install & bower install &' + ((this.useJspm) ? ' jspm install &' : '') + ' composer update') + '  to install the required dependencies.');
                     this.log('');
                 }
             }.bind(this)
