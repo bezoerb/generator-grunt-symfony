@@ -1,3 +1,15 @@
+0.1.2 / 2015-03-06
+==================
+
+  * Added 'git init' option + post-merge hook for composer, node, jspm & bower
+  
+0.1.1 / 2015-03-06
+==================
+
+  * Fixed missing font
+  * Tweaked jshint
+  * Fixed BrowserSync:dist
+  * Bumped dependencies
 
 0.1.0 / 2015-02-19
 ==================
