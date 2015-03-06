@@ -80,6 +80,8 @@ var AppGenerator = yeoman.generators.Base.extend({
 
     jspmInstall: function(cb){
         if (this.useJspm) {
+            this.log('');
+            this.log('Running ' + chalk.bold.yellow('jspm install') + ' for you to install the required dependencies.');
             this.spawnCommand('jspm', ['install'] ,{}).on('error', cb).on('exit', cb);
         } else {
             cb();
@@ -531,11 +533,6 @@ module.exports = AppGenerator.extend({
             );
 
             this.template('jshintrc', '.jshintrc');
-            //
-            //this.fs.copy(
-            //    this.templatePath('jshintrc'),
-            //    this.destinationPath('.jshintrc')
-            //);
         },
 
         symfonyBase: function symfonyBase() {
@@ -571,16 +568,18 @@ module.exports = AppGenerator.extend({
         this.cleanComposerJson();
 
 
-        // copy fonts
-        if (!this.skipInstall) {
-            this.copyFonts();
-        }
+
 
         this.installDependencies({
             skipInstall: this.options['skip-install'],
             skipMessage: this.options['skip-install-message'] || this.options['skip-install'],
             callback: function () {
                 if (!this.options['skip-install']) {
+                    // copy fonts
+                    if (!this.skipInstall) {
+                        this.copyFonts();
+                    }
+
                     this.jspmInstall(function(){
                         this.composerUpdate(function(){
                             if (!this.options['skip-install-message']) {
