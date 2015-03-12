@@ -262,8 +262,9 @@ module.exports = function(grunt) {
             }
         },<% } %>
         exec: {
-            sfcl: 'php app/console cache:clear -e prod'<% if (useJspm) { %>,
-            jspm: 'jspm bundle-sfx scripts/main .tmp/scripts/main.js'<% } %>
+            sfcl: 'php app/console cache:clear -e prod'<% if (useJspm && globalJspm) { %>,
+            jspm: 'jspm bundle-sfx scripts/main .tmp/scripts/main.js'<% } else if (useJspm && !globalJspm) { %>,
+            jspm: 'node_modules/.bin/jspm bundle-sfx scripts/main .tmp/scripts/main.js'<% } %>
         },<% if (useJspm) { %>
         uglify: {
             dist: {

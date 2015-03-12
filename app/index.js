@@ -96,7 +96,12 @@ var AppGenerator = yeoman.generators.Base.extend({
         if (this.useJspm) {
             this.log('');
             this.log('Running ' + chalk.bold.yellow('jspm install') + ' for you to install the required dependencies.');
-            this.spawnCommand('jspm', ['install'], {}).on('error', cb).on('exit', cb);
+            if (this.globalJspm) {
+                this.spawnCommand('jspm', ['install'], {}).on('error', cb).on('exit', cb);
+            } else {
+                this.log(chalk.bold.red('Warning: ') + 'Using local jspm. Run ' + chalk.bold.yellow('npm install -g jspm') + ' to install globally.');
+                this.spawnCommand('node_modules/.bin/jspm', ['install'], {}).on('error', cb).on('exit', cb);
+            }
         } else {
             cb();
         }
@@ -381,10 +386,6 @@ module.exports = AppGenerator.extend({
             return this.globalGit;
         }.bind(this);
 
-        var hasJspm = function () {
-            return this.globalJspm;
-        }.bind(this);
-
         function hasFeature(answers, group, feature) {
             return !!feature && _.result(answers, group) === feature;
         }
@@ -460,7 +461,6 @@ module.exports = AppGenerator.extend({
             type: 'list',
             name: 'loader',
             message: 'Which module loader would you like to use?',
-            when: hasJspm,
             choices: [
                 {name: 'RequireJS', value: 'requirejs', checked: true},
                 {name: 'SystemJS (jspm)', value: 'jspm'}
@@ -495,8 +495,8 @@ module.exports = AppGenerator.extend({
             this.includeRubySass = this.useSass && !props.libsass;
 
             var useLoader = _.partial(has, 'loader');
-            this.useRequirejs = !this.globalJspm || useLoader('requirejs');
-            this.useJspm = this.globalJspm && useLoader('jspm');
+            this.useRequirejs = useLoader('requirejs');
+            this.useJspm = useLoader('jspm');
             this.useBrowserify = useLoader('browserify');
 
             this.useGit = !!props.initGit;
