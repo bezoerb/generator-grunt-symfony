@@ -60,15 +60,6 @@ The directory structure is based on the [Symfony Best Practices](http://symfony.
 * 
 Run `grunt build` to compile, optimize and rev your assets for production.
 
-### Use with JSPM 
-To use this generator with jspm you need to install jspm globally
-```bash
-npm install -g jspm
-```
-When the generator detects a globally installed jspm version it will offer you to choose between jspm and requirejs.
-A basic js setup 
-
-
 ### Getting To Know Yeoman
 
 Yeoman has a heart of gold. He's a person with feelings and opinions, but he's very easy to work with. If you think he's too opinionated, he can be easily convinced.
