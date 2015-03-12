@@ -20,7 +20,7 @@ Just scaffold your app, run `grunt serve` and you are ready to go.
   * [Foundation](http://foundation.zurb.com)
   * [PureCSS](http://purecss.io) + [Suit](https://suitcss.github.io)
   * no framework?
-* Javascript module loader
+* Choose Javascript module loader
   * [RequireJS](http://requirejs.org/)
   * [JSPM](http://jspm.io/) + [SystemJS](https://github.com/systemjs/systemjs) (ES6)
 * File revving
