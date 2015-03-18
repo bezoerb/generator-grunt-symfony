@@ -1,4 +1,11 @@
 
+0.1.4 / 2015-03-18
+==================
+
+  * Added critical
+  * bumped dependency
+  * optimized rev process
+
 0.1.3 / 2015-03-12
 ==================
 
