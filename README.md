@@ -56,6 +56,7 @@ The directory structure is based on the [Symfony Best Practices](http://symfony.
 #### Dev
 * Assets are located in `app/Resources/public` 
 * Templates can be found in `app/Resources/views` 
+
 #### Production
 * All production assets are located in the `web` folder.
 * 
