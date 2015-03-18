@@ -72,7 +72,7 @@ var AppGenerator = yeoman.generators.Base.extend({
     checkJspm: function checkJspm() {
         // Check if jspm is installed globally
         this.globalJspm = false;
-        this.spawnCommand('jspm', ['-v']).on('exit', function () {
+        this.spawnCommand('jspm', ['-v'], {}).on('exit', function () {
             this.globalJspm = true;
         }.bind(this)).on('error',function(){
             this.globalJspm = false;
@@ -85,7 +85,7 @@ var AppGenerator = yeoman.generators.Base.extend({
     checkGit: function checkGit() {
         // Check if jspm is installed globally
         this.globalGit = false;
-        this.spawnCommand('git', ['--help']).on('exit', function () {
+        this.spawnCommand('git', ['--version'], {}).on('exit', function () {
             this.globalGit = true;
         }.bind(this)).on('error',function(){
             this.globalGit = false;
