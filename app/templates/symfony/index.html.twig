@@ -1,5 +1,17 @@
 {% extends 'base.html.twig' %}
-
+<% if (useCritical) { %>
+{% block stylesheetsDist %}
+<style type="text/css">
+    {% include 'public/styles/critical/index.css' ignore missing %}
+</style>
+<script>
+    (function(u){function loadCSS(e,t,n){"use strict";function r(){for(var t,i=0;i<d.length;i++)d[i].href&&d[i].href.indexOf(e)>-1&&(t=!0);t?o.media=n||"all":setTimeout(r)}var o=window.document.createElement("link"),i=t||window.document.getElementsByTagName("script")[0],d=window.document.styleSheets;return o.rel="stylesheet",o.href=e,o.media="only x",i.parentNode.insertBefore(o,i),r(),o}for(var i in u){loadCSS(u[i]);}}(["{{ asset('styles/main.css') }}"]));
+</script>
+<noscript>
+    <link rel="stylesheet" href="{{ asset('styles/main.css') }}">
+</noscript>
+{% endblock stylesheetsDist %}
+<% } %>
 {% block body %}
     <% if (useBootstrap) { %>
     <div class="container">
@@ -40,6 +52,8 @@
                 <% } else if (useStylus) { %><h4>Stylus</h4>
                 <p>Stylus is a revolutionary new language, providing an efficient, dynamic, and expressive way to generate CSS. Supporting both an indented syntax and regular CSS style.</p>
                 <% } %>
+                <% if (useCritical) { %><h4>Critical</h4>
+                <p>Extracts & inlines critical-path (above-the-fold) CSS from HTML.</p><% } %>
                 <h4>Bootstrap</h4>
                 <p>Sleek, intuitive, and powerful mobile first front-end framework for faster and easier web development.</p>
                 <% if (useRequirejs) { %><h4>RequireJS</h4>
@@ -47,10 +61,6 @@
                 <% if (useJspm) { %><h4>JSPM</h4>
                 <p>jspm is a package manager for the SystemJS universal module loader, built on top of the dynamic ES6 module loader</p><% } %>
             </div>
-        </div>
-
-        <div class="footer">
-            <p><span class="glyphicon glyphicon-heart"></span> from the Yeoman team</p>
         </div>
 
     </div>
@@ -111,6 +121,8 @@
                     <% } else if (useStylus) { %><h4>Stylus</h4>
                     <p>Stylus is a revolutionary new language, providing an efficient, dynamic, and expressive way to generate CSS. Supporting both an indented syntax and regular CSS style.</p>
                     <% } %>
+                    <% if (useCritical) { %><h4>Critical</h4>
+                    <p>Extracts & inlines critical-path (above-the-fold) CSS from HTML.</p><% } %>
                     <h4>Foundation</h4>
                     <p>Sleek, intuitive, and powerful mobile first front-end framework for faster and easier web development.</p>
                     <% if (useRequirejs) { %><h4>RequireJS</h4>
@@ -118,10 +130,6 @@
                     <% if (useJspm) { %><h4>JSPM</h4>
                     <p>jspm is a package manager for the SystemJS universal module loader, built on top of the dynamic ES6 module loader</p><% } %>
                 </div>
-            </div>
-
-            <div class="row footer">
-                <p><span class="glyphicon glyphicon-heart"></span> from the Yeoman team</p>
             </div>
 
         </div>
@@ -164,6 +172,8 @@
                     <% } else if (useStylus) { %><h4>Stylus</h4>
                     <p>Stylus is a revolutionary new language, providing an efficient, dynamic, and expressive way to generate CSS. Supporting both an indented syntax and regular CSS style.</p>
                     <% } %>
+                    <% if (useCritical) { %><h4>Critical</h4>
+                    <p>Extracts & inlines critical-path (above-the-fold) CSS from HTML.</p><% } %>
                     <h4>PureCSS</h4>
                     <p>A set of small, responsive CSS modules with a minimal footprint</p>
                     <h4>Suit</h4>
@@ -172,12 +182,6 @@
                     <p>A JavaScript file and module loader optimized for in-browser use.</p><% } %>
                     <% if (useJspm) { %><h4>JSPM</h4>
                     <p>jspm is a package manager for the SystemJS universal module loader, built on top of the dynamic ES6 module loader</p><% } %>
-                </div>
-            </div>
-
-            <div class="pure-g footer">
-                <div class="pure-u-1-2">
-                <p><span class="glyphicon glyphicon-heart"></span> from the Yeoman team</p>
                 </div>
             </div>
 
@@ -206,16 +210,14 @@
                 <% } else if (useStylus) { %><h4>Stylus</h4>
                 <p>Stylus is a revolutionary new language, providing an efficient, dynamic, and expressive way to generate CSS. Supporting both an indented syntax and regular CSS style.</p>
                 <% } %>
+                <% if (useCritical) { %><h4>Critical</h4>
+                <p>Extracts & inlines critical-path (above-the-fold) CSS from HTML.</p><% } %>
                 <% if (useRequirejs) { %><h4>RequireJS</h4>
                 <p>A JavaScript file and module loader optimized for in-browser use.</p><% } %>
                 <% if (useJspm) { %><h4>JSPM</h4>
                 <p>jspm is a package manager for the SystemJS universal module loader, built on top of the dynamic ES6 module loader</p><% } %>
             </pre>
 
-            <div class="footer">
-                    <p> from the Yeoman team</p>
-
-            </div>
 
         </div>
     <% } %>

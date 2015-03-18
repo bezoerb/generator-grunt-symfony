@@ -2,12 +2,16 @@
 // <%= pkg.name %> <%= pkg.version %>
 module.exports = function(grunt) {
     require('jit-grunt')(grunt);
-    var phpMiddleware;
-    <% if (useLess) { %>
+
+    var _ = require('lodash');
+    var fs = require('fs');
+    var path = require('path');<% if (useLess) { %>
     var LessPluginAutoPrefix = require('less-plugin-autoprefix');<% } %>
     var parseurl = require('parseurl');
-    var path = require('path');
     var php = require('php-proxy-middleware');
+    var env = fs.existsSync('.envrc') && grunt.file.readJSON('.envrc') || {
+        port: parseInt(grunt.option('port'),10) || 8000,
+    };
 
 
     var appConfig = {
@@ -24,14 +28,14 @@ module.exports = function(grunt) {
                     function(req, res, next) {
                         var obj = parseurl(req);
                         if (!/\.\w{2,4}$/.test(obj.pathname) || /\.php/.test(obj.pathname)) {
-                            phpMiddleware(req, res, next);
+                            grunt.bsMiddleware(req, res, next);
                         } else {
                             next();
                         }
                     }
                 ]
             },
-            port: 8000,
+            port: env.port,
             watchTask: true,
             notify: true,
             open: true,
@@ -42,6 +46,16 @@ module.exports = function(grunt) {
                 forms: true
             }
         };
+    }
+
+    // helper
+    function getMiddleware(){
+        return php({
+            address: '127.0.0.1', // which interface to bind to
+            ini: {max_execution_time: 60, variables_order:'EGPCS'},
+            root: appConfig.dist,
+            router: path.join(appConfig.dist, 'app.php')
+        });
     }
 
     // Project configuration.
@@ -147,40 +161,91 @@ module.exports = function(grunt) {
                 src: '.tmp/styles/main.css',
                 dest: 'web/styles/main.css'
             }
-        },
-        // revert rev before revving to prevent revrev
-        replace: {
-            dist: {
-                files: [{
-                    expand: true,
-                    cwd: 'app/Resources/views/',
-                    src: '**/*.html.twig',
-                    dest: 'app/Resources/views/'
-                }],
+        },<% if (useCritical) { %>
+
+        // Implementation of critical css processing
+        // Relevant pages are fetched processed afterwards by the critical task
+        // Generated critical path css is stored in 'app/Resources/public/styles/critical'
+        // and inlined in the corresponding twig template.
+        // See: app/Resources/views/Controller/default/index.html.twig
+        connect: {
+            fetch: {
                 options: {
-                    replacements: [{
-                        match: /\.[\w\d]{8}\.(css|js|jpg|jpeg|gif|png|webp)/,
-                        replacement: '.$1'
-                    }]
+                    port: env.port + 1000,
+                    hostname: '127.0.0.1',
+                    base: '<%%= config.dist %>',
+                    middleware: [
+                        function(req, res, next) {
+                            var obj = parseurl(req);
+                            if (!/\.\w{2,4}$/.test(obj.pathname) || /\.php/.test(obj.pathname)) {
+                                grunt.connectMiddleware(req, res, next);
+                            } else {
+                                next();
+                            }
+                        }
+                    ]
                 }
             }
         },
+
+        http: {
+            index: {
+                options: {
+                    url: 'http://<%%= connect.fetch.options.hostname %>:<%%= connect.fetch.options.port %>/'
+                },
+                dest: '.tmp/index.html'
+            }
+        },
+
+        critical: {
+            options: {
+                base: '.tmp',
+                    minify: true,
+                    css: ['.tmp/styles/main.css']
+            },
+            index: {
+                src: '<%%= http.index.dest %>',
+                dest: '<%%= config.app %>/styles/critical/index.css'
+            }
+        },<% } %>
+
         filerev: {
             dist: {
                 src: [
-                    'web/img/**/*.{jpg,jpeg,gif,png,webp}',
-                    'web/styles/main.css',
-                    'web/scripts/main.js'
+                    '<%%= config.dist %>/img/**/*.{jpg,jpeg,gif,png,webp}',
+                    '<%%= config.dist %>/styles/main.css',
+                    '<%%= config.dist %>/scripts/main.js'
                 ]
             }
         },
 
         usemin: {
-            css: ['web/styles/**/*.css'],
-            js: ['web/scripts/**/*.js'],
+            css: ['<%%= config.dist %>/styles/**/*.css'],
+            js: ['<%%= config.dist %>/scripts/**/*.js'],
             html: 'app/Resources/views/**/*.html.twig',
             options: {
-                assetsDirs: ['web']
+                assetsDirs: ['<%%= config.dist %>'],
+                patterns: {
+                    html: [[
+                        /asset\(['"]([^'"]+(?:css|js|jpg|jpeg|gif|png|webp))['"]\)/gm,
+                        'Update references to reved assets',
+                        function (m) {
+                            var matched = _.chain(grunt.config.get('usemin.options.assetsDirs')).reduce(function(dirs,dir){
+                                return _.map([
+                                    /\.[\w\d]{8}\.(css|js|jpg|jpeg|gif|png|webp)/m,
+                                    /\.(?:[\w\d]{8}\.)+(css|js|jpg|jpeg|gif|png|webp)/m
+                                ],function(r){
+                                    return path.join(dir,m.replace(r,'.$1'));
+                                }).concat(dirs);
+                            },[]).uniq().intersection(_.keys(grunt.filerev.summary)).first().value();
+                            return matched ? grunt.filerev.summary[matched] : m;
+                        },
+
+                        function (m) {
+                            return m.replace(new RegExp('^(' + grunt.config.get('usemin.options.assetsDirs').join('|') + ')/'),'');;
+                        }
+                    ]]
+                }
             }
         },
 
@@ -337,38 +402,41 @@ module.exports = function(grunt) {
         grunt.task.run(['clean:tmp']);
 
         if (target === 'dist') {
-            grunt.task.run(['assets']);
-
-            // Set env to prod in symfony
-            process.env['SYMFONY_ENV'] = 'prod';
-            process.env['SYMFONY_DEBUG'] = 0;
+            grunt.task.run(['assets','env:prod']);
         } else {
             target = 'dev';
-            grunt.task.run(['<% if (useLess) { %>less<% } else if (useStylus) { %>stylus<% } else if (useSass) { %>sass','autoprefixer<% } else if (noPreprocessor) { %>concat:css','autoprefixer<% } %>']);
-
-            // Set env to node in symfony for browsersync webserver
-            process.env['SYMFONY_ENV'] = 'node';
-            process.env['SYMFONY_DEBUG'] = 1;
+            grunt.task.run(['<% if (useLess) { %>less<% } else if (useStylus) { %>stylus<% } else if (useSass) { %>sass','autoprefixer<% } else if (noPreprocessor) { %>concat:css','autoprefixer<% } %>','env:node']);
         }
 
         // start php middleware
-        phpMiddleware = php({
-            address: '127.0.0.1', // which interface to bind to
-            ini: {max_execution_time: 60, variables_order:'EGPCS'},
-            root: appConfig.dist,
-            router: path.join(appConfig.dist, 'app.php')
-        });
+        grunt.bsMiddleware = getMiddleware();
 
         grunt.task.run([
             'browserSync:'+ target, // Using the php middleware
             'watch'                 // Any other watch tasks you want to run
         ]);
     });
+    <% if (useCritical) { %>
+    grunt.registerTask('criticalcss',function(){
+        grunt.connectMiddleware = getMiddleware();
+        grunt.task.run(['env:node','connect','http','critical']);
+    });
+    <% } %>
 
-    grunt.registerTask('css', ['clean:css','<% if (useLess) { %>less<% } else if (useStylus) { %>stylus<% } else if (useSass) { %>sass','autoprefixer<% } else if (noPreprocessor) { %>concat:css','autoprefixer<% } %>', 'cssmin']);
+    grunt.registerTask('env', function(target) {
+        if (target === 'prod') {
+            process.env['SYMFONY_ENV'] = 'prod';
+            process.env['SYMFONY_DEBUG'] = 0;
+        } else {
+            process.env['SYMFONY_ENV'] = 'node';
+            process.env['SYMFONY_DEBUG'] = 1;
+        }
+    });
+
+    grunt.registerTask('css', ['clean:css','<% if (useLess) { %>less<% } else if (useStylus) { %>stylus<% } else if (useSass) { %>sass','autoprefixer<% } else if (noPreprocessor) { %>concat:css','autoprefixer<% } %>', 'cssmin'<% if (useCritical) { %>, 'criticalcss'<% } %>]);
     grunt.registerTask('js', ['clean:js', 'jshint', '<% if (useRequirejs) { %>bowerRequirejs', 'requirejs<% } else if (useJspm) { %>exec:jspm', 'uglify:dist<% } %>']);
     grunt.registerTask('img', ['clean:img','imagemin','svgmin']);
-    grunt.registerTask('rev', ['replace', 'filerev', 'usemin']);
+    grunt.registerTask('rev', ['filerev', 'usemin']);
     grunt.registerTask('assets', ['js', 'css', 'img', 'rev', 'copy','exec:sfcl']);
     grunt.registerTask('build', ['assets','clean:tmp']);
 };

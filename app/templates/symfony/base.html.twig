@@ -6,8 +6,10 @@
         {% block stylesheets %}
             {% if app.environment == 'node' %}
                 <link rel="stylesheet" href="styles/main.css?no-rev"/>
-            {% else %}
-                <link rel="stylesheet" href="styles/main.css"/>
+            {% else %}<% if (useCritical) { %>
+                {% block stylesheetsDist %}<% } %>
+                <link rel="stylesheet" href="styles/main.css"/><% if (useCritical) { %>
+                {% endblock stylesheetsDist %}<% } %>
             {% endif %}
         {% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />

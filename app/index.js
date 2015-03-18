@@ -458,6 +458,12 @@ module.exports = AppGenerator.extend({
             chalk.green('https://github.com/andrew/node-sass#node-sass'),
             default: true
         }, {
+            type: 'confirm',
+            name: 'useCritical',
+            value: 'useCritical',
+            message: 'Supercharge your website by inlining critical path CSS?',
+            default: true
+        }, {
             type: 'list',
             name: 'loader',
             message: 'Which module loader would you like to use?',
@@ -500,6 +506,7 @@ module.exports = AppGenerator.extend({
             this.useBrowserify = useLoader('browserify');
 
             this.useGit = !!props.initGit;
+            this.useCritical = !!props.useCritical;
 
             done();
         }.bind(this));
