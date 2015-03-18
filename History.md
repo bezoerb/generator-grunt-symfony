@@ -30,7 +30,7 @@
   * Added custom gitignore to fix #7
   * Fixed run loop
 
-0.0.8-02-18
+0.0.8 / 2015-02-18
 ==================
 
   * cleanup
