@@ -20,7 +20,7 @@ Just scaffold your app, run `grunt serve` and you are ready to go.
   * [Foundation](http://foundation.zurb.com)
   * [PureCSS](http://purecss.io) + [Suit](https://suitcss.github.io)
   * no framework?
-* Javascript module loader
+* Choose Javascript module loader
   * [RequireJS](http://requirejs.org/)
   * [JSPM](http://jspm.io/) + [SystemJS](https://github.com/systemjs/systemjs) (ES6)
 * File revving
@@ -59,15 +59,6 @@ The directory structure is based on the [Symfony Best Practices](http://symfony.
 * All production assets are located in the `web` folder.
 * 
 Run `grunt build` to compile, optimize and rev your assets for production.
-
-### Use with JSPM 
-To use this generator with jspm you need to install jspm globally
-```bash
-npm install -g jspm
-```
-When the generator detects a globally installed jspm version it will offer you to choose between jspm and requirejs.
-A basic js setup 
-
 
 ### Getting To Know Yeoman
 
