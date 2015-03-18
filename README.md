@@ -25,6 +25,7 @@ Just scaffold your app, run `grunt serve` and you are ready to go.
   * [JSPM](http://jspm.io/) + [SystemJS](https://github.com/systemjs/systemjs) (ES6)
 * File revving
 * Image optimization
+* [Critical](https://github.com/addyosmani/critical) (Extract & Inline Critical-path CSS) 
 
 ## Things to come
 * Optimize your assets with
