@@ -8,7 +8,7 @@
                 <link rel="stylesheet" href="styles/main.css?no-rev"/>
             {% else %}<% if (useCritical) { %>
                 {% block stylesheetsDist %}<% } %>
-                <link rel="stylesheet" href="styles/main.css"/><% if (useCritical) { %>
+                <link rel="stylesheet" href="{{ asset('styles/main.css') }}"/><% if (useCritical) { %>
                 {% endblock stylesheetsDist %}<% } %>
             {% endif %}
         {% endblock %}
