@@ -35,7 +35,7 @@ module.exports = function(grunt) {
                     }
                 ]
             },
-            port: env.port,
+            port: parseInt(env.port,10),
             watchTask: true,
             notify: true,
             open: true,
@@ -242,7 +242,7 @@ module.exports = function(grunt) {
                         },
 
                         function (m) {
-                            return m.replace(new RegExp('^(' + grunt.config.get('usemin.options.assetsDirs').join('|') + ')/'),'');;
+                            return m.replace(new RegExp('^(' + grunt.config.get('usemin.options.assetsDirs').join('|') + ')/'),'');
                         }
                     ]]
                 }
