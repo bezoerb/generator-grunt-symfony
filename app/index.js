@@ -62,7 +62,7 @@ var AppGenerator = yeoman.generators.Base.extend({
             args.unshift('composer.phar');
             cmd = 'php';
         }
-        var command = this.spawnCommand(cmd, args, {stdio: 'ignore'}).on('error', cb).on('exit', cb);
+        var command = this.spawnCommand(cmd, args, {}).on('error', cb).on('exit', cb);
     },
 
 
