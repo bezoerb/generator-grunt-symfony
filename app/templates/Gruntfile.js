@@ -49,7 +49,14 @@ module.exports = function(grunt) {
     }
 
     // helper
-    function getMiddleware(){
+    function getMiddleware(target){
+        if (target === 'dist') {
+            process.env['SYMFONY_ENV'] = 'prod';
+            process.env['SYMFONY_DEBUG'] = 0;
+        } else {
+            process.env['SYMFONY_ENV'] = 'node';
+            process.env['SYMFONY_DEBUG'] = 1;
+        }
         return php({
             address: '127.0.0.1', // which interface to bind to
             ini: {max_execution_time: 60, variables_order:'EGPCS'},
@@ -402,14 +409,14 @@ module.exports = function(grunt) {
         grunt.task.run(['clean:tmp']);
 
         if (target === 'dist') {
-            grunt.task.run(['assets','env:prod']);
+            grunt.task.run(['assets']);
         } else {
             target = 'dev';
-            grunt.task.run(['<% if (useLess) { %>less<% } else if (useStylus) { %>stylus<% } else if (useSass) { %>sass','autoprefixer<% } else if (noPreprocessor) { %>concat:css','autoprefixer<% } %>','env:node']);
+            grunt.task.run(['<% if (useLess) { %>less<% } else if (useStylus) { %>stylus<% } else if (useSass) { %>sass','autoprefixer<% } else if (noPreprocessor) { %>concat:css','autoprefixer<% } %>']);
         }
 
         // start php middleware
-        grunt.bsMiddleware = getMiddleware();
+        grunt.bsMiddleware = getMiddleware(target);
 
         grunt.task.run([
             'browserSync:'+ target, // Using the php middleware
@@ -419,19 +426,10 @@ module.exports = function(grunt) {
     <% if (useCritical) { %>
     grunt.registerTask('criticalcss',function(){
         grunt.connectMiddleware = getMiddleware();
-        grunt.task.run(['env:node','connect','http','critical']);
+        grunt.task.run(['connect','http','critical']);
     });
     <% } %>
 
-    grunt.registerTask('env', function(target) {
-        if (target === 'prod') {
-            process.env['SYMFONY_ENV'] = 'prod';
-            process.env['SYMFONY_DEBUG'] = 0;
-        } else {
-            process.env['SYMFONY_ENV'] = 'node';
-            process.env['SYMFONY_DEBUG'] = 1;
-        }
-    });
 
     grunt.registerTask('css', ['clean:css','<% if (useLess) { %>less<% } else if (useStylus) { %>stylus<% } else if (useSass) { %>sass','autoprefixer<% } else if (noPreprocessor) { %>concat:css','autoprefixer<% } %>', 'cssmin'<% if (useCritical) { %>, 'criticalcss'<% } %>]);
     grunt.registerTask('js', ['clean:js', 'jshint', '<% if (useRequirejs) { %>bowerRequirejs', 'requirejs<% } else if (useJspm) { %>exec:jspm', 'uglify:dist<% } %>']);
