@@ -672,16 +672,5 @@ module.exports = AppGenerator.extend({
             };
             fs.writeFileSync('.bowerrc', JSON.stringify(bowerrc, null, 2));
         }
-
-        // patch jspm
-        // remove when https://github.com/jspm/registry/pull/278 is merged
-        if (this.useJspm && this.useFoundation) {
-            this.jspm(['install', 'foundation', '-o', this.templatePath('scripts/jspm/bower-foundation@5.5.1.json')], null, {stdio: 'ignore'});
-        }
-        // remove when https://github.com/jspm/registry/pull/277 is merged
-        if (this.useJspm && this.useUikit) {
-            this.jspm(['install', 'github:uikit/uikit', '-o', this.templatePath('scripts/jspm/uikit@2.18.0.json')], null, {stdio: 'ignore'});
-        }
-
     }
 });
