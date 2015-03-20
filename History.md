@@ -1,4 +1,12 @@
 
+0.3.1 / 2015-03-20
+==================
+
+  * fixed usage of frontend framework scripts with requirejs
+  * fixed usage of frontend framework scripts with jspm
+  * Fix #9
+  * Fixed typo
+
 0.3.0 / 2015-03-20
 ==================
 
