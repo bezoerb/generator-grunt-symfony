@@ -7,7 +7,7 @@ Just scaffold your app, run `grunt serve` and you are ready to go.
 
 ## Features
 * Symfony2 framework
-* Twig templating enging
+* Twig templating engine
 * Assetic removed
 * Browsersync dev/prod server with livereload
 * Choose the CSS preprocessor which fits your needs
