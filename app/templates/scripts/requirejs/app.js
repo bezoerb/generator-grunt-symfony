@@ -10,12 +10,19 @@
 define(function(require, exports) {
     'use strict';
     var $ = require('jquery');
-    var log = require('loglevel');
+    var log = require('loglevel');<% if (useUikit) { %>
+    var UI = require('uikit');<% } else if (useFoundation) { %>
+    var Foundation = require('foundation/core'); <% } else if (useBootstrap) { %>
+    require('bootstrap');
+    <% } %>
 
 
     exports.init = function init() {
         log.setLevel(0);
-        log.debug('Running jQuery: ', $().jquery);
         log.debug('\'Allo \'Allo');
+        log.debug('Running jQuery:', $().jquery);<% if (useBootstrap) { %>
+        log.debug('Running Bootstrap:',!!$.fn.scrollspy? '~3.3.0' : false);<% } else if (useUikit) { %>
+        log.debug('Running UIkit:', UI.version);<% } else if (useFoundation) { %>
+        log.debug('Running Foundation:', Foundation.version);<% } %>
     };
 });

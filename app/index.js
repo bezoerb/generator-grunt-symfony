@@ -286,7 +286,8 @@ var AppGenerator = yeoman.generators.Base.extend({
         this.mkdir(this.destinationPath('app/Resources/public/scripts'));
         if (this.useRequirejs) {
             _.forEach(['app.js', 'main.js', 'config.js'], function (file) {
-                fse.copySync(this.templatePath('scripts/requirejs/' + file), 'app/Resources/public/scripts/' + file);
+                var content = this.readFileAsString(this.templatePath('scripts/requirejs/' + file));
+                fs.writeFileSync(this.destinationPath('app/Resources/public/scripts/' + file), this.engine(content, this));
             }, this);
         } else if (this.useJspm) {
             _.forEach(['main.js', 'config.js'], function (file) {
@@ -542,7 +543,7 @@ module.exports = AppGenerator.extend({
                 if (this.useSass) {
                     bs += '-sass-official';
                 }
-                bower.dependencies[bs] = '~3.2.0';
+                bower.dependencies[bs] = '~3.3.0';
                 if (this.useStylus) {
                     bs += '-stylus';
                     bower.dependencies[bs] = '~4.0.0';
@@ -671,6 +672,8 @@ module.exports = AppGenerator.extend({
                 'postinstall': 'grunt bowerRequirejs'
             };
             fs.writeFileSync('.bowerrc', JSON.stringify(bowerrc, null, 2));
+            this.spawnCommand('grunt', ['bowerRequirejs'], {stdio: 'ignore'});
+
         }
     }
 });
