@@ -16,9 +16,10 @@
     margin: 0 auto;
 }<% } %>
 
+<% if (!useUikit) { %>
 .header {
     height: 50px;
-}
+}<% } %>
 
 .yeoman-team {
     max-width: 90%;

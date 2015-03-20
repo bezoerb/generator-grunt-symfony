@@ -12,7 +12,10 @@ System.config({
     "map": {
         "jquery": "github:components/jquery@2.1.3",
         "loglevel": "npm:loglevel@1.2.0",
-        "picturefill": "npm:picturefill@2.2.1",
+        "picturefill": "npm:picturefill@2.2.1",<% if (useBootstrap) { %>
+        "bootstrap": "github:twbs/bootstrap@3.3.4",<% } else if (useFoundation) { %>
+        "foundation": "github:zurb/bower-foundation@5.5.1",<% } else if (useUikit) { %>
+        "uikit/uikit": "github:uikit/uikit@2.18.0",<% } %>
         "github:jspm/nodelibs-process@0.1.1": {
             "process": "npm:process@0.10.0"
         },

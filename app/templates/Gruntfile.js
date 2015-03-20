@@ -27,7 +27,7 @@ module.exports = function(grunt) {
                 middleware: [
                     function(req, res, next) {
                         var obj = parseurl(req);
-                        if (!/\.\w{2,4}$/.test(obj.pathname) || /\.php/.test(obj.pathname)) {
+                        if (!/\.\w{2,}$/.test(obj.pathname) || /\.php/.test(obj.pathname)) {
                             grunt.bsMiddleware(req, res, next);
                         } else {
                             next();
@@ -93,7 +93,8 @@ module.exports = function(grunt) {
         concat: {
             css: {
                 src: [<% if (useBootstrap) { %>
-                    'bower_components/bootstrap/dist/css/bootstrap.css',<% } else { %>
+                    'bower_components/bootstrap/dist/css/bootstrap.css',<% } else if (useUikit) { %>
+                    'bower_components/uikit/css/uikit.almost-flat.css',<% } else { %>
                     'bower_components/sass-bootstrap-glyphicons/css/bootstrap-glyphicons.css',<% } if (useFoundation) { %>
                     'bower_components/foundation/css/foundation.css',<% } if (usePure) { %>
                     'bower_components/pure/pure.css',
@@ -184,7 +185,7 @@ module.exports = function(grunt) {
                     middleware: [
                         function(req, res, next) {
                             var obj = parseurl(req);
-                            if (!/\.\w{2,4}$/.test(obj.pathname) || /\.php/.test(obj.pathname)) {
+                            if (!/\.\w{2,}$/.test(obj.pathname) || /\.php/.test(obj.pathname)) {
                                 grunt.connectMiddleware(req, res, next);
                             } else {
                                 next();
@@ -435,6 +436,6 @@ module.exports = function(grunt) {
     grunt.registerTask('js', ['clean:js', 'jshint', '<% if (useRequirejs) { %>bowerRequirejs', 'requirejs<% } else if (useJspm) { %>exec:jspm', 'uglify:dist<% } %>']);
     grunt.registerTask('img', ['clean:img','imagemin','svgmin']);
     grunt.registerTask('rev', ['filerev', 'usemin']);
-    grunt.registerTask('assets', ['js', 'css', 'img', 'rev', 'copy','exec:sfcl']);
-    grunt.registerTask('build', ['assets','clean:tmp']);
+    grunt.registerTask('assets', ['js', 'css', 'img', 'rev', 'copy','clean:tmp','exec:sfcl']);
+    grunt.registerTask('build', ['assets']);
 };

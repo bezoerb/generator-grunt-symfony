@@ -1,6 +1,20 @@
 <% if (useBootstrap) { %>@import "bootstrap/less/bootstrap"; <% } else if (useFoundation) { %>@import (inline) "/foundation/css/foundation.css";<% }  else if (usePure) { %>@import (inline) "pure/pure.css";
-@import (inline) "suit-utils-layout/lib/layout.css";<% } %>
-<% if (!useBootstrap) { %>@import "sass-bootstrap-glyphicons/less/bootstrap-glyphicons";<% } %>
+@import (inline) "suit-utils-layout/lib/layout.css";<% } else if (useUikit) { %>
+@import "uikit/less/uikit-variables";
+@navbar-background:                              #444;
+@navbar-color:                                   #eee;
+@navbar-link-color:                              #eee;
+@navbar-link-hover-color:                        #fff;
+@navbar-nav-color:                               #eee;
+@navbar-brand-color:                             #eee;
+@navbar-brand-hover-color:                       #eee;
+@icon-font-path:                                 "../fonts";
+@import "uikit/less/uikit";
+
+a {
+    transition: all 100ms ease-in-out;
+} <% } %>
+<% if (!useBootstrap && !useUikit) { %>@import "sass-bootstrap-glyphicons/less/bootstrap-glyphicons";<% } %>
 
 <% if (usePure) { %>
 .pure-g {
@@ -19,10 +33,10 @@
     max-width: 1024px;
     margin: 0 auto;
 }<% } %>
-
+<% if (!useUikit) { %>
 .header {
     height: 50px;
-}
+}<% } %>
 
 .yeoman-team {
     max-width: 90%;

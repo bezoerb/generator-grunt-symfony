@@ -53,8 +53,7 @@ var AppGenerator = yeoman.generators.Base.extend({
 
     composer: function (args, cb) {
         if (!_.isFunction(cb)) {
-            cb = function () {
-            };
+            cb = function () {};
         }
 
         var cmd = 'composer';
@@ -62,7 +61,19 @@ var AppGenerator = yeoman.generators.Base.extend({
             args.unshift('composer.phar');
             cmd = 'php';
         }
-        var command = this.spawnCommand(cmd, args, {}).on('error', cb).on('exit', cb);
+        return this.spawnCommand(cmd, args, {}).on('error', cb).on('exit', cb);
+    },
+
+    jspm: function (args, cb, options) {
+        if (!_.isFunction(cb)) {
+            cb = function () {};
+        }
+
+        var cmd = 'jspm';
+        if (!this.globalJspm) {
+            cmd = 'node_modules/.bin/jspm';
+        }
+        return this.spawnCommand(cmd, args, options || {}).on('error', cb).on('exit', cb);
     },
 
 
@@ -96,12 +107,11 @@ var AppGenerator = yeoman.generators.Base.extend({
         if (this.useJspm) {
             this.log('');
             this.log('Running ' + chalk.bold.yellow('jspm install') + ' for you to install the required dependencies.');
-            if (this.globalJspm) {
-                this.spawnCommand('jspm', ['install'], {}).on('error', cb).on('exit', cb);
-            } else {
+            if (!this.globalJspm) {
                 this.log(chalk.bold.red('Warning: ') + 'Using local jspm. Run ' + chalk.bold.yellow('npm install -g jspm') + ' to install globally.');
-                this.spawnCommand('node_modules/.bin/jspm', ['install'], {}).on('error', cb).on('exit', cb);
             }
+
+            this.jspm(['install'],cb);
         } else {
             cb();
         }
@@ -324,6 +334,8 @@ var AppGenerator = yeoman.generators.Base.extend({
             } else {
                 fontpath = path.join(src, 'bootstrap', 'fonts');
             }
+        } else if (this.useUikit) {
+            fontpath = path.join(src, 'uikit', 'fonts');
         }
 
         if (fs.existsSync(fontpath)) {
@@ -434,20 +446,21 @@ module.exports = AppGenerator.extend({
                 return 'Would you like to include a CSS framework?';
             },
             choices: [
-                {name: 'No Framework', value: 'noframework'},
+                {name: 'UIkit', value: 'uikit'},
                 {name: 'Twitter Bootstrap', value: 'bootstrap', checked: true},
+                {name: 'Foundation', value: 'foundation'},
                 {name: 'PureCSS + Suit', value: 'pure'},
-                {name: 'Foundation', value: 'foundation'}
+                {name: 'No Framework', value: 'noframework'}
             ]
         }, {
             type: 'list',
             name: 'preprocessor',
             message: 'Would you like to use a CSS preprocessor?',
             choices: [
-                {name: 'No Preprocessor', value: 'nopreprocessor'},
+                {name: 'Sass', value: 'sass'},
                 {name: 'Less', value: 'less'},
-                {name: 'Sass', value: 'sass', checked: true},
-                {name: 'Stylus', value: 'stylus'}
+                {name: 'Stylus', value: 'stylus'},
+                {name: 'No Preprocessor', value: 'nopreprocessor'}
             ]
         }, {
             when: useSass,
@@ -468,8 +481,8 @@ module.exports = AppGenerator.extend({
             name: 'loader',
             message: 'Which module loader would you like to use?',
             choices: [
-                {name: 'RequireJS', value: 'requirejs', checked: true},
-                {name: 'SystemJS (jspm)', value: 'jspm'}
+                {name: 'SystemJS (jspm)', value: 'jspm'},
+                {name: 'RequireJS', value: 'requirejs'}
             ]
         }, {
             when: hasGit,
@@ -477,7 +490,7 @@ module.exports = AppGenerator.extend({
             name: 'initGit',
             value: 'initGit',
             message: 'Would you like to enable Git for this project?',
-            default: true
+            default: false
         }];
 
         this.prompt(prompts, function (props) {
@@ -491,6 +504,7 @@ module.exports = AppGenerator.extend({
             this.useBootstrap = useFramework('bootstrap');
             this.usePure = useFramework('pure');
             this.useFoundation = useFramework('foundation');
+            this.useUikit = useFramework('uikit');
 
             var usePreprocessor = _.partial(has, 'preprocessor');
             this.noPreprocessor = usePreprocessor('nopreprocessor');
@@ -539,12 +553,14 @@ module.exports = AppGenerator.extend({
                 bower.dependencies.pure = '~0.5.0';
                 bower.dependencies.suit = '~0.6.0';
                 bower.dependencies.jquery = '~2.1.3';
+            } else if (this.useUikit) {
+                bower.dependencies.uikit = "~2.18.0";
             } else {
                 bower.dependencies.jquery = '~2.1.3';
             }
 
             // add standalone glyphicons if bootstrap is not used
-            if (!this.useBootstrap) {
+            if (!this.useBootstrap && !this.useUikit) {
                 bower.dependencies['sass-bootstrap-glyphicons'] = '~1.0.0';
             }
 
@@ -655,6 +671,16 @@ module.exports = AppGenerator.extend({
                 'postinstall': 'grunt bowerRequirejs'
             };
             fs.writeFileSync('.bowerrc', JSON.stringify(bowerrc, null, 2));
+        }
+
+        // patch jspm
+        // remove when https://github.com/jspm/registry/pull/278 is merged
+        if (this.useJspm && this.useFoundation) {
+            this.jspm(['install', 'foundation', '-o', this.templatePath('scripts/jspm/bower-foundation@5.5.1.json')], null, {stdio: 'ignore'});
+        }
+        // remove when https://github.com/jspm/registry/pull/277 is merged
+        if (this.useJspm && this.useUikit) {
+            this.jspm(['install', 'github:uikit/uikit', '-o', this.templatePath('scripts/jspm/uikit@2.18.0.json')], null, {stdio: 'ignore'});
         }
 
     }
