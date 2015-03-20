@@ -1,6 +1,8 @@
 language: node_js
 node_js:
+  - 'iojs'
   - '0.10'
+  - '0.12'
 before_install:
   - currentfolder=${PWD##*/}
   - if [ "$currentfolder" != 'generator-grunt-symfony' ]; then cd .. && eval "mv $currentfolder generator-grunt-symfony" && cd generator-grunt-symfony; fi
