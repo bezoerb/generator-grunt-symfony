@@ -1,4 +1,10 @@
 
+0.3.0 / 2015-03-20
+==================
+
+  * Added uikit support
+  * Added css framework support for jspm 
+
 0.2.3 / 2015-03-19
 ==================
 
