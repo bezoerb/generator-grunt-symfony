@@ -672,7 +672,9 @@ module.exports = AppGenerator.extend({
                 'postinstall': 'grunt bowerRequirejs'
             };
             fs.writeFileSync('.bowerrc', JSON.stringify(bowerrc, null, 2));
-            this.spawnCommand('grunt', ['bowerRequirejs'], {stdio: 'ignore'});
+            this.spawnCommand('grunt', ['bowerRequirejs'], {stdio: 'ignore'}).on('error', function(err){
+                this.log(err)
+            }.bind(this));
 
         }
     }
