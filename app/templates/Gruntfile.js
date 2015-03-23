@@ -5,12 +5,11 @@ module.exports = function(grunt) {
 
     var _ = require('lodash');
     var fs = require('fs');
-    var path = require('path');<% if (useLess) { %>
-    var LessPluginAutoPrefix = require('less-plugin-autoprefix');<% } %>
+    var path = require('path');
     var parseurl = require('parseurl');
     var php = require('php-proxy-middleware');
     var env = fs.existsSync('.envrc') && grunt.file.readJSON('.envrc') || {
-        port: parseInt(grunt.option('port'),10) || 8000,
+        port: parseInt(grunt.option('port'),10) || 8000
     };
 
 
@@ -79,7 +78,7 @@ module.exports = function(grunt) {
         watch: {
             styles: {
                 files: ['<%%= config.app %>/styles/{,*/}*.<% if (useLess) { %>less<% } else if (useStylus) { %>styl<% } else if (useSass) { %>{scss,sass}<% } else if (noPreprocessor) { %>css<% } %>'],
-                tasks: ['<% if (useLess) { %>less<% } else if (useStylus) { %>stylus<% } else if (useSass) { %>sass','autoprefixer<% } else if (noPreprocessor) { %>concat:css','autoprefixer<% } %>']
+                tasks: ['<% if (useLess) { %>less<% } else if (useStylus) { %>stylus<% } else if (useSass) { %>sass<% } else if (noPreprocessor) { %>concat:css<% } %>','autoprefixer']
             },
             scripts: {
                 files: ['<%%= config.app %>/scripts/**/*.js'],
@@ -101,9 +100,9 @@ module.exports = function(grunt) {
                     'bower_components/suit-utils-layout/lib/layout.css',<% } %>
                     '<%%= config.app %>/styles/{,*/}*.css'
                 ],
-                dest: '.tmp/styles/main.css'
+                dest: '.tmp/concat/main.css'
             }
-        },<% } if (useSass) { %>
+        },<% } else if (useSass) { %>
         sass: {
             options: {<% if (includeLibSass) { %>
                 loadPath: ['bower_components']<% } else { %>
@@ -111,10 +110,35 @@ module.exports = function(grunt) {
             },
             all: {
                 files: {
-                    '.tmp/styles/main.css': '<%%= config.app %>/styles/main.scss'
+                    '.tmp/sass/main.css': '<%%= config.app %>/styles/main.scss'
                 }
             }
-        },<% } if (noPreprocessor || useSass) { %>
+        },<% } else if (useLess) { %>
+        less: {
+            dist: {
+                options: {
+                    paths: [
+                        '<%%= config.app %>/styles',
+                        'bower_components'
+                    ]
+                },
+                src: "<%%= config.app %>/styles/main.less",
+                dest: ".tmp/less/main.css"
+            }
+        },<% } else if (useStylus) { %>
+        stylus: {
+            compile: {
+                files: {
+                    '.tmp/stylus/main.css': '<%%= config.app %>/styles/main.styl'
+                },
+                options: {
+                    paths: ['bower_components'],
+                        'include css':true,
+                        use: [require('nib')],
+                        dest: '.tmp'
+                }
+            }
+        },<% } %>
         autoprefixer: {
             options: {
                 browsers: ['> 5%', 'last 2 versions', 'ie 9'],
@@ -125,45 +149,12 @@ module.exports = function(grunt) {
             dist: {
                 files: [{
                     expand: true,
-                    cwd: '.tmp/styles/',
+                    cwd: '.tmp/<% if (noPreprocessor) {%>concat<% } else if (useLess) {%>less<% } else if (useSass) { %>sass<% } else if (useStylus) { %>stylus<% } %>/',
                     src: '{,*/}*.css',
                     dest: '.tmp/styles/'
                 }]
             }
-        },<% } if (useLess) { %>
-        less: {
-            dist: {
-                options: {
-                    paths: [
-                        '<%%= config.app %>/styles',
-                        'bower_components'
-                    ],
-                    plugins: [
-                        new LessPluginAutoPrefix({browsers: ['> 5%', 'last 2 versions', 'ie 9']})
-                    ]
-                },
-                src: "<%%= config.app %>/styles/main.less",
-                dest: ".tmp/styles/main.css"
-            }
-        },<% } else if (useStylus) { %>
-        stylus: {
-            compile: {
-                files: {
-                    '.tmp/styles/main.css': '<%%= config.app %>/styles/main.styl'
-                },
-                options: {
-                    paths: ['bower_components'],
-                    'include css':true,
-                    use: [
-                        require('nib'),
-                        function() { return require('autoprefixer-stylus')({
-                            browsers: ['> 5%', 'last 2 versions', 'ie 9']
-                        }); }
-                    ],
-                    dest: '.tmp'
-                }
-            }
-        },<% } %>
+        },
         cssmin: {
             dist: {
                 src: '.tmp/styles/main.css',
