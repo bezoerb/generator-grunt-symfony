@@ -22,7 +22,7 @@ var AppGenerator = yeoman.generators.Base.extend({
         // Check if composer is installed globally
         this.globalComposer = false;
         exec('composer', ['-V'], function (error) {
-            if (error != null && os.platform() !== 'win32') {
+            if (error !== null && os.platform() !== 'win32') {
                 var prompts = [{
                     type: 'confirm',
                     name: 'continue',
@@ -41,7 +41,7 @@ var AppGenerator = yeoman.generators.Base.extend({
                         process.exit(1);
                     }
                 }.bind(this));
-            } else if (error != null) {
+            } else if (error !== null) {
                 this.log('WARNING: No global composer installation found. Go to https://getcomposer.org/download/ and install first.');
                 process.exit(1);
             } else {
@@ -131,16 +131,15 @@ var AppGenerator = yeoman.generators.Base.extend({
      * @returns {boolean} true
      */
     showSymfonyRepo: function getRepo(answers) {
-        var data = _.pick(answers, 'symfonyUsername', 'symfonyRepository', 'symfonyCommit');
         var custom = !_.result(answers, 'symfonyStandard');
 
         if (custom) {
-            var repo = 'https://github.com/'
-                + _.result(answers, 'symfonyUsername')
-                + '/'
-                + _.result(answers, 'symfonyRepository')
-                + '/tree/'
-                + _.result(answers, 'symfonyCommit');
+            var repo = 'https://github.com/' +
+                _.result(answers, 'symfonyUsername') +
+                '/' +
+                _.result(answers, 'symfonyRepository') +
+                '/tree/' +
+                _.result(answers, 'symfonyCommit');
 
             console.log('');
             console.log('Thanks! I\'ll use ' + repo);
@@ -377,9 +376,11 @@ module.exports = AppGenerator.extend({
         };
 
         // Have Yeoman greet the user.
-        this.log(yosay(
-            'Welcome to the priceless ' + chalk.red('GruntSymfony') + ' generator!'
-        ));
+        if (!this.options['skip-welcome-message']) {
+            this.log(yosay(
+                'Welcome to the priceless ' + chalk.red('GruntSymfony') + ' generator!'
+            ));
+        }
 
         this.checkJspm();
         this.checkGit();
@@ -555,7 +556,7 @@ module.exports = AppGenerator.extend({
                 bower.dependencies.suit = '~0.6.0';
                 bower.dependencies.jquery = '~2.1.3';
             } else if (this.useUikit) {
-                bower.dependencies.uikit = "~2.18.0";
+                bower.dependencies.uikit = '~2.18.0';
             } else {
                 bower.dependencies.jquery = '~2.1.3';
             }
@@ -652,7 +653,7 @@ module.exports = AppGenerator.extend({
                                 this.log('I\'m finally all done. Run ' + chalk.bold.green('grunt serve') + ' to start your development server or ' + chalk.bold.green('grunt serve:dist') + ' to check your prod environment.');
                                 this.log('');
                             }
-                        }.bind(this))
+                        }.bind(this));
                     }.bind(this));
 
                 } else if (!this.options['skip-install-message']) {
@@ -673,7 +674,7 @@ module.exports = AppGenerator.extend({
             };
             fs.writeFileSync('.bowerrc', JSON.stringify(bowerrc, null, 2));
             this.spawnCommand('grunt', ['bowerRequirejs'], {stdio: 'ignore'}).on('error', function(err){
-                this.log(err)
+                this.log(err);
             }.bind(this));
 
         }
