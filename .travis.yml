@@ -6,6 +6,8 @@ node_js:
 before_install:
   - sudo apt-get update
   - sudo apt-get install php5
+  - gem update --system
+  - gem install sass --version "=3.3.7"
   - npm install -g bower grunt-cli
   - currentfolder=${PWD##*/}
   - if [ "$currentfolder" != 'generator-grunt-symfony' ]; then cd .. && eval "mv $currentfolder generator-grunt-symfony" && cd generator-grunt-symfony; fi
