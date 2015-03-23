@@ -106,7 +106,7 @@ module.exports = function(grunt) {
         },<% } if (useSass) { %>
         sass: {
             options: {<% if (includeLibSass) { %>
-                includePaths: ['bower_components']<% } else { %>
+                loadPath: ['bower_components']<% } else { %>
                 loadPath: 'bower_components'<% } %>
             },
             all: {
@@ -410,7 +410,7 @@ module.exports = function(grunt) {
         grunt.task.run(['clean:tmp']);
 
         if (target === 'dist') {
-            grunt.task.run(['assets']);
+            grunt.task.run(['build']);
         } else {
             target = 'dev';
             grunt.task.run(['<% if (useLess) { %>less<% } else if (useStylus) { %>stylus<% } else if (useSass) { %>sass','autoprefixer<% } else if (noPreprocessor) { %>concat:css','autoprefixer<% } %>']);
@@ -436,6 +436,6 @@ module.exports = function(grunt) {
     grunt.registerTask('js', ['clean:js', 'jshint', '<% if (useRequirejs) { %>bowerRequirejs', 'requirejs<% } else if (useJspm) { %>exec:jspm', 'uglify:dist<% } %>']);
     grunt.registerTask('img', ['clean:img','imagemin','svgmin']);
     grunt.registerTask('rev', ['filerev', 'usemin']);
-    grunt.registerTask('assets', ['js', 'css', 'img', 'rev', 'copy','clean:tmp','exec:sfcl']);
-    grunt.registerTask('build', ['assets']);
+    grunt.registerTask('assets', ['js', 'css', 'img', 'rev', 'copy','clean:tmp']);
+    grunt.registerTask('build', ['assets','exec:sfcl']);
 };

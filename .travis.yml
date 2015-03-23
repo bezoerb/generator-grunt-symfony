@@ -4,6 +4,8 @@ node_js:
   - '0.10'
   - '0.12'
 before_install:
+  - sudo apt-get update
+  - sudo apt-get install php5
   - npm install -g bower grunt-cli
   - currentfolder=${PWD##*/}
   - if [ "$currentfolder" != 'generator-grunt-symfony' ]; then cd .. && eval "mv $currentfolder generator-grunt-symfony" && cd generator-grunt-symfony; fi
