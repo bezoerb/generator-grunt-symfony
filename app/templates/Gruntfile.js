@@ -404,7 +404,7 @@ module.exports = function(grunt) {
             grunt.task.run(['build']);
         } else {
             target = 'dev';
-            grunt.task.run(['<% if (useLess) { %>less<% } else if (useStylus) { %>stylus<% } else if (useSass) { %>sass','autoprefixer<% } else if (noPreprocessor) { %>concat:css','autoprefixer<% } %>']);
+            grunt.task.run(['<% if (useLess) { %>less<% } else if (useStylus) { %>stylus<% } else if (useSass) { %>sass<% } else if (noPreprocessor) { %>concat:css<% } %>','autoprefixer']);
         }
 
         // start php middleware
@@ -423,7 +423,7 @@ module.exports = function(grunt) {
     <% } %>
 
 
-    grunt.registerTask('css', ['clean:css','<% if (useLess) { %>less<% } else if (useStylus) { %>stylus<% } else if (useSass) { %>sass','autoprefixer<% } else if (noPreprocessor) { %>concat:css','autoprefixer<% } %>', 'cssmin'<% if (useCritical) { %>, 'criticalcss'<% } %>]);
+    grunt.registerTask('css', ['clean:css','<% if (useLess) { %>less<% } else if (useStylus) { %>stylus<% } else if (useSass) { %>sass<% } else if (noPreprocessor) { %>concat:css<% } %>','autoprefixer', 'cssmin'<% if (useCritical) { %>, 'criticalcss'<% } %>]);
     grunt.registerTask('js', ['clean:js', 'jshint', '<% if (useRequirejs) { %>bowerRequirejs', 'requirejs<% } else if (useJspm) { %>exec:jspm', 'uglify:dist<% } %>']);
     grunt.registerTask('img', ['clean:img','imagemin','svgmin']);
     grunt.registerTask('rev', ['filerev', 'usemin']);
