@@ -1,1 +1,4 @@
 node_modules/
+test/fixtures/bin/
+test/fixtures/bower_components/
+test/fixtures/vendor/
