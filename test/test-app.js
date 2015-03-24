@@ -88,13 +88,13 @@ describe('grunt-symfony generator', function () {
 
             it('should build assets', function (done) {
                 this.timeout(100000);
-                withComposer(function (error) {
-                    expect(error).to.be.null;
+                //withComposer(function (error) {
+                //    expect(error).to.be.null;
                     exec('grunt assets', function (error, stdout) {
                         expect(stdout).to.contain('Done, without errors.');
                         done();
                     });
-                });
+                //});
 
             });
         };
