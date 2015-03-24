@@ -21,9 +21,9 @@ var exec = require('child_process').exec;
 //
 
 function linkDeps() {
-    fs.copy(__dirname + '/fixtures/node_modules', __dirname + '/temp/node_modules');
-    fs.copy(__dirname + '/fixtures/bower_components', __dirname + '/temp/bower_components');
-    fs.copy(__dirname + '/fixtures/vendor', __dirname + '/temp/vendor');
+    fs.copySync(__dirname + '/fixtures/node_modules', __dirname + '/temp/node_modules');
+    fs.copySync(__dirname + '/fixtures/bower_components', __dirname + '/temp/bower_components');
+    fs.copySync(__dirname + '/fixtures/vendor', __dirname + '/temp/vendor');
 }
 
 function withComposer(cb) {
