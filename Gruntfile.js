@@ -63,15 +63,18 @@ module.exports = function (grunt) {
             grunt.log.ok('installing bower dependencies for generated app');
             process.exec('bower install --quiet', {cwd: '../fixtures'}, function () {
 
-                grunt.log.ok('installing composer dependencies for generated app');
-                process.exec('composer install --quiet', {cwd: '../fixtures'}, function () {
-                    shell.cd('../../');
-                    done();
+                process.exec('php -r "readfile(\'https://getcomposer.org/installer\');" | php', function () {
+                    grunt.log.ok('installing composer dependencies for generated app');
+                    process.exec('php composer.phar install --quiet', function () {
+                        shell.cd('../../');
+                        done();
+                    });
                 });
             });
         });
     });
 
-    grunt.registerTask('test', ['updateFixtures','installFixtures','simplemocha'
-    ]);
+    grunt.log.ok(process.version);
+
+    grunt.registerTask('test', ['updateFixtures','installFixtures','simplemocha']);
 };

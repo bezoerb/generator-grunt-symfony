@@ -20,16 +20,26 @@ var exec = require('child_process').exec;
 // loader (requirejs|jspm)
 //
 
+function getVersion(){
+    return parseFloat('v0.12.0'.replace(/\w/,''));
+}
+
 function linkDeps() {
-    fs.copySync(__dirname + '/fixtures/node_modules', __dirname + '/temp/node_modules');
-    fs.copySync(__dirname + '/fixtures/bower_components', __dirname + '/temp/bower_components');
-    fs.copySync(__dirname + '/fixtures/vendor', __dirname + '/temp/vendor');
+    if (getVersion() < 0.12) {
+        fs.copySync(__dirname + '/fixtures/node_modules', __dirname + '/temp/node_modules');
+        fs.copySync(__dirname + '/fixtures/bower_components', __dirname + '/temp/bower_components');
+        fs.copySync(__dirname + '/fixtures/vendor', __dirname + '/temp/vendor');
+    } else {
+        fs.symlinkSync(__dirname + '/fixtures/node_modules', __dirname + '/temp/node_modules');
+        fs.symlinkSync(__dirname + '/fixtures/bower_components', __dirname + '/temp/bower_components');
+        fs.symlinkSync(__dirname + '/fixtures/vendor', __dirname + '/temp/vendor');
+    }
+
 }
 
 function withComposer(cb) {
     if (!cb) {
-        cb = function () {
-        };
+        cb = function () {};
     }
     exec('php -r "readfile(\'https://getcomposer.org/installer\');" | php', function () {
         fs.copySync(__dirname + '/temp/app/config/parameters.yml.dist', __dirname + '/temp/app/config/parameters.yml');
@@ -78,13 +88,13 @@ describe('grunt-symfony generator', function () {
 
             it('should build assets', function (done) {
                 this.timeout(100000);
-                //withComposer(function (error) {
-                //    expect(error).to.be.null;
+                withComposer(function (error) {
+                    expect(error).to.be.null;
                     exec('grunt assets', function (error, stdout) {
                         expect(stdout).to.contain('Done, without errors.');
                         done();
                     });
-                //});
+                });
 
             });
         };
