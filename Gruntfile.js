@@ -1,6 +1,7 @@
 'use strict';
 var shell = require('shelljs');
 var process = require('child_process');
+var spawn = require('cross-spawn');
 var fs = require('fs-extra');
 var path = require('path');
 
@@ -36,12 +37,10 @@ module.exports = function (grunt) {
         var packageJson = fs.readFileSync(path.resolve('app/templates/_package.json'), 'utf8');
         var bowerJson = fs.readFileSync(path.resolve('app/templates/_bower.json'), 'utf8');
 
-        // replace package name
-        packageJson = packageJson.replace(/"name": "<%(.*)%>"/g, '"name": "tempApp"');
+        // replace package nam
         packageJson = packageJson.replace(/<%(.*)%>/g, '');
 
         // remove all ejs conditionals
-        bowerJson = bowerJson.replace(/"name": "<%(.*)%>"/g, '"name": "tempApp"');
         bowerJson = bowerJson.replace(/<%(.*)%>/g, '');
 
         // save files
@@ -50,7 +49,7 @@ module.exports = function (grunt) {
                 done();
             });
         });
-    });
+    }.bind(this));
 
 
     grunt.registerTask('installFixtures', 'install package and bower fixtures', function () {
@@ -58,21 +57,16 @@ module.exports = function (grunt) {
 
         shell.cd('test/fixtures');
         grunt.log.ok('installing npm dependencies for generated app');
-        process.exec('npm install --quiet', {cwd: '../fixtures'}, function () {
+
+        process.exec('npm install', {cwd: '../fixtures', stdio: 'inherit'}, function () {
 
             grunt.log.ok('installing bower dependencies for generated app');
-            process.exec('bower install --quiet', {cwd: '../fixtures'}, function () {
-
-                process.exec('php -r "readfile(\'https://getcomposer.org/installer\');" | php', function () {
-                    grunt.log.ok('installing composer dependencies for generated app');
-                    process.exec('php composer.phar install --quiet', function () {
-                        shell.cd('../../');
-                        done();
-                    });
-                });
+            process.exec('bower install', {cwd: '../fixtures', stdio: 'inherit'}, function () {
+                shell.cd('../../');
+                done();
             });
         });
-    });
+    }.bind(this));
 
     grunt.log.ok(process.version);
 

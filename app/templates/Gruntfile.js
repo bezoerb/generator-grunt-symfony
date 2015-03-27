@@ -105,7 +105,7 @@ module.exports = function(grunt) {
         },<% } else if (useSass) { %>
         sass: {
             options: {<% if (includeLibSass) { %>
-                loadPath: ['bower_components']<% } else { %>
+                includePaths: ['bower_components']<% } else { %>
                 loadPath: 'bower_components'<% } %>
             },
             all: {
