@@ -28,6 +28,10 @@ module.exports = function (grunt) {
                 timeout: 100000,
                 ui: 'bdd'
             }
+        },
+
+        exec: {
+            fixtures: 'cd test/fixtures && npm install && bower install && cd ../..'
         }
     });
 
@@ -36,10 +40,12 @@ module.exports = function (grunt) {
         var packageJson = fs.readFileSync(path.resolve('app/templates/_package.json'), 'utf8');
         var bowerJson = fs.readFileSync(path.resolve('app/templates/_bower.json'), 'utf8');
 
-        // replace package nam
+        // replace package name
+        packageJson = packageJson.replace(/"name": "<%(.*)%>"/g, '"name": "tempApp"');
         packageJson = packageJson.replace(/<%(.*)%>/g, '');
 
         // remove all ejs conditionals
+        bowerJson = bowerJson.replace(/"name": "<%(.*)%>"/g, '"name": "tempApp"');
         bowerJson = bowerJson.replace(/<%(.*)%>/g, '');
 
         // save files
@@ -49,6 +55,7 @@ module.exports = function (grunt) {
             });
         });
     });
+
 
 
     grunt.registerTask('installFixtures', 'install package and bower fixtures', function () {
@@ -69,5 +76,5 @@ module.exports = function (grunt) {
 
     grunt.log.ok(process.version);
 
-    grunt.registerTask('test', ['updateFixtures','installFixtures','simplemocha']);
+    grunt.registerTask('test', ['updateFixtures','exec:fixtures','simplemocha']);
 };
