@@ -48,7 +48,7 @@ module.exports = function (grunt) {
                 done();
             });
         });
-    }.bind(this));
+    });
 
 
     grunt.registerTask('installFixtures', 'install package and bower fixtures', function () {
@@ -65,7 +65,7 @@ module.exports = function (grunt) {
                 done();
             });
         });
-    }.bind(this));
+    });
 
     grunt.log.ok(process.version);
 
