@@ -1,7 +1,6 @@
 'use strict';
 var shell = require('shelljs');
 var process = require('child_process');
-var spawn = require('cross-spawn');
 var fs = require('fs-extra');
 var path = require('path');
 
