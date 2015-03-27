@@ -25,15 +25,8 @@ function getVersion(){
 }
 
 function linkDeps() {
-    if (getVersion() < 0.12) {
-        fs.copySync(__dirname + '/fixtures/node_modules', __dirname + '/temp/node_modules');
-        fs.copySync(__dirname + '/fixtures/bower_components', __dirname + '/temp/bower_components');
-        fs.copySync(__dirname + '/fixtures/vendor', __dirname + '/temp/vendor');
-    } else {
-        fs.symlinkSync(__dirname + '/fixtures/node_modules', __dirname + '/temp/node_modules');
-        fs.symlinkSync(__dirname + '/fixtures/bower_components', __dirname + '/temp/bower_components');
-        fs.symlinkSync(__dirname + '/fixtures/vendor', __dirname + '/temp/vendor');
-    }
+    fs.symlinkSync(__dirname + '/fixtures/node_modules', __dirname + '/temp/node_modules');
+    fs.symlinkSync(__dirname + '/fixtures/bower_components', __dirname + '/temp/bower_components');
 
 }
 
