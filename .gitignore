@@ -2,3 +2,5 @@ node_modules/
 test/fixtures/bin/
 test/fixtures/bower_components/
 test/fixtures/vendor/
+test/fixtures/app/
+test/fixtures/jspm_packages/

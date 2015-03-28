@@ -10,6 +10,6 @@ before_install:
   - gem install sass --version "=3.3.7"
   - npm cache clean
   - npm update -g npm
-  - npm install -g bower grunt-cli
+  - npm install -g bower grunt-cli jspm
   - currentfolder=${PWD##*/}
   - if [ "$currentfolder" != 'generator-grunt-symfony' ]; then cd .. && eval "mv $currentfolder generator-grunt-symfony" && cd generator-grunt-symfony; fi

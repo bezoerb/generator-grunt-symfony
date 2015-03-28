@@ -31,7 +31,7 @@ module.exports = function (grunt) {
         },
 
         exec: {
-            fixtures: 'cd test/fixtures && npm install && bower install && cd ../..'
+            fixtures: 'cd test/fixtures && npm install --silent && bower install --silent && jspm install --silent && cd ../..'
         }
     });
 
@@ -39,19 +39,23 @@ module.exports = function (grunt) {
         var done = this.async();
         var packageJson = fs.readFileSync(path.resolve('app/templates/_package.json'), 'utf8');
         var bowerJson = fs.readFileSync(path.resolve('app/templates/_bower.json'), 'utf8');
+        var jspmConfig = fs.readFileSync(path.resolve('app/templates/scripts/jspm/config.js'), 'utf8');
 
-        // replace package name
+        // remove all ejs conditionals
         packageJson = packageJson.replace(/"name": "<%(.*)%>"/g, '"name": "tempApp"');
         packageJson = packageJson.replace(/<%(.*)%>/g, '');
 
-        // remove all ejs conditionals
         bowerJson = bowerJson.replace(/"name": "<%(.*)%>"/g, '"name": "tempApp"');
         bowerJson = bowerJson.replace(/<%(.*)%>/g, '');
 
+        jspmConfig = jspmConfig.replace(/<%(.*)%>/g, '');
+
         // save files
-        fs.writeFile(path.resolve(__dirname + '/test/fixtures/package.json'), packageJson, function () {
-            fs.writeFile(path.resolve(__dirname + '/test/fixtures/bower.json'), bowerJson, function () {
-                done();
+        fs.outputFile(path.resolve(__dirname + '/test/fixtures/package.json'), packageJson, function () {
+            fs.outputFile(path.resolve(__dirname + '/test/fixtures/bower.json'), bowerJson, function () {
+                fs.outputFile(path.resolve(__dirname + '/test/fixtures/app/Resources/public/scripts/config.js'), jspmConfig, function () {
+                    done();
+                });
             });
         });
     });
