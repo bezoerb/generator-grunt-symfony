@@ -7,6 +7,7 @@ var files = require('./helper/fileHelper');
 var chai = require('chai');
 var expect = chai.expect;
 var fs = require('fs-extra');
+var glob = require('glob');
 var exec = require('child_process').exec;
 
 
@@ -20,19 +21,31 @@ var exec = require('child_process').exec;
 // loader (requirejs|jspm)
 //
 
-function getVersion(){
-    return parseFloat('v0.12.0'.replace(/\w/,''));
+function linkDeps(skip) {
+    return function () {
+        // reset conflicted modules
+        _.forEach(glob.sync(__dirname + '/fixtures/node_modules/*.conflicted'), function (conflicted) {
+            fs.renameSync(conflicted, conflicted.replace(/\.conflicted$/, ''));
+        });
+        // rename skiped files conflicted
+        _.chain(glob.sync(__dirname + '/fixtures/node_modules/*'))
+            .filter(function (dir) {
+                return _.indexOf(skip || [], path.basename(dir)) !== -1;
+            }).forEach(function (dir) {
+                fs.renameSync(dir, dir + '.conflicted');
+            }).value();
+
+
+        fs.symlinkSync(__dirname + '/fixtures/node_modules', __dirname + '/temp/node_modules');
+        fs.symlinkSync(__dirname + '/fixtures/bower_components', __dirname + '/temp/bower_components');
+    };
 }
 
-function linkDeps() {
-    fs.symlinkSync(__dirname + '/fixtures/node_modules', __dirname + '/temp/node_modules');
-    fs.symlinkSync(__dirname + '/fixtures/bower_components', __dirname + '/temp/bower_components');
-
-}
 
 function withComposer(cb) {
     if (!cb) {
-        cb = function () {};
+        cb = function () {
+        };
     }
     exec('php -r "readfile(\'https://getcomposer.org/installer\');" | php', function () {
         fs.copySync(__dirname + '/temp/app/config/parameters.yml.dist', __dirname + '/temp/app/config/parameters.yml');
@@ -41,7 +54,6 @@ function withComposer(cb) {
         });
     });
 }
-
 
 
 describe('grunt-symfony generator', function () {
@@ -55,7 +67,7 @@ describe('grunt-symfony generator', function () {
         loader: 'requirejs'
     };
 
-    function testConfiguration(config) {
+    function testConfiguration(config, conflictingModules) {
         return function () {
             before(function (done) {
                 this.timeout(60000);
@@ -63,7 +75,7 @@ describe('grunt-symfony generator', function () {
                     .inDir(__dirname + '/temp')
                     .withOptions({'skip-install': true})
                     .withPrompts(_.assign(defaultOptions, config || {}))
-                    .on('ready', linkDeps)
+                    .on('ready', linkDeps(conflictingModules))
                     .on('end', done);
             });
 
@@ -83,10 +95,10 @@ describe('grunt-symfony generator', function () {
                 this.timeout(100000);
                 //withComposer(function (error) {
                 //    expect(error).to.be.null;
-                    exec('grunt assets', function (error, stdout) {
-                        expect(stdout).to.contain('Done, without errors.');
-                        done();
-                    });
+                exec('grunt assets', function (error, stdout) {
+                    expect(stdout).to.contain('Done, without errors.');
+                    done();
+                });
                 //});
 
             });
@@ -94,35 +106,96 @@ describe('grunt-symfony generator', function () {
     }
 
     describe('running app with requirejs and without preprocessor,framework ', testConfiguration());
-    describe('running app with requirejs, less and without framework ', testConfiguration({preprocessor:'less'}));
-    describe('running app with requirejs, sass (ruby) and without framework ', testConfiguration({preprocessor:'sass',libsass: false}));
-    describe('running app with requirejs, sass (node) and without framework ', testConfiguration({preprocessor:'sass',libsass: true}));
-    describe('running app with requirejs, stylus and without framework ', testConfiguration({preprocessor:'stylus'}));
+    describe('running app with requirejs, less and without framework ', testConfiguration({preprocessor: 'less'}));
+    describe('running app with requirejs, sass (ruby) and without framework ', testConfiguration({
+        preprocessor: 'sass',
+        libsass: false
+    }, ['grunt-sass']));
+    describe('running app with requirejs, sass (node) and without framework ', testConfiguration({
+        preprocessor: 'sass',
+        libsass: true
+    }, ['grunt-contrib-sass']));
+    describe('running app with requirejs, stylus and without framework ', testConfiguration({preprocessor: 'stylus'}));
 
     describe('running app with requirejs, uikit and without preprocessor ', testConfiguration());
-    describe('running app with requirejs, less and uikit ', testConfiguration({preprocessor:'less', framework:'uikit'}));
-    describe('running app with requirejs, sass (ruby) and uikit ', testConfiguration({preprocessor:'sass',libsass: false, framework:'uikit'}));
-    describe('running app with requirejs, sass (node) and uikit ', testConfiguration({preprocessor:'sass',libsass: true, framework:'uikit'}));
-    describe('running app with requirejs, stylus and uikit ', testConfiguration({preprocessor:'stylus', framework:'uikit'}));
+    describe('running app with requirejs, less and uikit ', testConfiguration({
+        preprocessor: 'less',
+        framework: 'uikit'
+    }));
+    describe('running app with requirejs, sass (ruby) and uikit ', testConfiguration({
+        preprocessor: 'sass',
+        libsass: false,
+        framework: 'uikit'
+    }, ['grunt-sass']));
+    describe('running app with requirejs, sass (node) and uikit ', testConfiguration({
+        preprocessor: 'sass',
+        libsass: true,
+        framework: 'uikit'
+    }, ['grunt-contrib-sass']));
+    describe('running app with requirejs, stylus and uikit ', testConfiguration({
+        preprocessor: 'stylus',
+        framework: 'uikit'
+    }));
 
     describe('running app with requirejs, bootstrap and without preprocessor ', testConfiguration());
-    describe('running app with requirejs, less and bootstrap ', testConfiguration({preprocessor:'less', framework:'bootstrap'}));
-    describe('running app with requirejs, sass (ruby) and bootstrap ', testConfiguration({preprocessor:'sass',libsass: false, framework:'bootstrap'}));
-    describe('running app with requirejs, sass (node) and bootstrap ', testConfiguration({preprocessor:'sass',libsass: true, framework:'bootstrap'}));
-    describe('running app with requirejs, stylus and bootstrap ', testConfiguration({preprocessor:'stylus', framework:'bootstrap'}));
+    describe('running app with requirejs, less and bootstrap ', testConfiguration({
+        preprocessor: 'less',
+        framework: 'bootstrap'
+    }));
+    describe('running app with requirejs, sass (ruby) and bootstrap ', testConfiguration({
+        preprocessor: 'sass',
+        libsass: false,
+        framework: 'bootstrap'
+    }, ['grunt-sass']));
+    describe('running app with requirejs, sass (node) and bootstrap ', testConfiguration({
+        preprocessor: 'sass',
+        libsass: true,
+        framework: 'bootstrap'
+    }, ['grunt-contrib-sass']));
+    describe('running app with requirejs, stylus and bootstrap ', testConfiguration({
+        preprocessor: 'stylus',
+        framework: 'bootstrap'
+    }));
 
     describe('running app with requirejs, foundation and without preprocessor ', testConfiguration());
-    describe('running app with requirejs, less and foundation ', testConfiguration({preprocessor:'less', framework:'foundation'}));
-    describe('running app with requirejs, sass (ruby) and foundation ', testConfiguration({preprocessor:'sass',libsass: false, framework:'foundation'}));
-    describe('running app with requirejs, sass (node) and foundation ', testConfiguration({preprocessor:'sass',libsass: true, framework:'foundation'}));
-    describe('running app with requirejs, stylus and foundation ', testConfiguration({preprocessor:'stylus', framework:'foundation'}));
+    describe('running app with requirejs, less and foundation ', testConfiguration({
+        preprocessor: 'less',
+        framework: 'foundation'
+    }));
+    describe('running app with requirejs, sass (ruby) and foundation ', testConfiguration({
+        preprocessor: 'sass',
+        libsass: false,
+        framework: 'foundation'
+    }, ['grunt-sass']));
+    describe('running app with requirejs, sass (node) and foundation ', testConfiguration({
+        preprocessor: 'sass',
+        libsass: true,
+        framework: 'foundation'
+    }, ['grunt-contrib-sass']));
+    describe('running app with requirejs, stylus and foundation ', testConfiguration({
+        preprocessor: 'stylus',
+        framework: 'foundation'
+    }));
 
     describe('running app with requirejs, pure and without preprocessor ', testConfiguration());
-    describe('running app with requirejs, less and pure ', testConfiguration({preprocessor:'less', framework:'pure'}));
-    describe('running app with requirejs, sass (ruby) and pure ', testConfiguration({preprocessor:'sass',libsass: false, framework:'pure'}));
-    describe('running app with requirejs, sass (node) and pure ', testConfiguration({preprocessor:'sass',libsass: true, framework:'pure'}));
-    describe('running app with requirejs, stylus and pure ', testConfiguration({preprocessor:'stylus', framework:'pure'}));
-
+    describe('running app with requirejs, less and pure ', testConfiguration({
+        preprocessor: 'less',
+        framework: 'pure'
+    }));
+    describe('running app with requirejs, sass (ruby) and pure ', testConfiguration({
+        preprocessor: 'sass',
+        libsass: false,
+        framework: 'pure'
+    }, ['grunt-sass']));
+    describe('running app with requirejs, sass (node) and pure ', testConfiguration({
+        preprocessor: 'sass',
+        libsass: true,
+        framework: 'pure'
+    }, ['grunt-contrib-sass']));
+    describe('running app with requirejs, stylus and pure ', testConfiguration({
+        preprocessor: 'stylus',
+        framework: 'pure'
+    }));
 
 
 });
