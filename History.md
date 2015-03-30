@@ -1,9 +1,13 @@
 
-0.3.1 / 2015-03-20
+0.3.1 / 2015-03-30
 ==================
-
-  * fixed usage of frontend framework scripts with requirejs
-  * fixed usage of frontend framework scripts with jspm
+  * Added tests for jspm configuration
+  * Use 'includePaths' for libsass
+  * dropped autoprefixer plugins in favour of grunt-autoprefixer 2.2.0
+  * bump deps
+  * improved tests
+  * integrated frontend framework scripts with requirejs
+  * integrated frontend framework scripts with jspm
   * Fix #9
   * Fixed typo
 
