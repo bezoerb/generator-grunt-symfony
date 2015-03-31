@@ -2,6 +2,7 @@
 0.3.2 / 2015-03-31
 ==================
 
+  * Smarter tests to speed up travis 
   * Added optional 'load-grunt-config'
 
 0.3.1 / 2015-03-30
