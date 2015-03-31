@@ -8,9 +8,9 @@ module.exports = function(grunt) {
     var path = require('path');
     var parseurl = require('parseurl');
     var php = require('php-proxy-middleware');
-    var env = fs.existsSync('.envrc') && grunt.file.readJSON('.envrc') || {
-        port: parseInt(grunt.option('port'),10) || 8000
-    };
+    var env = _.defaults(fs.existsSync('.envrc') && grunt.file.readJSON('.envrc') || {},{
+        port: parseInt(grunt.option('port'), 10) || 8000
+    });
 
 
     var appConfig = {
@@ -122,8 +122,8 @@ module.exports = function(grunt) {
                         'bower_components'
                     ]
                 },
-                src: "<%%= config.app %>/styles/main.less",
-                dest: ".tmp/less/main.css"
+                src: '<%%= config.app %>/styles/main.less',
+                dest: '.tmp/less/main.css'
             }
         },<% } else if (useStylus) { %>
         stylus: {

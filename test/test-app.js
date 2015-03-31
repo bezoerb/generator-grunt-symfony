@@ -43,17 +43,17 @@ function linkDeps(skip) {
 }
 
 
-function withComposer(cb) {
-    if (!cb) {
-        cb = function () {};
-    }
-    exec('php -r "readfile(\'https://getcomposer.org/installer\');" | php', function () {
-        fs.copySync(__dirname + '/temp/app/config/parameters.yml.dist', __dirname + '/temp/app/config/parameters.yml');
-        exec('php composer.phar install', function (error, stdout) {
-            cb(error, stdout);
-        });
-    });
-}
+//function withComposer(cb) {
+//    if (!cb) {
+//        cb = function () {};
+//    }
+//    exec('php -r "readfile(\'https://getcomposer.org/installer\');" | php', function () {
+//        fs.copySync(__dirname + '/temp/app/config/parameters.yml.dist', __dirname + '/temp/app/config/parameters.yml');
+//        exec('php composer.phar install', function (error, stdout) {
+//            cb(error, stdout);
+//        });
+//    });
+//}
 
 function withJspm(cb) {
     if (!cb) {
@@ -73,7 +73,8 @@ describe('grunt-symfony generator', function () {
         framework: 'noframework',
         preprocessor: 'nopreprocessor',
         useCritical: false,
-        loader: 'requirejs'
+        loader: 'requirejs',
+        loadGruntConfig: false
     };
 
     function testConfiguration(config, conflictingModules) {
@@ -117,73 +118,129 @@ describe('grunt-symfony generator', function () {
                         done();
                     });
                 }
-                //withComposer(function (error) {
-                //    expect(error).to.be.null;
-
-                //});
-
             });
         };
     }
 
-    describe('running app with jspm and without preprocessor,framework ', testConfiguration({loader: 'jspm'}));
-    describe('running app with jspm, less and without framework ', testConfiguration({loader: 'jspm',preprocessor: 'less'}));
-    describe('running app with jspm, sass (ruby) and without framework ', testConfiguration({loader: 'jspm',preprocessor: 'sass',libsass: false}, ['grunt-sass']));
-    describe('running app with jspm, sass (node) and without framework ', testConfiguration({loader: 'jspm',preprocessor: 'sass',libsass: true}, ['grunt-contrib-sass']));
-    describe('running app with jspm, stylus and without framework ', testConfiguration({loader: 'jspm',preprocessor: 'stylus'}));
+    describe('running app with jspm and without preprocessor,framework ', testConfiguration({loadGruntConfig: true,loader: 'jspm'}));
+    describe('running app with jspm, less and without framework ', testConfiguration({loadGruntConfig: true,loader: 'jspm',preprocessor: 'less'}));
+    describe('running app with jspm, sass (ruby) and without framework ', testConfiguration({loadGruntConfig: true,loader: 'jspm',preprocessor: 'sass',libsass: false}, ['grunt-sass']));
+    describe('running app with jspm, sass (node) and without framework ', testConfiguration({loadGruntConfig: true,loader: 'jspm',preprocessor: 'sass',libsass: true}, ['grunt-contrib-sass']));
+    describe('running app with jspm, stylus and without framework ', testConfiguration({loadGruntConfig: true,loader: 'jspm',preprocessor: 'stylus'}));
 
-    describe('running app with jspm, uikit and without preprocessor ', testConfiguration({loader: 'jspm'}));
-    describe('running app with jspm, less and uikit ', testConfiguration({loader: 'jspm',preprocessor: 'less',framework: 'uikit'}));
-    describe('running app with jspm, sass (ruby) and uikit ', testConfiguration({loader: 'jspm',preprocessor: 'sass',libsass: false,framework: 'uikit'}, ['grunt-sass']));
-    describe('running app with jspm, sass (node) and uikit ', testConfiguration({loader: 'jspm',preprocessor: 'sass',libsass: true,framework: 'uikit'}, ['grunt-contrib-sass']));
-    describe('running app with jspm, stylus and uikit ', testConfiguration({loader: 'jspm',preprocessor: 'stylus',framework: 'uikit'}));
+    describe('running app with jspm, uikit and without preprocessor ', testConfiguration({loadGruntConfig: true,loader: 'jspm'}));
+    describe('running app with jspm, less and uikit ', testConfiguration({loadGruntConfig: true,loader: 'jspm',preprocessor: 'less',framework: 'uikit'}));
+    describe('running app with jspm, sass (ruby) and uikit ', testConfiguration({loadGruntConfig: true,loader: 'jspm',preprocessor: 'sass',libsass: false,framework: 'uikit'}, ['grunt-sass']));
+    describe('running app with jspm, sass (node) and uikit ', testConfiguration({loadGruntConfig: true,loader: 'jspm',preprocessor: 'sass',libsass: true,framework: 'uikit'}, ['grunt-contrib-sass']));
+    describe('running app with jspm, stylus and uikit ', testConfiguration({loadGruntConfig: true,loader: 'jspm',preprocessor: 'stylus',framework: 'uikit'}));
 
-    describe('running app with jspm, bootstrap and without preprocessor ', testConfiguration({loader: 'jspm'}));
-    describe('running app with jspm, less and bootstrap ', testConfiguration({loader: 'jspm',preprocessor: 'less',framework: 'bootstrap'}));
-    describe('running app with jspm, sass (ruby) and bootstrap ', testConfiguration({loader: 'jspm',preprocessor: 'sass',libsass: false,framework: 'bootstrap'}, ['grunt-sass']));
-    describe('running app with jspm, sass (node) and bootstrap ', testConfiguration({loader: 'jspm',preprocessor: 'sass',libsass: true,framework: 'bootstrap'}, ['grunt-contrib-sass']));
-    describe('running app with jspm, stylus and bootstrap ', testConfiguration({loader: 'jspm',preprocessor: 'stylus',framework: 'bootstrap'}));
+    describe('running app with jspm, bootstrap and without preprocessor ', testConfiguration({loadGruntConfig: true,loader: 'jspm'}));
+    describe('running app with jspm, less and bootstrap ', testConfiguration({loadGruntConfig: true,loader: 'jspm',preprocessor: 'less',framework: 'bootstrap'}));
+    describe('running app with jspm, sass (ruby) and bootstrap ', testConfiguration({loadGruntConfig: true,loader: 'jspm',preprocessor: 'sass',libsass: false,framework: 'bootstrap'}, ['grunt-sass']));
+    describe('running app with jspm, sass (node) and bootstrap ', testConfiguration({loadGruntConfig: true,loader: 'jspm',preprocessor: 'sass',libsass: true,framework: 'bootstrap'}, ['grunt-contrib-sass']));
+    describe('running app with jspm, stylus and bootstrap ', testConfiguration({loadGruntConfig: true,loader: 'jspm',preprocessor: 'stylus',framework: 'bootstrap'}));
 
-    describe('running app with jspm, foundation and without preprocessor ', testConfiguration({loader: 'jspm'}));
-    describe('running app with jspm, less and foundation ', testConfiguration({loader: 'jspm',preprocessor: 'less',framework: 'foundation'}));
-    describe('running app with jspm, sass (ruby) and foundation ', testConfiguration({loader: 'jspm',preprocessor: 'sass',libsass: false,framework: 'foundation'}, ['grunt-sass']));
-    describe('running app with jspm, sass (node) and foundation ', testConfiguration({loader: 'jspm',preprocessor: 'sass',libsass: true,framework: 'foundation'}, ['grunt-contrib-sass']));
-    describe('running app with jspm, stylus and foundation ', testConfiguration({loader: 'jspm',preprocessor: 'stylus',framework: 'foundation'}));
+    describe('running app with jspm, foundation and without preprocessor ', testConfiguration({loadGruntConfig: true,loader: 'jspm'}));
+    describe('running app with jspm, less and foundation ', testConfiguration({loadGruntConfig: true,loader: 'jspm',preprocessor: 'less',framework: 'foundation'}));
+    describe('running app with jspm, sass (ruby) and foundation ', testConfiguration({loadGruntConfig: true,loader: 'jspm',preprocessor: 'sass',libsass: false,framework: 'foundation'}, ['grunt-sass']));
+    describe('running app with jspm, sass (node) and foundation ', testConfiguration({loadGruntConfig: true,loader: 'jspm',preprocessor: 'sass',libsass: true,framework: 'foundation'}, ['grunt-contrib-sass']));
+    describe('running app with jspm, stylus and foundation ', testConfiguration({loadGruntConfig: true,loader: 'jspm',preprocessor: 'stylus',framework: 'foundation'}));
 
-    describe('running app with jspm, pure and without preprocessor ', testConfiguration({loader: 'jspm'}));
-    describe('running app with jspm, less and pure ', testConfiguration({loader: 'jspm',preprocessor: 'less',framework: 'pure'}));
-    describe('running app with jspm, sass (ruby) and pure ', testConfiguration({loader: 'jspm',preprocessor: 'sass',libsass: false,framework: 'pure'}, ['grunt-sass']));
-    describe('running app with jspm, sass (node) and pure ', testConfiguration({loader: 'jspm',preprocessor: 'sass',libsass: true,framework: 'pure'}, ['grunt-contrib-sass']));
-    describe('running app with jspm, stylus and pure ', testConfiguration({loader: 'jspm',preprocessor: 'stylus',framework: 'pure'}));
+    describe('running app with jspm, pure and without preprocessor ', testConfiguration({loadGruntConfig: true,loader: 'jspm'}));
+    describe('running app with jspm, less and pure ', testConfiguration({loadGruntConfig: true,loader: 'jspm',preprocessor: 'less',framework: 'pure'}));
+    describe('running app with jspm, sass (ruby) and pure ', testConfiguration({loadGruntConfig: true,loader: 'jspm',preprocessor: 'sass',libsass: false,framework: 'pure'}, ['grunt-sass']));
+    describe('running app with jspm, sass (node) and pure ', testConfiguration({loadGruntConfig: true,loader: 'jspm',preprocessor: 'sass',libsass: true,framework: 'pure'}, ['grunt-contrib-sass']));
+    describe('running app with jspm, stylus and pure ', testConfiguration({loadGruntConfig: true,loader: 'jspm',preprocessor: 'stylus',framework: 'pure'}));
 
     describe('running app with requirejs and without preprocessor,framework ', testConfiguration());
-    describe('running app with requirejs, less and without framework ', testConfiguration({preprocessor: 'less'}));
-    describe('running app with requirejs, sass (ruby) and without framework ', testConfiguration({preprocessor: 'sass',libsass: false}, ['grunt-sass']));
-    describe('running app with requirejs, sass (node) and without framework ', testConfiguration({preprocessor: 'sass',libsass: true}, ['grunt-contrib-sass']));
-    describe('running app with requirejs, stylus and without framework ', testConfiguration({preprocessor: 'stylus'}));
+    describe('running app with requirejs, less and without framework ', testConfiguration({loadGruntConfig: true,preprocessor: 'less'}));
+    describe('running app with requirejs, sass (ruby) and without framework ', testConfiguration({loadGruntConfig: true,preprocessor: 'sass',libsass: false}, ['grunt-sass']));
+    describe('running app with requirejs, sass (node) and without framework ', testConfiguration({loadGruntConfig: true,preprocessor: 'sass',libsass: true}, ['grunt-contrib-sass']));
+    describe('running app with requirejs, stylus and without framework ', testConfiguration({loadGruntConfig: true,preprocessor: 'stylus'}));
 
     describe('running app with requirejs, uikit and without preprocessor ', testConfiguration());
-    describe('running app with requirejs, less and uikit ', testConfiguration({preprocessor: 'less',framework: 'uikit'}));
-    describe('running app with requirejs, sass (ruby) and uikit ', testConfiguration({preprocessor: 'sass',libsass: false,framework: 'uikit'}, ['grunt-sass']));
-    describe('running app with requirejs, sass (node) and uikit ', testConfiguration({preprocessor: 'sass',libsass: true,framework: 'uikit'}, ['grunt-contrib-sass']));
-    describe('running app with requirejs, stylus and uikit ', testConfiguration({preprocessor: 'stylus',framework: 'uikit'}));
+    describe('running app with requirejs, less and uikit ', testConfiguration({loadGruntConfig: true,preprocessor: 'less',framework: 'uikit'}));
+    describe('running app with requirejs, sass (ruby) and uikit ', testConfiguration({loadGruntConfig: true,preprocessor: 'sass',libsass: false,framework: 'uikit'}, ['grunt-sass']));
+    describe('running app with requirejs, sass (node) and uikit ', testConfiguration({loadGruntConfig: true,preprocessor: 'sass',libsass: true,framework: 'uikit'}, ['grunt-contrib-sass']));
+    describe('running app with requirejs, stylus and uikit ', testConfiguration({loadGruntConfig: true,preprocessor: 'stylus',framework: 'uikit'}));
 
     describe('running app with requirejs, bootstrap and without preprocessor ', testConfiguration());
-    describe('running app with requirejs, less and bootstrap ', testConfiguration({preprocessor: 'less',framework: 'bootstrap'}));
-    describe('running app with requirejs, sass (ruby) and bootstrap ', testConfiguration({preprocessor: 'sass',libsass: false,framework: 'bootstrap'}, ['grunt-sass']));
-    describe('running app with requirejs, sass (node) and bootstrap ', testConfiguration({preprocessor: 'sass',libsass: true,framework: 'bootstrap'}, ['grunt-contrib-sass']));
-    describe('running app with requirejs, stylus and bootstrap ', testConfiguration({preprocessor: 'stylus',framework: 'bootstrap'}));
+    describe('running app with requirejs, less and bootstrap ', testConfiguration({loadGruntConfig: true,preprocessor: 'less',framework: 'bootstrap'}));
+    describe('running app with requirejs, sass (ruby) and bootstrap ', testConfiguration({loadGruntConfig: true,preprocessor: 'sass',libsass: false,framework: 'bootstrap'}, ['grunt-sass']));
+    describe('running app with requirejs, sass (node) and bootstrap ', testConfiguration({loadGruntConfig: true,preprocessor: 'sass',libsass: true,framework: 'bootstrap'}, ['grunt-contrib-sass']));
+    describe('running app with requirejs, stylus and bootstrap ', testConfiguration({loadGruntConfig: true,preprocessor: 'stylus',framework: 'bootstrap'}));
 
     describe('running app with requirejs, foundation and without preprocessor ', testConfiguration());
-    describe('running app with requirejs, less and foundation ', testConfiguration({preprocessor: 'less',framework: 'foundation'}));
-    describe('running app with requirejs, sass (ruby) and foundation ', testConfiguration({preprocessor: 'sass',libsass: false,framework: 'foundation'}, ['grunt-sass']));
-    describe('running app with requirejs, sass (node) and foundation ', testConfiguration({preprocessor: 'sass',libsass: true,framework: 'foundation'}, ['grunt-contrib-sass']));
-    describe('running app with requirejs, stylus and foundation ', testConfiguration({preprocessor: 'stylus',framework: 'foundation'}));
+    describe('running app with requirejs, less and foundation ', testConfiguration({loadGruntConfig: true,preprocessor: 'less',framework: 'foundation'}));
+    describe('running app with requirejs, sass (ruby) and foundation ', testConfiguration({loadGruntConfig: true,preprocessor: 'sass',libsass: false,framework: 'foundation'}, ['grunt-sass']));
+    describe('running app with requirejs, sass (node) and foundation ', testConfiguration({loadGruntConfig: true,preprocessor: 'sass',libsass: true,framework: 'foundation'}, ['grunt-contrib-sass']));
+    describe('running app with requirejs, stylus and foundation ', testConfiguration({loadGruntConfig: true,preprocessor: 'stylus',framework: 'foundation'}));
 
     describe('running app with requirejs, pure and without preprocessor ', testConfiguration());
-    describe('running app with requirejs, less and pure ', testConfiguration({preprocessor: 'less',framework: 'pure'}));
-    describe('running app with requirejs, sass (ruby) and pure ', testConfiguration({preprocessor: 'sass',libsass: false,framework: 'pure'}, ['grunt-sass']));
-    describe('running app with requirejs, sass (node) and pure ', testConfiguration({preprocessor: 'sass',libsass: true,framework: 'pure'}, ['grunt-contrib-sass']));
-    describe('running app with requirejs, stylus and pure ', testConfiguration({preprocessor: 'stylus',framework: 'pure'}));
+    describe('running app with requirejs, less and pure ', testConfiguration({loadGruntConfig: true,preprocessor: 'less',framework: 'pure'}));
+    describe('running app with requirejs, sass (ruby) and pure ', testConfiguration({loadGruntConfig: true,preprocessor: 'sass',libsass: false,framework: 'pure'}, ['grunt-sass']));
+    describe('running app with requirejs, sass (node) and pure ', testConfiguration({loadGruntConfig: true,preprocessor: 'sass',libsass: true,framework: 'pure'}, ['grunt-contrib-sass']));
+    describe('running app with requirejs, stylus and pure ', testConfiguration({loadGruntConfig: true,preprocessor: 'stylus',framework: 'pure'}));
+
+
+    describe('running app with load-grunt-config, jspm and without preprocessor,framework ', testConfiguration({loadGruntConfig: true,loader: 'jspm'}));
+    describe('running app with load-grunt-config, jspm, less and without framework ', testConfiguration({loadGruntConfig: true,loader: 'jspm',preprocessor: 'less'}));
+    describe('running app with load-grunt-config, jspm, sass (ruby) and without framework ', testConfiguration({loadGruntConfig: true,loader: 'jspm',preprocessor: 'sass',libsass: false}, ['grunt-sass']));
+    describe('running app with load-grunt-config, jspm, sass (node) and without framework ', testConfiguration({loadGruntConfig: true,loader: 'jspm',preprocessor: 'sass',libsass: true}, ['grunt-contrib-sass']));
+    describe('running app with load-grunt-config, jspm, stylus and without framework ', testConfiguration({loadGruntConfig: true,loader: 'jspm',preprocessor: 'stylus'}));
+
+    describe('running app with load-grunt-config, jspm, uikit and without preprocessor ', testConfiguration({loadGruntConfig: true,loader: 'jspm'}));
+    describe('running app with load-grunt-config, jspm, less and uikit ', testConfiguration({loadGruntConfig: true,loader: 'jspm',preprocessor: 'less',framework: 'uikit'}));
+    describe('running app with load-grunt-config, jspm, sass (ruby) and uikit ', testConfiguration({loadGruntConfig: true,loader: 'jspm',preprocessor: 'sass',libsass: false,framework: 'uikit'}, ['grunt-sass']));
+    describe('running app with load-grunt-config, jspm, sass (node) and uikit ', testConfiguration({loadGruntConfig: true,loader: 'jspm',preprocessor: 'sass',libsass: true,framework: 'uikit'}, ['grunt-contrib-sass']));
+    describe('running app with load-grunt-config, jspm, stylus and uikit ', testConfiguration({loadGruntConfig: true,loader: 'jspm',preprocessor: 'stylus',framework: 'uikit'}));
+
+    describe('running app with load-grunt-config, jspm, bootstrap and without preprocessor ', testConfiguration({loadGruntConfig: true,loader: 'jspm'}));
+    describe('running app with load-grunt-config, jspm, less and bootstrap ', testConfiguration({loadGruntConfig: true,loader: 'jspm',preprocessor: 'less',framework: 'bootstrap'}));
+    describe('running app with load-grunt-config, jspm, sass (ruby) and bootstrap ', testConfiguration({loadGruntConfig: true,loader: 'jspm',preprocessor: 'sass',libsass: false,framework: 'bootstrap'}, ['grunt-sass']));
+    describe('running app with load-grunt-config, jspm, sass (node) and bootstrap ', testConfiguration({loadGruntConfig: true,loader: 'jspm',preprocessor: 'sass',libsass: true,framework: 'bootstrap'}, ['grunt-contrib-sass']));
+    describe('running app with load-grunt-config, jspm, stylus and bootstrap ', testConfiguration({loadGruntConfig: true,loader: 'jspm',preprocessor: 'stylus',framework: 'bootstrap'}));
+
+    describe('running app with load-grunt-config, jspm, foundation and without preprocessor ', testConfiguration({loadGruntConfig: true,loader: 'jspm'}));
+    describe('running app with load-grunt-config, jspm, less and foundation ', testConfiguration({loadGruntConfig: true,loader: 'jspm',preprocessor: 'less',framework: 'foundation'}));
+    describe('running app with load-grunt-config, jspm, sass (ruby) and foundation ', testConfiguration({loadGruntConfig: true,loader: 'jspm',preprocessor: 'sass',libsass: false,framework: 'foundation'}, ['grunt-sass']));
+    describe('running app with load-grunt-config, jspm, sass (node) and foundation ', testConfiguration({loadGruntConfig: true,loader: 'jspm',preprocessor: 'sass',libsass: true,framework: 'foundation'}, ['grunt-contrib-sass']));
+    describe('running app with load-grunt-config, jspm, stylus and foundation ', testConfiguration({loadGruntConfig: true,loader: 'jspm',preprocessor: 'stylus',framework: 'foundation'}));
+
+    describe('running app with load-grunt-config, jspm, pure and without preprocessor ', testConfiguration({loadGruntConfig: true,loader: 'jspm'}));
+    describe('running app with load-grunt-config, jspm, less and pure ', testConfiguration({loadGruntConfig: true,loader: 'jspm',preprocessor: 'less',framework: 'pure'}));
+    describe('running app with load-grunt-config, jspm, sass (ruby) and pure ', testConfiguration({loadGruntConfig: true,loader: 'jspm',preprocessor: 'sass',libsass: false,framework: 'pure'}, ['grunt-sass']));
+    describe('running app with load-grunt-config, jspm, sass (node) and pure ', testConfiguration({loadGruntConfig: true,loader: 'jspm',preprocessor: 'sass',libsass: true,framework: 'pure'}, ['grunt-contrib-sass']));
+    describe('running app with load-grunt-config, jspm, stylus and pure ', testConfiguration({loadGruntConfig: true,loader: 'jspm',preprocessor: 'stylus',framework: 'pure'}));
+
+    describe('running app with load-grunt-config, requirejs and without preprocessor,framework ', testConfiguration({loadGruntConfig: true}));
+    describe('running app with load-grunt-config, requirejs, less and without framework ', testConfiguration({loadGruntConfig: true,preprocessor: 'less'}));
+    describe('running app with load-grunt-config, requirejs, sass (ruby) and without framework ', testConfiguration({loadGruntConfig: true,preprocessor: 'sass',libsass: false}, ['grunt-sass']));
+    describe('running app with load-grunt-config, requirejs, sass (node) and without framework ', testConfiguration({loadGruntConfig: true,preprocessor: 'sass',libsass: true}, ['grunt-contrib-sass']));
+    describe('running app with load-grunt-config, requirejs, stylus and without framework ', testConfiguration({loadGruntConfig: true,preprocessor: 'stylus'}));
+
+    describe('running app with load-grunt-config, requirejs, uikit and without preprocessor ', testConfiguration({loadGruntConfig: true}));
+    describe('running app with load-grunt-config, requirejs, less and uikit ', testConfiguration({loadGruntConfig: true,preprocessor: 'less',framework: 'uikit'}));
+    describe('running app with load-grunt-config, requirejs, sass (ruby) and uikit ', testConfiguration({loadGruntConfig: true,preprocessor: 'sass',libsass: false,framework: 'uikit'}, ['grunt-sass']));
+    describe('running app with load-grunt-config, requirejs, sass (node) and uikit ', testConfiguration({loadGruntConfig: true,preprocessor: 'sass',libsass: true,framework: 'uikit'}, ['grunt-contrib-sass']));
+    describe('running app with load-grunt-config, requirejs, stylus and uikit ', testConfiguration({loadGruntConfig: true,preprocessor: 'stylus',framework: 'uikit'}));
+
+    describe('running app with load-grunt-config, requirejs, bootstrap and without preprocessor ', testConfiguration({loadGruntConfig: true}));
+    describe('running app with load-grunt-config, requirejs, less and bootstrap ', testConfiguration({loadGruntConfig: true,preprocessor: 'less',framework: 'bootstrap'}));
+    describe('running app with load-grunt-config, requirejs, sass (ruby) and bootstrap ', testConfiguration({loadGruntConfig: true,preprocessor: 'sass',libsass: false,framework: 'bootstrap'}, ['grunt-sass']));
+    describe('running app with load-grunt-config, requirejs, sass (node) and bootstrap ', testConfiguration({loadGruntConfig: true,preprocessor: 'sass',libsass: true,framework: 'bootstrap'}, ['grunt-contrib-sass']));
+    describe('running app with load-grunt-config, requirejs, stylus and bootstrap ', testConfiguration({loadGruntConfig: true,preprocessor: 'stylus',framework: 'bootstrap'}));
+
+    describe('running app with load-grunt-config, requirejs, foundation and without preprocessor ', testConfiguration({loadGruntConfig: true}));
+    describe('running app with load-grunt-config, requirejs, less and foundation ', testConfiguration({loadGruntConfig: true,preprocessor: 'less',framework: 'foundation'}));
+    describe('running app with load-grunt-config, requirejs, sass (ruby) and foundation ', testConfiguration({loadGruntConfig: true,preprocessor: 'sass',libsass: false,framework: 'foundation'}, ['grunt-sass']));
+    describe('running app with load-grunt-config, requirejs, sass (node) and foundation ', testConfiguration({loadGruntConfig: true,preprocessor: 'sass',libsass: true,framework: 'foundation'}, ['grunt-contrib-sass']));
+    describe('running app with load-grunt-config, requirejs, stylus and foundation ', testConfiguration({loadGruntConfig: true,preprocessor: 'stylus',framework: 'foundation'}));
+
+    describe('running app with load-grunt-config, requirejs, pure and without preprocessor ', testConfiguration({loadGruntConfig: true}));
+    describe('running app with load-grunt-config, requirejs, less and pure ', testConfiguration({loadGruntConfig: true,preprocessor: 'less',framework: 'pure'}));
+    describe('running app with load-grunt-config, requirejs, sass (ruby) and pure ', testConfiguration({loadGruntConfig: true,preprocessor: 'sass',libsass: false,framework: 'pure'}, ['grunt-sass']));
+    describe('running app with load-grunt-config, requirejs, sass (node) and pure ', testConfiguration({loadGruntConfig: true,preprocessor: 'sass',libsass: true,framework: 'pure'}, ['grunt-contrib-sass']));
+    describe('running app with load-grunt-config, requirejs, stylus and pure ', testConfiguration({loadGruntConfig: true,preprocessor: 'stylus',framework: 'pure'}));
 
 });

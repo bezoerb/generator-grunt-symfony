@@ -389,7 +389,6 @@ module.exports = AppGenerator.extend({
 
 
     prompting: function () {
-        var context = this;
         var done = this.async();
 
         var symfonyCustom = function (answers) {
@@ -419,12 +418,12 @@ module.exports = AppGenerator.extend({
             type: 'input',
             name: 'symfonyUsername',
             message: function () {
-                context.log('--------------------------------------------------------------------------------');
-                context.log('Please provide GitHub details of the Symfony distribution you would like to use.');
-                context.log('e.g. http://github.com/[username]/[repository]/tree/[commit].');
-                context.log('--------------------------------------------------------------------------------');
+                this.log('--------------------------------------------------------------------------------');
+                this.log('Please provide GitHub details of the Symfony distribution you would like to use.');
+                this.log('e.g. http://github.com/[username]/[repository]/tree/[commit].');
+                this.log('--------------------------------------------------------------------------------');
                 return 'Username';
-            },
+            }.bind(this),
             default: this.symfonyDefaults.username,
             when: symfonyCustom
 
@@ -443,10 +442,10 @@ module.exports = AppGenerator.extend({
         }, {
             type: 'list',
             name: 'framework',
-            message: function () {
-                context.log('--------------------------------------------------------------------------------');
+            message: function(){
+                this.log('--------------------------------------------------------------------------------');
                 return 'Would you like to include a CSS framework?';
-            },
+            }.bind(this),
             choices: [
                 {name: 'UIkit', value: 'uikit'},
                 {name: 'Twitter Bootstrap', value: 'bootstrap', checked: true},
@@ -469,7 +468,7 @@ module.exports = AppGenerator.extend({
             type: 'confirm',
             name: 'libsass',
             value: 'uselibsass',
-            message: 'Would you like to use libsass? Read up more at \n' +
+            message: 'Would you like to use libsass? Read up more at' + os.EOL +
             chalk.green('https://github.com/andrew/node-sass#node-sass'),
             default: true
         }, {
@@ -486,6 +485,13 @@ module.exports = AppGenerator.extend({
                 {name: 'SystemJS (jspm)', value: 'jspm'},
                 {name: 'RequireJS', value: 'requirejs'}
             ]
+        }, {
+            type: 'confirm',
+            name: 'loadGruntConfig',
+            value: 'loadGruntConfig',
+            message: 'Would you like to use load-grunt-config to organize your Gruntfile?' + os.EOL +
+            chalk.green('http://firstandthird.github.io/load-grunt-config'),
+            default: true
         }, {
             when: hasGit,
             type: 'confirm',
@@ -524,6 +530,8 @@ module.exports = AppGenerator.extend({
             this.useGit = !!props.initGit;
             this.useCritical = !!props.useCritical;
 
+            this.loadGruntConfig = !!props.loadGruntConfig;
+
             done();
         }.bind(this));
     },
@@ -531,7 +539,6 @@ module.exports = AppGenerator.extend({
     writing: {
         app: function () {
             this.template('_package.json', 'package.json');
-            this.template('Gruntfile.js', 'Gruntfile.js');
 
             var bower = {
                 name: this._.slugify(this.appname),
@@ -580,6 +587,56 @@ module.exports = AppGenerator.extend({
                 this.destinationPath('.bowerrc')
             );
             this.write('bower.json', JSON.stringify(bower, null, 2));
+        },
+
+        grunt: function(){
+            if (!this.loadGruntConfig) {
+                this.template('Gruntfile.js', 'Gruntfile.js');
+            } else {
+                this.template('Gruntfile.slim.js', 'Gruntfile.js');
+                fse.mkdirsSync(this.destinationPath('grunt'));
+
+
+                // first all basic tasks for every configuration
+                this.template('grunt/aliases.js','grunt/aliases.js');
+                this.template('grunt/clean.js','grunt/clean.js');
+                this.template('grunt/watch.js','grunt/watch.js');
+                this.template('grunt/autoprefixer.js','grunt/autoprefixer.js');
+                this.template('grunt/cssmin.js','grunt/cssmin.js');
+                this.template('grunt/copy.js','grunt/copy.js');
+                this.template('grunt/exec.js','grunt/exec.js');
+                this.template('grunt/filerev.js','grunt/filerev.js');
+                this.template('grunt/usemin.js','grunt/usemin.js');
+                this.template('grunt/jshint.js','grunt/jshint.js');
+                this.template('grunt/imagemin.js','grunt/imagemin.js');
+                this.template('grunt/svgmin.js','grunt/svgmin.js');
+                this.template('grunt/browserSync.js','grunt/browserSync.js');
+
+                // css
+                if (this.noPreprocessor) {
+                    this.template('grunt/concat.js','grunt/concat.js');
+                } else if (this.useSass) {
+                    this.template('grunt/sass.js','grunt/sass.js');
+                } else if (this.useLess) {
+                    this.template('grunt/less.js','grunt/less.js');
+                } else if (this.useStylus) {
+                    this.template('grunt/stylus.js','grunt/stylus.js');
+                }
+
+                if (this.useCritical) {
+                    this.template('grunt/connect.js','grunt/connect.js');
+                    this.template('grunt/http.js','grunt/http.js');
+                    this.template('grunt/critical.js','grunt/critical.js');
+                }
+
+                // js
+                if (this.useRequirejs) {
+                    this.template('grunt/bowerRequirejs.js','grunt/bowerRequirejs.js');
+                    this.template('grunt/requirejs.js','grunt/requirejs.js');
+                } else if (this.useJspm) {
+                    this.template('grunt/uglify.js','grunt/uglify.js');
+                }
+            }
         },
 
         projectfiles: function () {
