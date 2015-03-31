@@ -27,6 +27,7 @@ Just scaffold your app, run `grunt serve` and you are ready to go.
 * File revving
 * Image optimization
 * [Critical](https://github.com/addyosmani/critical) (Extract & Inline Critical-path CSS) 
+* Organize your Gruntfile with [load-grunt-config](http://firstandthird.github.io/load-grunt-config) or keep everything in place
 
 ## Things to come
 * Optimize your assets with
