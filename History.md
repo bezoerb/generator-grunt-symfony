@@ -1,4 +1,9 @@
 
+0.3.2 / 2015-03-31
+==================
+
+  * Added optional 'load-grunt-config'
+
 0.3.1 / 2015-03-30
 ==================
   * Added tests for jspm configuration
