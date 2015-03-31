@@ -102,22 +102,30 @@ describe('grunt-symfony generator', function () {
                 });
             });
 
-            it('should build assets', function (done) {
+            it('should build js', function (done) {
                 this.timeout(100000);
                 if (opts.loader === 'jspm') {
                     withJspm(function (error) {
                         expect(error).to.be.null;
-                        exec('grunt assets', function (error, stdout) {
+                        exec('grunt js', function (error, stdout) {
                             expect(stdout).to.contain('Done, without errors.');
                             done();
                         });
                     });
                 } else {
-                    exec('grunt assets', function (error, stdout) {
+                    exec('grunt js', function (error, stdout) {
                         expect(stdout).to.contain('Done, without errors.');
                         done();
                     });
                 }
+            });
+
+            it('should build css', function (done) {
+                this.timeout(100000);
+                exec('grunt css', function (error, stdout) {
+                    expect(stdout).to.contain('Done, without errors.');
+                    done();
+                });
             });
         };
     }
