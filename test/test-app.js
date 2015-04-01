@@ -73,6 +73,7 @@ describe('grunt-symfony generator', function () {
         framework: 'noframework',
         preprocessor: 'nopreprocessor',
         useCritical: false,
+        useUncss: false,
         loader: 'requirejs',
         loadGruntConfig: false
     };
