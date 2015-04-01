@@ -85,7 +85,7 @@ var AppGenerator = yeoman.generators.Base.extend({
         this.globalJspm = false;
         this.spawnCommand('jspm', ['-v'], {stdio: 'ignore'}).on('exit', function () {
             this.globalJspm = true;
-        }.bind(this)).on('error',function(){
+        }.bind(this)).on('error', function () {
             this.globalJspm = false;
         }.bind(this));
     },
@@ -98,12 +98,12 @@ var AppGenerator = yeoman.generators.Base.extend({
         this.globalGit = false;
         this.spawnCommand('git', ['--version'], {stdio: 'ignore'}).on('exit', function () {
             this.globalGit = true;
-        }.bind(this)).on('error',function(){
+        }.bind(this)).on('error', function () {
             this.globalGit = false;
         }.bind(this));
     },
 
-    jspmInstall: function (cb) {
+    jspmInstall: function jspmInstall(cb) {
         if (this.useJspm) {
             this.log('');
             this.log('Running ' + chalk.bold.yellow('jspm install') + ' for you to install the required dependencies.');
@@ -111,17 +111,75 @@ var AppGenerator = yeoman.generators.Base.extend({
                 this.log(chalk.bold.red('Warning: ') + 'Using local jspm. Run ' + chalk.bold.yellow('npm install -g jspm') + ' to install globally.');
             }
 
-            this.jspm(['install'],cb);
+            this.jspm(['install'], cb);
         } else {
             cb();
         }
     },
 
-    composerUpdate: function (cb) {
+    composerUpdate: function composerUpdate(cb) {
         this.log('');
         this.log('Running ' + chalk.bold.yellow('composer update') + ' for you to install the required dependencies.');
         this.composer(['update'], cb || function () {
         });
+    },
+
+    /**
+     * Set up permissions
+     * see: http://symfony.com/doc/current/book/installation.html#book-installation-permissions
+     * @param cb
+     */
+    setupPermissions: function setupPermissions(cb) {
+        if (!cb) {
+            cb = function () {};
+        }
+        this.log(os.EOL + 'Set up permissions for ' + chalk.cyan('app/cache') + ' and ' + chalk.cyan('app/logs') + '.');
+
+        var acl = {
+            // Use ACL on a system that does support chmod +a
+            chmod: [
+                'HTTPDUSER=`ps aux | grep -E \'[a]pache|[h]ttpd|[_]www|[w]ww-data|[n]ginx\' | grep -v root | head -1 | cut -d\\  -f1`',
+                'chmod +a "$HTTPDUSER allow delete,write,append,file_inherit,directory_inherit" app/cache app/logs',
+                'chmod +a "`whoami` allow delete,write,append,file_inherit,directory_inherit" app/cache app/logs'
+            ].join(';'),
+
+            // Use ACL on a system that does not support chmod +a
+            setfacl: [
+                'HTTPDUSER=`ps aux | grep -E \'[a]pache|[h]ttpd|[_]www|[w]ww-data|[n]ginx\' | grep -v root | head -1 | cut -d\\  -f1`',
+                'setfacl -R -m u:"$HTTPDUSER":rwX -m u:`whoami`:rwX app/cache app/logs',
+                'setfacl -dR -m u:"$HTTPDUSER":rwX -m u:`whoami`:rwX app/cache app/logs'
+            ].join(';')
+        };
+
+
+        exec(acl.chmod, [], function (err) {
+            if (!err) {
+                return cb();
+            }
+
+            exec(acl.setfacl, [], function (err) {
+                if (!err) {
+                    return cb();
+                }
+
+                this.log('Your system doesn\'t support ACL. Setting permissions via ' + chalk.bold.yellow('umask'));
+                this.log('See: http://symfony.com/doc/current/book/installation.html#book-installation-permissions');
+
+                // Without using ACL
+                var consoleContents = this.readFileAsString('app/console').replace('<?php', '<?php' + os.EOL + 'umask(0002);');
+                fse.outputFileSync('app/console', consoleContents);
+
+                var appContents = this.readFileAsString('web/app.php').replace('<?php', '<?php' + os.EOL + 'umask(0002);');
+                fse.outputFileSync('web/app.php', appContents);
+
+                var appDevContents = this.readFileAsString('web/app_dev.php').replace('<?php', '<?php' + os.EOL + 'umask(0002);');
+                fse.outputFileSync('web/app_dev.php', appDevContents);
+
+                cb();
+
+            }.bind(this));
+
+        }.bind(this));
     },
 
 
@@ -442,7 +500,7 @@ module.exports = AppGenerator.extend({
         }, {
             type: 'list',
             name: 'framework',
-            message: function(){
+            message: function () {
                 this.log('--------------------------------------------------------------------------------');
                 return 'Would you like to include a CSS framework?';
             }.bind(this),
@@ -589,7 +647,7 @@ module.exports = AppGenerator.extend({
             this.write('bower.json', JSON.stringify(bower, null, 2));
         },
 
-        grunt: function(){
+        grunt: function () {
             if (!this.loadGruntConfig) {
                 this.template('Gruntfile.js', 'Gruntfile.js');
             } else {
@@ -598,43 +656,43 @@ module.exports = AppGenerator.extend({
 
 
                 // first all basic tasks for every configuration
-                this.template('grunt/aliases.js','grunt/aliases.js');
-                this.template('grunt/clean.js','grunt/clean.js');
-                this.template('grunt/watch.js','grunt/watch.js');
-                this.template('grunt/autoprefixer.js','grunt/autoprefixer.js');
-                this.template('grunt/cssmin.js','grunt/cssmin.js');
-                this.template('grunt/copy.js','grunt/copy.js');
-                this.template('grunt/exec.js','grunt/exec.js');
-                this.template('grunt/filerev.js','grunt/filerev.js');
-                this.template('grunt/usemin.js','grunt/usemin.js');
-                this.template('grunt/jshint.js','grunt/jshint.js');
-                this.template('grunt/imagemin.js','grunt/imagemin.js');
-                this.template('grunt/svgmin.js','grunt/svgmin.js');
-                this.template('grunt/browserSync.js','grunt/browserSync.js');
+                this.template('grunt/aliases.js', 'grunt/aliases.js');
+                this.template('grunt/clean.js', 'grunt/clean.js');
+                this.template('grunt/watch.js', 'grunt/watch.js');
+                this.template('grunt/autoprefixer.js', 'grunt/autoprefixer.js');
+                this.template('grunt/cssmin.js', 'grunt/cssmin.js');
+                this.template('grunt/copy.js', 'grunt/copy.js');
+                this.template('grunt/exec.js', 'grunt/exec.js');
+                this.template('grunt/filerev.js', 'grunt/filerev.js');
+                this.template('grunt/usemin.js', 'grunt/usemin.js');
+                this.template('grunt/jshint.js', 'grunt/jshint.js');
+                this.template('grunt/imagemin.js', 'grunt/imagemin.js');
+                this.template('grunt/svgmin.js', 'grunt/svgmin.js');
+                this.template('grunt/browserSync.js', 'grunt/browserSync.js');
 
                 // css
                 if (this.noPreprocessor) {
-                    this.template('grunt/concat.js','grunt/concat.js');
+                    this.template('grunt/concat.js', 'grunt/concat.js');
                 } else if (this.useSass) {
-                    this.template('grunt/sass.js','grunt/sass.js');
+                    this.template('grunt/sass.js', 'grunt/sass.js');
                 } else if (this.useLess) {
-                    this.template('grunt/less.js','grunt/less.js');
+                    this.template('grunt/less.js', 'grunt/less.js');
                 } else if (this.useStylus) {
-                    this.template('grunt/stylus.js','grunt/stylus.js');
+                    this.template('grunt/stylus.js', 'grunt/stylus.js');
                 }
 
                 if (this.useCritical) {
-                    this.template('grunt/connect.js','grunt/connect.js');
-                    this.template('grunt/http.js','grunt/http.js');
-                    this.template('grunt/critical.js','grunt/critical.js');
+                    this.template('grunt/connect.js', 'grunt/connect.js');
+                    this.template('grunt/http.js', 'grunt/http.js');
+                    this.template('grunt/critical.js', 'grunt/critical.js');
                 }
 
                 // js
                 if (this.useRequirejs) {
-                    this.template('grunt/bowerRequirejs.js','grunt/bowerRequirejs.js');
-                    this.template('grunt/requirejs.js','grunt/requirejs.js');
+                    this.template('grunt/bowerRequirejs.js', 'grunt/bowerRequirejs.js');
+                    this.template('grunt/requirejs.js', 'grunt/requirejs.js');
                 } else if (this.useJspm) {
-                    this.template('grunt/uglify.js','grunt/uglify.js');
+                    this.template('grunt/uglify.js', 'grunt/uglify.js');
                 }
             }
         },
@@ -692,6 +750,8 @@ module.exports = AppGenerator.extend({
 
         this.cleanComposerJson();
 
+        this.setupPermissions();
+
 
         this.installDependencies({
             skipInstall: this.options['skip-install'],
@@ -730,7 +790,7 @@ module.exports = AppGenerator.extend({
                 'postinstall': 'grunt bowerRequirejs'
             };
             fs.writeFileSync('.bowerrc', JSON.stringify(bowerrc, null, 2));
-            this.spawnCommand('grunt', ['bowerRequirejs'], {stdio: 'ignore'}).on('error', function(err){
+            this.spawnCommand('grunt', ['bowerRequirejs'], {stdio: 'ignore'}).on('error', function (err) {
                 this.log(err);
             }.bind(this));
 
