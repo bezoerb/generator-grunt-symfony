@@ -141,24 +141,34 @@ var AppGenerator = yeoman.generators.Base.extend({
                 'HTTPDUSER=`ps aux | grep -E \'[a]pache|[h]ttpd|[_]www|[w]ww-data|[n]ginx\' | grep -v root | head -1 | cut -d\\  -f1`',
                 'chmod +a "$HTTPDUSER allow delete,write,append,file_inherit,directory_inherit" app/cache app/logs',
                 'chmod +a "`whoami` allow delete,write,append,file_inherit,directory_inherit" app/cache app/logs'
-            ].join(';'),
+            ],
 
             // Use ACL on a system that does not support chmod +a
             setfacl: [
                 'HTTPDUSER=`ps aux | grep -E \'[a]pache|[h]ttpd|[_]www|[w]ww-data|[n]ginx\' | grep -v root | head -1 | cut -d\\  -f1`',
                 'setfacl -R -m u:"$HTTPDUSER":rwX -m u:`whoami`:rwX app/cache app/logs',
                 'setfacl -dR -m u:"$HTTPDUSER":rwX -m u:`whoami`:rwX app/cache app/logs'
-            ].join(';')
+            ]
         };
 
 
-        exec(acl.chmod, [], function (err) {
+        exec(acl.chmod.join(';'), [], function (err, stdout, stderr) {
             if (!err) {
+                return cb();
+            } else if (/not\spermitted/.test(stderr)) {
+                this.log(chalk.bold.red('Warning: ') + 'I failed setting the folder permissions. Run the following command as admin as soon as i\'m done:' );
+                this.log(chalk.yellow(acl.chmod.join(os.EOL)));
+                this.log('');
                 return cb();
             }
 
-            exec(acl.setfacl, [], function (err) {
+            exec(acl.setfacl.join(';'), [], function (err, stdout, stderr) {
                 if (!err) {
+                    return cb();
+                } else if (/not\spermitted/.test(stderr)) {
+                    this.log(chalk.bold.red('Warning: ') + 'I failed setting the folder permissions. Run the following command as admin as soon as i\'m done:' );
+                    this.log(chalk.yellow(acl.setfacl.join(os.EOL)));
+                    this.log('');
                     return cb();
                 }
 
