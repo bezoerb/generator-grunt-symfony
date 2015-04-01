@@ -1,4 +1,9 @@
 
+0.3.3 / 2015-04-01
+==================
+
+  * Set symfony folder permissions for 'app/cache' & 'app/logs'
+
 0.3.2 / 2015-03-31
 ==================
 
