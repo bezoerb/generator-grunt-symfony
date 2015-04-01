@@ -29,9 +29,11 @@ module.exports = function (grunt, options) {
             'stylus',<% } else if (useSass) { %>
             'sass',<% } else if (noPreprocessor) { %>
             'concat:css',<% } %>
-            'autoprefixer',
+            'autoprefixer',<% if (useUncss || useCritical) { %>
+            'fetch',<% } if (useUncss) { %>
+            'uncss',<% } %>
             'cssmin'<% if (useCritical) { %>,
-            'criticalcss'<% } %>
+            'critical'<% } %>
         ],
         js: [
             'clean:js',
@@ -61,10 +63,10 @@ module.exports = function (grunt, options) {
         build: [
             'assets',
             'exec:sfcl'
-        ],<% if (useCritical) { %>
-        criticalcss: function(){
+        ],<% if (useCritical || useUncss) { %>
+        fetch: function(){
             grunt.connectMiddleware = getMiddleware();
-            grunt.task.run(['connect', 'http', 'critical']);
+            grunt.task.run(['connect', 'http']);
         },<% } %>
         serve: function(target) {
             // clean tmp

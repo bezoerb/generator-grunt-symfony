@@ -1,9 +1,9 @@
 'use strict';
 module.exports = {
     options: {
-        base: '.tmp',
+        base: '<%%= paths.dist %>',
         minify: true,
-        css: ['.tmp/styles/main.css']
+        css: ['<%%= paths.dist %>/styles/main.css']
     },
     index: {
         src: '<%%= http.index.dest %>',

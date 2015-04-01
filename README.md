@@ -27,11 +27,11 @@ Just scaffold your app, run `grunt serve` and you are ready to go.
 * File revving
 * Image optimization
 * [Critical](https://github.com/addyosmani/critical) (Extract & Inline Critical-path CSS) 
+* [uncss](https://github.com/addyosmani/grunt-uncss) (Automatically strip off unused css)
 * Organize your Gruntfile with [load-grunt-config](http://firstandthird.github.io/load-grunt-config) or keep everything in one place
 
 ## Things to come
 * Optimize your assets with
-  * [uncss](https://github.com/addyosmani/grunt-uncss) (automatically strip off unused css)
   * phpunit
   * js testsuite 
   * ... feel free to add feature requests ;)

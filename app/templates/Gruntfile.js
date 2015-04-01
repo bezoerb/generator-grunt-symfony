@@ -160,13 +160,7 @@ module.exports = function(grunt) {
                 src: '.tmp/styles/main.css',
                 dest: 'web/styles/main.css'
             }
-        },<% if (useCritical) { %>
-
-        // Implementation of critical css processing
-        // Relevant pages are fetched processed afterwards by the critical task
-        // Generated critical path css is stored in 'app/Resources/public/styles/critical'
-        // and inlined in the corresponding twig template.
-        // See: app/Resources/views/Controller/default/index.html.twig
+        },<% if (useCritical || useUncss) { %>
         connect: {
             fetch: {
                 options: {
@@ -194,13 +188,47 @@ module.exports = function(grunt) {
                 },
                 dest: '.tmp/index.html'
             }
-        },
-
+        },<% } if (useUncss) { %>
+        uncss: {
+            dist: {
+                options: {
+                    stylesheets: ['../.tmp/styles/main.css'],
+                        ignore: [
+                        /* ignore classes which are not present at dom load */<% if (useBootstrap) { %>
+                        /\.fade/,
+                            /\.collapse/,
+                            /\.collapsing/,
+                            /\.modal/,
+                            /\.alert/,
+                            /\.open/,
+                        /\.in/<% } else if (useFoundation) { %>
+                        /meta\..+/,
+                            /\.move-/,
+                            /\.fixed/,
+                            /\.modal/,
+                        /open/<% } else if (useUikit) { %>
+                        /\.uk-open/,
+                            /\.uk-notify/,
+                            /\.uk-nestable/,
+                            /\.uk-sortable/,
+                        /\.uk-active/<% } %>
+                ]
+                },
+                files: {
+                    '.tmp/styles/main.css': ['.tmp/*.html']
+                }
+            }
+        },<% } if (useCritical) { %>
+        // Implementation of critical css processing
+        // Relevant pages are fetched processed afterwards by the critical task
+        // Generated critical path css is stored in 'app/Resources/public/styles/critical'
+        // and inlined in the corresponding twig template.
+        // See: app/Resources/views/Controller/default/index.html.twig
         critical: {
             options: {
-                base: '.tmp',
+                base: '<%%= config.dist %>',
                     minify: true,
-                    css: ['.tmp/styles/main.css']
+                    css: ['<%%= config.dist %>/styles/main.css']
             },
             index: {
                 src: '<%%= http.index.dest %>',
@@ -415,15 +443,15 @@ module.exports = function(grunt) {
             'watch'                 // Any other watch tasks you want to run
         ]);
     });
-    <% if (useCritical) { %>
-    grunt.registerTask('criticalcss',function(){
+    <% if (useCritical || useUncss) { %>
+    grunt.registerTask('fetch',function(){
         grunt.connectMiddleware = getMiddleware();
-        grunt.task.run(['connect','http','critical']);
+        grunt.task.run(['connect', 'http']);
     });
     <% } %>
 
 
-    grunt.registerTask('css', ['clean:css','<% if (useLess) { %>less<% } else if (useStylus) { %>stylus<% } else if (useSass) { %>sass<% } else if (noPreprocessor) { %>concat:css<% } %>','autoprefixer', 'cssmin'<% if (useCritical) { %>, 'criticalcss'<% } %>]);
+    grunt.registerTask('css', ['clean:css','<% if (useLess) { %>less<% } else if (useStylus) { %>stylus<% } else if (useSass) { %>sass<% } else if (noPreprocessor) { %>concat:css<% } %>','autoprefixer', <% if (useCritical || useUncss) { %>'fetch',<% } if (useUncss) { %> 'uncss', <% } %> 'cssmin'<% if (useCritical) { %>, 'critical'<% } %>]);
     grunt.registerTask('js', ['clean:js', 'jshint', '<% if (useRequirejs) { %>bowerRequirejs', 'requirejs<% } else if (useJspm) { %>exec:jspm', 'uglify:dist<% } %>']);
     grunt.registerTask('img', ['clean:img','imagemin','svgmin']);
     grunt.registerTask('rev', ['filerev', 'usemin']);

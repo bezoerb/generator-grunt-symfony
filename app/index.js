@@ -541,6 +541,12 @@ module.exports = AppGenerator.extend({
             default: true
         }, {
             type: 'confirm',
+            name: 'useUncss',
+            value: 'useUncss',
+            message: 'Remove unused CSS using uncss?',
+            default: true
+        }, {
+            type: 'confirm',
             name: 'useCritical',
             value: 'useCritical',
             message: 'Supercharge your website by inlining critical path CSS?',
@@ -597,6 +603,7 @@ module.exports = AppGenerator.extend({
 
             this.useGit = !!props.initGit;
             this.useCritical = !!props.useCritical;
+            this.useUncss = !!props.useUncss;
 
             this.loadGruntConfig = !!props.loadGruntConfig;
 
@@ -691,9 +698,14 @@ module.exports = AppGenerator.extend({
                     this.template('grunt/stylus.js', 'grunt/stylus.js');
                 }
 
-                if (this.useCritical) {
+                if (this.useCritical || this.useUncss) {
                     this.template('grunt/connect.js', 'grunt/connect.js');
                     this.template('grunt/http.js', 'grunt/http.js');
+                }
+                if (this.useCritical) {
+                    this.template('grunt/uncss.js', 'grunt/uncss.js');
+                }
+                if (this.useCritical) {
                     this.template('grunt/critical.js', 'grunt/critical.js');
                 }
 
