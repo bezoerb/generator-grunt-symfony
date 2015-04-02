@@ -72,10 +72,9 @@ describe('grunt-symfony generator', function () {
         continue: true,
         framework: 'noframework',
         preprocessor: 'nopreprocessor',
-        useCritical: false,
-        useUncss: false,
         loader: 'requirejs',
-        loadGruntConfig: false
+        loadGruntConfig: false,
+        additional: []
     };
 
     function testJs(config, conflictingModules) {

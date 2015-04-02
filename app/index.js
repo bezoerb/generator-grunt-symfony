@@ -5,7 +5,8 @@ var yosay = require('yosay');
 var os = require('os');
 var fs = require('fs');
 var _ = require('lodash');
-//var util = require('util');
+var updateNotifier = require('update-notifier');
+var stringLength = require('string-length');
 var path = require('path');
 var exec = require('child_process').exec;
 var yaml = require('js-yaml');
@@ -443,10 +444,22 @@ module.exports = AppGenerator.extend({
             commit: '2.6'
         };
 
+
+        var message = ['Welcome to the ' + chalk.bold.yellow('Grunt Symfony') + ' generator!'];
+        if (this.options['update-notifier'] !== false) {
+            var notifier = updateNotifier({pkg: this.pkg});
+
+            if (notifier.update) {
+                message.push('------------------------------------------');
+                message.push('Update available: ' + chalk.green.bold(notifier.update.latest) + chalk.gray(' (current: ' + notifier.update.current + ')'));
+                message.push('Run ' + chalk.magenta('npm install -g ' + this.pkg.name) + ' to update.');
+            }
+        }
+
         // Have Yeoman greet the user.
         if (!this.options['skip-welcome-message']) {
             this.log(yosay(
-                'Welcome to the priceless ' + chalk.red('GruntSymfony') + ' generator!'
+                message.join(' '), {maxLength: stringLength(message[Math.min(message.length-1,1)])}
             ));
         }
 
@@ -540,18 +553,6 @@ module.exports = AppGenerator.extend({
             chalk.green('https://github.com/andrew/node-sass#node-sass'),
             default: true
         }, {
-            type: 'confirm',
-            name: 'useUncss',
-            value: 'useUncss',
-            message: 'Remove unused CSS using uncss?',
-            default: true
-        }, {
-            type: 'confirm',
-            name: 'useCritical',
-            value: 'useCritical',
-            message: 'Supercharge your website by inlining critical path CSS?',
-            default: true
-        }, {
             type: 'list',
             name: 'loader',
             message: 'Which module loader would you like to use?',
@@ -560,12 +561,32 @@ module.exports = AppGenerator.extend({
                 {name: 'RequireJS', value: 'requirejs'}
             ]
         }, {
+        //    type: 'confirm',
+        //    name: 'useUncss',
+        //    value: 'useUncss',
+        //    message: 'Remove unused CSS using uncss?',
+        //    default: true
+        //}, {
+        //    type: 'confirm',
+        //    name: 'useCritical',
+        //    value: 'useCritical',
+        //    message: 'Supercharge your website by inlining critical path CSS?',
+        //    default: true
+        //}, {
             type: 'confirm',
             name: 'loadGruntConfig',
             value: 'loadGruntConfig',
             message: 'Would you like to use load-grunt-config to organize your Gruntfile?' + os.EOL +
             chalk.green('http://firstandthird.github.io/load-grunt-config'),
             default: true
+        }, {
+            type: 'checkbox',
+            name: 'additional',
+            message: 'Which additional plugins should i integrate for you?',
+            choices: [
+                {value: 'uncss', name: 'UnCSS - A grunt task for removing unused CSS', checked: true},
+                {value: 'critical', name: 'Critical - Extract & Inline Critical-path CSS', checked: true}
+            ]
         }, {
             when: hasGit,
             type: 'confirm',
@@ -601,10 +622,13 @@ module.exports = AppGenerator.extend({
             this.useJspm = useLoader('jspm');
             this.useBrowserify = useLoader('browserify');
 
-            this.useGit = !!props.initGit;
-            this.useCritical = !!props.useCritical;
-            this.useUncss = !!props.useUncss;
+            this.log(props.additional);
+            var hasAdditional = _.partial(has, 'additional');
+            this.useCritical = hasAdditional('critical');
+            this.useUncss = hasAdditional('uncss');
 
+
+            this.useGit = !!props.initGit;
             this.loadGruntConfig = !!props.loadGruntConfig;
 
             done();
