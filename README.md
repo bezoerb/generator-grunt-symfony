@@ -1,4 +1,5 @@
-# generator-grunt-symfony [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][depstat-image]][depstat-url]
+# generator-grunt-symfony 
+[![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][depstat-image]][depstat-url]
 
 This [Yeoman](http://yeoman.io) generator scaffolds a symfony2 app with full featured frontend tooling. 
 Just scaffold your app, run `grunt serve` and you are ready to go. 
