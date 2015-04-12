@@ -481,7 +481,8 @@ module.exports = AppGenerator.extend({
         }.bind(this);
 
         function hasFeature(answers, group, feature) {
-            return !!feature && _.result(answers, group) === feature;
+            var val = _.result(answers, group);
+            return typeof feature !== 'undefined' && (val === feature || _.isArray(val) && _.indexOf(val,feature) !== -1);
         }
 
 
@@ -561,18 +562,6 @@ module.exports = AppGenerator.extend({
                 {name: 'RequireJS', value: 'requirejs'}
             ]
         }, {
-        //    type: 'confirm',
-        //    name: 'useUncss',
-        //    value: 'useUncss',
-        //    message: 'Remove unused CSS using uncss?',
-        //    default: true
-        //}, {
-        //    type: 'confirm',
-        //    name: 'useCritical',
-        //    value: 'useCritical',
-        //    message: 'Supercharge your website by inlining critical path CSS?',
-        //    default: true
-        //}, {
             type: 'confirm',
             name: 'loadGruntConfig',
             value: 'loadGruntConfig',
@@ -622,11 +611,10 @@ module.exports = AppGenerator.extend({
             this.useJspm = useLoader('jspm');
             this.useBrowserify = useLoader('browserify');
 
-            this.log(props.additional);
+
             var hasAdditional = _.partial(has, 'additional');
             this.useCritical = hasAdditional('critical');
             this.useUncss = hasAdditional('uncss');
-
 
             this.useGit = !!props.initGit;
             this.loadGruntConfig = !!props.loadGruntConfig;
