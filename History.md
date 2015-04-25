@@ -1,4 +1,14 @@
 
+0.3.4 / 2015-04-25
+==================
+
+  * bump deps
+  * Add some unser hint
+  * badges
+  * Promts restructured + update-notifier
+  * Updates for test
+  * Added uncss
+
 0.3.3 / 2015-04-01
 ==================
 
