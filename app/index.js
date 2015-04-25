@@ -802,6 +802,7 @@ module.exports = AppGenerator.extend({
                             if (!this.options['skip-install-message']) {
                                 this.log('');
                                 this.log('I\'m finally all done. Run ' + chalk.bold.green('grunt serve') + ' to start your development server or ' + chalk.bold.green('grunt serve:dist') + ' to check your prod environment.');
+                                this.log('Run ' + chalk.bold.green('grunt build') + ' to prepare your assets before running your site on a standard webserver like apache or nginx.');
                                 this.log('');
                             }
                         }.bind(this));
