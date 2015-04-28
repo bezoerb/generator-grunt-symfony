@@ -23,7 +23,7 @@ var require = {
         'foundation/slider': 'foundation/js/foundation/foundation.slider',
         'foundation/tab': 'foundation/js/foundation/foundation.tab',
         'foundation/tooltip': 'foundation/js/foundation/foundation.tooltip',
-        'foundation/topbar': 'foundation/js/foundation/foundation.topbar'<% } else if (useBootstrap) { %>,
+        'foundation/topbar': 'foundation/js/foundation/foundation.topbar'<% } else if (useBootstrap && !useSass) { %>,
         bootstrap: 'bootstrap/dist/js/bootstrap',
         'bootstrap/affix': 'bootstrap/js/affix',
         'bootstrap/alert': 'bootstrap/js/alert',
@@ -36,7 +36,20 @@ var require = {
         'bootstrap/scrollspy': 'bootstrap/js/scrollspy',
         'bootstrap/tab': 'bootstrap/js/tab',
         'bootstrap/tooltip': 'bootstrap/js/tooltip',
-        'bootstrap/transition': 'bootstrap/js/transition'<% } %>
+        'bootstrap/transition': 'bootstrap/js/transition'<% } else if (useBootstrap) { %>
+        bootstrap: 'bootstrap-sass-official/assets/javascripts/bootstrap',
+        'bootstrap/affix': 'bootstrap-sass-official/assets/javascripts/bootstrap/affix',
+        'bootstrap/alert': 'bootstrap-sass-official/assets/javascripts/bootstrap/alert',
+        'bootstrap/button': 'bootstrap-sass-official/assets/javascripts/bootstrap/button',
+        'bootstrap/carousel': 'bootstrap-sass-official/assets/javascripts/bootstrap/carousel',
+        'bootstrap/collapse': 'bootstrap-sass-official/assets/javascripts/bootstrap/collapse',
+        'bootstrap/dropdown': 'bootstrap-sass-official/assets/javascripts/bootstrap/dropdown',
+        'bootstrap/modal': 'bootstrap-sass-official/assets/javascripts/bootstrap/modal',
+        'bootstrap/popover': 'bootstrap-sass-official/assets/javascripts/bootstrap/popover',
+        'bootstrap/scrollspy': 'bootstrap-sass-official/assets/javascripts/bootstrap/scrollspy',
+        'bootstrap/tab': 'bootstrap-sass-official/assets/javascripts/bootstrap/tab',
+        'bootstrap/tooltip': 'bootstrap-sass-official/assets/javascripts/bootstrap/tooltip',
+        'bootstrap/transition': 'bootstrap-sass-official/assets/javascripts/bootstrap/transition'<% } %>
     },
     shim: {<% if (useUikit) { %>
         uikit: ['jquery']<% } else if (useFoundation) { %>

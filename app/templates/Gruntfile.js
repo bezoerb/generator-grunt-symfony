@@ -288,7 +288,7 @@ module.exports = function(grunt) {
         },<% if (useRequirejs) { %>
         bowerRequirejs: {
             options: {
-                exclude: ['modernizr', 'requirejs', 'almond'],
+                exclude: ['modernizr', 'requirejs', 'almond'<% if (useBootstrap && useSass) { %>, 'bootstrap-sass-official'<% } %>],
                 baseUrl: 'bower_components'
             },
             dist: {
