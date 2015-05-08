@@ -1,6 +1,20 @@
-/* jshint -W098,-W079 */
-var require = {
-    baseUrl: 'bower_components',
+'use strict';
+var allTestFiles = [];
+var TEST_REGEXP = /(spec|test)\.js$/i;
+
+var pathToModule = function(path) {
+    return path.replace(/^\/base\//, '../').replace(/\.js$/, '');
+};
+
+Object.keys(window.__karma__.files).forEach(function(file) {
+    if (TEST_REGEXP.test(file)) {
+        // Normalize paths to RequireJS module names.
+        allTestFiles.push(pathToModule(file));
+    }
+});
+
+require.config({
+    baseUrl: '/base/bower_components',
     paths: {
         main: '../app/Resources/public/scripts/main',
         app: '../app/Resources/public/scripts/app',
@@ -89,4 +103,6 @@ var require = {
     packages: [
 
     ]
-};
+});
+
+require(allTestFiles,window.__karma__.start);

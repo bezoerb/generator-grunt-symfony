@@ -293,6 +293,9 @@ module.exports = function(grunt) {
             },
             dist: {
                 rjsConfig: '<%%= config.app %>/scripts/config.js'
+            },
+            test: {
+                rjsConfig: 'test/test-main.js'
             }
         },
         requirejs: {
@@ -419,7 +422,33 @@ module.exports = function(grunt) {
                 bsFiles: { src: [] },
                 options: bsOptions(appConfig.dist)
             }
-        }
+        },
+        // Testing
+        karma: {
+            unit: {
+                configFile: 'test/karma.conf.js',
+                    singleRun: true
+            }
+        }<% if (useRequirejs) { %>,
+        wiredep: {
+            test: {
+                src: 'test/karma.conf.js',
+                    devDependencies: false,
+                    ignorePath: '../',
+                    fileTypes: {
+                    js: {
+                        block: /(([\s\t]*)\/\/\s*bower:*(\S*))(\n|\r|.)*?(\/\/\s*endbower)/gi,
+                        detect: {
+                            js: /'(.*\.js)'/gi
+                        },
+                        replace: {
+                            js: '{pattern: \'{{filePath}}\', included: false},'
+                        }
+                    }
+                },
+                exclude: []
+            }
+        }<% } %>
 
     });
 
@@ -450,7 +479,7 @@ module.exports = function(grunt) {
     });
     <% } %>
 
-
+    grunt.registerTask('test', ['jshint',<% if (useRequirejs) { %>'wiredep:test','bowerRequirejs:test',<% } %>'karma']);
     grunt.registerTask('css', ['clean:css','<% if (useLess) { %>less<% } else if (useStylus) { %>stylus<% } else if (useSass) { %>sass<% } else if (noPreprocessor) { %>concat:css<% } %>','autoprefixer', <% if (useCritical || useUncss) { %>'fetch',<% } if (useUncss) { %> 'uncss', <% } %> 'cssmin'<% if (useCritical) { %>, 'critical'<% } %>]);
     grunt.registerTask('js', ['clean:js', 'jshint', '<% if (useRequirejs) { %>bowerRequirejs', 'requirejs<% } else if (useJspm) { %>exec:jspm', 'uglify:dist<% } %>']);
     grunt.registerTask('img', ['clean:img','imagemin','svgmin']);

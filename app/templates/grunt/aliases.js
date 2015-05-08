@@ -63,6 +63,9 @@ module.exports = function (grunt, options) {
         build: [
             'assets',
             'exec:sfcl'
+        ],
+        test: [
+            'jshint',<% if (useRequirejs) { %>'wiredep:test','bowerRequirejs:test',<% } %>'karma'
         ],<% if (useCritical || useUncss) { %>
         fetch: function(){
             grunt.connectMiddleware = getMiddleware();

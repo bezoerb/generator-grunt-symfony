@@ -357,11 +357,13 @@ var AppGenerator = yeoman.generators.Base.extend({
                 var content = this.readFileAsString(this.templatePath('scripts/requirejs/' + file));
                 fs.writeFileSync(this.destinationPath('app/Resources/public/scripts/' + file), this.engine(content, this));
             }, this);
+            fse.copySync(this.templatePath('scripts/requirejs/modules'),this.destinationPath('app/Resources/public/scripts/modules'));
         } else if (this.useJspm) {
             _.forEach(['main.js', 'config.js'], function (file) {
                 var content = this.readFileAsString(this.templatePath('scripts/jspm/' + file));
                 fs.writeFileSync(this.destinationPath('app/Resources/public/scripts/' + file), this.engine(content, this));
             }, this);
+            fse.copySync(this.templatePath('scripts/jspm/modules'),this.destinationPath('app/Resources/public/scripts/modules'));
         }
 
 
@@ -722,7 +724,9 @@ module.exports = AppGenerator.extend({
                 }
 
                 // js
+                this.template('grunt/karma.js', 'grunt/karma.js');
                 if (this.useRequirejs) {
+                    this.template('grunt/wiredep.js', 'grunt/wiredep.js');
                     this.template('grunt/bowerRequirejs.js', 'grunt/bowerRequirejs.js');
                     this.template('grunt/requirejs.js', 'grunt/requirejs.js');
                 } else if (this.useJspm) {
@@ -756,6 +760,26 @@ module.exports = AppGenerator.extend({
                     done();
                 }
             );
+        },
+
+        testFiles: function () {
+            if (this.useRequirejs) {
+                fse.copySync(
+                    this.templatePath(path.join('test','requirejs','spec')),
+                    this.destinationPath(path.join('test','spec'))
+                );
+                fse.copySync(this.templatePath(path.join('test','requirejs','.jshintrc')), this.destinationPath(path.join('test','.jshintrc')));
+                fse.copySync(this.templatePath(path.join('test','requirejs','karma.conf.js')),this.destinationPath(path.join('test','karma.conf.js')));
+                this.template(path.join('test','requirejs','test-main.js'), path.join('test','test-main.js'));
+            } else if (this.useJspm) {
+                fse.copySync(
+                    this.templatePath(path.join('test','jspm')),
+                    this.destinationPath('test')
+                );
+            }
+
+
+
         },
 
         gitInit: function gitInit() {
