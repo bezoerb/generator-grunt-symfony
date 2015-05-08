@@ -37,8 +37,8 @@ module.exports = function (grunt, options) {
         ],
         js: [
             'clean:js',
-            'jshint', <% if (useRequirejs) { %>
-            'bowerRequirejs',
+            'test', <% if (useRequirejs) { %>
+            'bowerRequirejs:dist',
             'requirejs'<% } else if (useJspm) { %>
             'exec:jspm',
             'uglify:dist'<% } %>
