@@ -36,8 +36,7 @@ module.exports = function (grunt, options) {
             'critical'<% } %>
         ],
         js: [
-            'clean:js',
-            'test', <% if (useRequirejs) { %>
+            'clean:js', <% if (useRequirejs) { %>
             'bowerRequirejs:dist',
             'requirejs'<% } else if (useJspm) { %>
             'exec:jspm',
@@ -53,6 +52,7 @@ module.exports = function (grunt, options) {
             'usemin'
         ],
         assets: [
+            'test',
             'js',
             'css',
             'img',

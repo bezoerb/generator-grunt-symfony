@@ -72,13 +72,17 @@ module.exports = function (grunt) {
 
             grunt.log.ok('installing bower dependencies for generated app');
             process.exec('bower install', {cwd: '../fixtures', stdio: 'inherit'}, function () {
-                shell.cd('../../');
-                done();
+
+                grunt.log.ok('installing jspm dependencies for generated app');
+                process.exec('node node_modules/.bin/jspm install', {cwd: '../fixtures', stdio: 'inherit'}, function () {
+                    shell.cd('../../');
+                    done();
+                });
             });
         });
     });
 
     grunt.log.ok(process.version);
 
-    grunt.registerTask('test', ['updateFixtures','exec:fixtures','simplemocha']);
+    grunt.registerTask('test', ['updateFixtures','installFixtures','simplemocha']);
 };

@@ -563,13 +563,14 @@ module.exports = AppGenerator.extend({
                 {name: 'SystemJS (jspm)', value: 'jspm'},
                 {name: 'RequireJS', value: 'requirejs'}
             ]
-        }, {
-            type: 'confirm',
-            name: 'loadGruntConfig',
-            value: 'loadGruntConfig',
-            message: 'Would you like to use load-grunt-config to organize your Gruntfile?' + os.EOL +
-            chalk.green('http://firstandthird.github.io/load-grunt-config'),
-            default: true
+        // deprecated default gruntfile - skip one question and always use load-grunt-config
+        //}, {
+        //    type: 'confirm',
+        //    name: 'loadGruntConfig',
+        //    value: 'loadGruntConfig',
+        //    message: 'Would you like to use load-grunt-config to organize your Gruntfile?' + os.EOL +
+        //    chalk.green('http://firstandthird.github.io/load-grunt-config'),
+        //    default: true
         }, {
             type: 'checkbox',
             name: 'additional',
@@ -619,7 +620,7 @@ module.exports = AppGenerator.extend({
             this.useUncss = hasAdditional('uncss');
 
             this.useGit = !!props.initGit;
-            this.loadGruntConfig = !!props.loadGruntConfig;
+            this.loadGruntConfig = true;//!!props.loadGruntConfig;
 
             done();
         }.bind(this));
