@@ -28,10 +28,6 @@ module.exports = function (grunt) {
                 timeout: 100000,
                 ui: 'bdd'
             }
-        },
-
-        exec: {
-            fixtures: 'cd test/fixtures && npm install --silent && bower install --silent && jspm install --silent && cd ../..'
         }
     });
 
@@ -68,21 +64,26 @@ module.exports = function (grunt) {
         shell.cd('test/fixtures');
         grunt.log.ok('installing npm dependencies for generated app');
 
-        process.exec('npm install', {cwd: '../fixtures', stdio: 'inherit'}, function () {
-
+        process.exec('npm install', {cwd: '../fixtures', stdio: 'inherit'}, function (err) {
+            if (err) {
+                grunt.log.error(err.message || err);
+            }
             grunt.log.ok('installing bower dependencies for generated app');
-            process.exec('bower install', {cwd: '../fixtures', stdio: 'inherit'}, function () {
-
+            process.exec('bower install', {cwd: '../fixtures', stdio: 'inherit'}, function (err) {
+                if (err) {
+                    grunt.log.error(err.message || err);
+                }
                 grunt.log.ok('installing jspm dependencies for generated app');
-                process.exec('node node_modules/.bin/jspm install', {cwd: '../fixtures', stdio: 'inherit'}, function () {
+                process.exec('node node_modules/.bin/jspm install', {cwd: '../fixtures', stdio: 'inherit'}, function (err) {
+                    if (err) {
+                        grunt.log.error(err.message || err);
+                    }
                     shell.cd('../../');
                     done();
                 });
             });
         });
     });
-
-    grunt.log.ok(process.version);
 
     grunt.registerTask('test', ['updateFixtures','installFixtures','simplemocha']);
 };
