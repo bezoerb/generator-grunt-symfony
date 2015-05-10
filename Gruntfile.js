@@ -1,6 +1,6 @@
 'use strict';
 var shell = require('shelljs');
-var process = require('child_process');
+var exec = require('child_process').exec;
 var fs = require('fs-extra');
 var path = require('path');
 
@@ -20,6 +20,9 @@ module.exports = function (grunt) {
                 jshintrc: '.jshintrc',
                 reporter: require('jshint-stylish')
             }
+        },
+        clean: {
+            test: ['test/fixtures/node_modules','test/fixtures/bower_components','test/fixtures/jspm_packages']
         },
         simplemocha: {
             all: ['test/*.js'],
@@ -64,26 +67,20 @@ module.exports = function (grunt) {
         shell.cd('test/fixtures');
         grunt.log.ok('installing npm dependencies for generated app');
 
-        process.exec('npm install', {cwd: '../fixtures', stdio: 'inherit'}, function (err) {
-            if (err) {
-                grunt.log.error(err.message || err);
-            }
+        exec('npm install', {cwd: '../fixtures'}, function () {
             grunt.log.ok('installing bower dependencies for generated app');
-            process.exec('bower install', {cwd: '../fixtures', stdio: 'inherit'}, function (err) {
-                if (err) {
-                    grunt.log.error(err.message || err);
-                }
+            exec('bower install', {cwd: '../fixtures'}, function () {
                 grunt.log.ok('installing jspm dependencies for generated app');
-                process.exec('node node_modules/.bin/jspm install', {cwd: '../fixtures', stdio: 'inherit'}, function (err) {
+                exec('node node_modules/.bin/jspm install', {cwd: '../fixtures'}, function (err) {
                     if (err) {
                         grunt.log.error(err.message || err);
                     }
                     shell.cd('../../');
                     done();
-                });
+                }).stdout.pipe(process.stdout);
             });
         });
     });
 
-    grunt.registerTask('test', ['updateFixtures','installFixtures','simplemocha']);
+    grunt.registerTask('test', ['clean:test','updateFixtures','installFixtures','simplemocha']);
 };
