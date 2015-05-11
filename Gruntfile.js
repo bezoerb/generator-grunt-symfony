@@ -65,21 +65,22 @@ module.exports = function (grunt) {
         var done = this.async();
 
         shell.cd('test/fixtures');
-        grunt.log.ok('installing npm dependencies for generated app');
+        grunt.log.ok('installing jspm dependencies for generated app');
 
-        exec('npm install', {cwd: '../fixtures'}, function () {
+        exec('node node_modules/.bin/jspm install', {cwd: '../fixtures'}, function (err) {
+            if (err) {
+                grunt.log.error(err.message || err);
+            }
             grunt.log.ok('installing bower dependencies for generated app');
             exec('bower install', {cwd: '../fixtures'}, function () {
-                grunt.log.ok('installing jspm dependencies for generated app');
-                exec('node node_modules/.bin/jspm install', {cwd: '../fixtures'}, function (err) {
-                    if (err) {
-                        grunt.log.error(err.message || err);
-                    }
+                grunt.log.ok('installing npm dependencies for generated app');
+                exec('npm install', {cwd: '../fixtures'}, function () {
+
                     shell.cd('../../');
                     done();
-                }).stdout.pipe(process.stdout);
+                });
             });
-        });
+        }).stdout.pipe(process.stdout);
     });
 
     grunt.registerTask('test', ['clean:test','updateFixtures','installFixtures','simplemocha']);
