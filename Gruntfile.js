@@ -67,7 +67,7 @@ module.exports = function (grunt) {
         shell.cd('test/fixtures');
         grunt.log.ok('installing jspm dependencies for generated app');
 
-        exec('node node_modules/.bin/jspm install', {cwd: '../fixtures'}, function (err) {
+        exec('jspm install', {cwd: '../fixtures'}, function (err) {
             if (err) {
                 grunt.log.error(err.message || err);
             }
