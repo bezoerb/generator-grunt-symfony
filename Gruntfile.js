@@ -80,7 +80,7 @@ module.exports = function (grunt) {
                     done();
                 });
             });
-        }).stdout.pipe(process.stdout);
+        });
     });
 
     grunt.registerTask('test', ['clean:test','updateFixtures','installFixtures','simplemocha']);

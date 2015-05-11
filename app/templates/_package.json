@@ -24,6 +24,7 @@
         "grunt-contrib-stylus": "^0.21.0",<% } %>
         "grunt-svgmin": "^2.0.0",
         "grunt-usemin": "^3.0.0",
+        "grunt-phpunit": "^0.3.6",
         "jit-grunt": "^0.9.1",
         "time-grunt": "^1.1.0",
         "jshint-stylish": "^1.0.0",

@@ -345,6 +345,18 @@ var AppGenerator = yeoman.generators.Base.extend({
         fse.copySync(this.templatePath('symfony/DefaultController.php'), controllerPath);
     },
 
+    /**
+     * update default controller test to use own template
+     */
+    updateControllerTest: function updateControllerTest() {
+        var controllerPath = 'src/Tests/Controller/DefaultControllerTest.php';
+        if (fs.existsSync(controllerPath)) {
+            fs.unlinkSync(controllerPath);
+        }
+
+        fse.copySync(this.templatePath('symfony/DefaultControllerTest.php'), controllerPath);
+    },
+
 
     /**
      * Add scripts and init jspm if applicable
@@ -417,10 +429,16 @@ var AppGenerator = yeoman.generators.Base.extend({
     /**
      * remove assetic
      */
-    cleanComposerJson: function () {
+    updateComposerJson: function () {
         var composerContents = this.readFileAsString('composer.json');
         var composerParse = JSON.parse(composerContents);
+
+        // remove assetic
         delete composerParse.require['symfony/assetic-bundle'];
+
+        // add phpunit
+        composerParse['require-dev'] = _.assign(composerParse['require-dev'] || {},{'phpunit/phpunit': '~4.6'});
+
         var data = JSON.stringify(composerParse, null, 4);
 
         fse.deleteSync(this.templatePath('composer.json'));
@@ -803,11 +821,12 @@ module.exports = AppGenerator.extend({
         this.updateConfig();
         this.updateParameters();
         this.updateController();
+        this.updateControllerTest();
         this.updateView();
         this.updateAppKernel();
         this.updateApp();
 
-        this.cleanComposerJson();
+        this.updateComposerJson();
 
         this.setupPermissions();
 
