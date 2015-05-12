@@ -22,7 +22,7 @@ module.exports = function (grunt) {
             }
         },
         clean: {
-            test: ['test/fixtures/node_modules','test/fixtures/bower_components','test/fixtures/jspm_packages']
+            test: ['test/fixtures/node_modules', 'test/fixtures/bower_components', 'test/fixtures/jspm_packages']
         },
         simplemocha: {
             all: ['test/*.js'],
@@ -60,6 +60,55 @@ module.exports = function (grunt) {
     });
 
 
+    grunt.registerTask('installNpmFixtures', 'install npm packages', function () {
+        var done = this.async();
+
+        shell.cd('test/fixtures');
+        grunt.log.ok('installing npm dependencies for generated app');
+        exec('npm install', {cwd: '../fixtures'}, function () {
+            shell.cd('../../');
+            done();
+        });
+    });
+
+    grunt.registerTask('installBowerFixtures', 'install bower packages', function () {
+        var done = this.async();
+
+        shell.cd('test/fixtures');
+        grunt.log.ok('installing bower dependencies for generated app');
+        exec('bower install', {cwd: '../fixtures'}, function () {
+            shell.cd('../../');
+            done();
+        });
+    });
+
+    grunt.registerTask('installJspmFixtures', 'install jspm packages', function () {
+        var done = this.async();
+
+        shell.cd('test/fixtures');
+        grunt.log.ok('installing jspm dependencies for generated app');
+        exec('jspm install', {cwd: '../fixtures'}, function () {
+            shell.cd('../../');
+            done();
+        });
+    });
+
+    grunt.registerTask('installComposerFixtures', 'install Composer fixtures', function () {
+        var done = this.async();
+
+        shell.cd('test/fixtures');
+        grunt.log.ok('fetching local composer');
+        exec('php -r "readfile(\'https://getcomposer.org/installer\');" | php', function() {
+            grunt.log.ok('installing composer dependencies for generated app');
+            exec('php composer.phar update  --no-interaction ', {cwd: '../fixtures'}, function () {
+                shell.cd('../../');
+                done();
+            });
+        });
+
+
+    });
+
 
     grunt.registerTask('installFixtures', 'install package and bower fixtures', function () {
         var done = this.async();
@@ -76,12 +125,24 @@ module.exports = function (grunt) {
                 grunt.log.ok('installing npm dependencies for generated app');
                 exec('npm install', {cwd: '../fixtures'}, function () {
 
-                    shell.cd('../../');
-                    done();
+                    grunt.log.ok('installing comnposer dependencies for generated app');
+                    exec('composer install --no-interaction', {cwd: '../fixtures'}, function () {
+
+                        shell.cd('../../');
+                        done();
+                    });
                 });
             });
         });
     });
 
-    grunt.registerTask('test', ['clean:test','updateFixtures','installFixtures','simplemocha']);
+    grunt.registerTask('test', [
+        'clean:test',
+        'updateFixtures',
+        'installJspmFixtures',
+        'installNpmFixtures',
+        'installBowerFixtures',
+        'installComposerFixtures',
+        'simplemocha'
+    ]);
 };

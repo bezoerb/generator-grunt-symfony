@@ -22,17 +22,16 @@ var exec = require('child_process').exec;
 //
 
 
-//function withComposer(cb) {
-//    if (!cb) {
-//        cb = function () {};
-//    }
-//    exec('php -r "readfile(\'https://getcomposer.org/installer\');" | php', function () {
-//        fs.copySync(__dirname + '/temp/app/config/parameters.yml.dist', __dirname + '/temp/app/config/parameters.yml');
-//        exec('php composer.phar install', function (error, stdout) {
-//            cb(error, stdout);
-//        });
-//    });
-//}
+function withComposer(cb) {
+    if (!cb) {
+        cb = function () {};
+    }
+    exec('php -r "readfile(\'https://getcomposer.org/installer\');" | php', function () {
+        exec('php composer.phar install  --no-interaction ', function (error, stdout) {
+            cb(error, stdout);
+        });
+    });
+}
 
 function withJspm(cb) {
     if (!cb) {
@@ -78,10 +77,13 @@ describe('grunt-symfony generator', function () {
                 done();
             });
 
-            it('should pass jshint + karma', function (done) {
-                exec('grunt test --no-color', function (error, stdout) {
-                    expect(stdout).to.contain('Done, without errors.');
-                    done();
+            it('should pass jshint, karma (mocha) and phpunit', function (done) {
+                withComposer(function(error){
+                    expect(error).to.be.null;
+                    exec('grunt test --no-color', function (error, stdout) {
+                        expect(stdout).to.contain('Done, without errors.');
+                        done();
+                    });
                 });
             });
 
@@ -110,6 +112,8 @@ describe('grunt-symfony generator', function () {
                     done();
                 });
             });
+
+
         };
     }
 

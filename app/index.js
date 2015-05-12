@@ -349,7 +349,7 @@ var AppGenerator = yeoman.generators.Base.extend({
      * update default controller test to use own template
      */
     updateControllerTest: function updateControllerTest() {
-        var controllerPath = 'src/Tests/Controller/DefaultControllerTest.php';
+        var controllerPath = 'src/AppBundle/Tests/Controller/DefaultControllerTest.php';
         if (fs.existsSync(controllerPath)) {
             fs.unlinkSync(controllerPath);
         }
@@ -719,6 +719,7 @@ module.exports = AppGenerator.extend({
                 this.template('grunt/imagemin.js', 'grunt/imagemin.js');
                 this.template('grunt/svgmin.js', 'grunt/svgmin.js');
                 this.template('grunt/browserSync.js', 'grunt/browserSync.js');
+                this.template('grunt/phpunit.js', 'grunt/phpunit.js');
 
                 // css
                 if (this.noPreprocessor) {

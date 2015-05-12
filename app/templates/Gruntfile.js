@@ -489,7 +489,7 @@ module.exports = function(grunt) {
     });
     <% } %>
 
-    grunt.registerTask('test', ['jshint',<% if (useRequirejs) { %>'wiredep:test','bowerRequirejs:test',<% } %>'karma']);
+    grunt.registerTask('test', ['jshint',<% if (useRequirejs) { %>'wiredep:test','bowerRequirejs:test',<% } %>'karma','phpunit']);
     grunt.registerTask('css', ['clean:css','<% if (useLess) { %>less<% } else if (useStylus) { %>stylus<% } else if (useSass) { %>sass<% } else if (noPreprocessor) { %>concat:css<% } %>','autoprefixer', <% if (useCritical || useUncss) { %>'fetch',<% } if (useUncss) { %> 'uncss', <% } %> 'cssmin'<% if (useCritical) { %>, 'critical'<% } %>]);
     grunt.registerTask('js', ['clean:js', 'test', '<% if (useRequirejs) { %>bowerRequirejs', 'requirejs<% } else if (useJspm) { %>exec:jspm', 'uglify:dist<% } %>']);
     grunt.registerTask('img', ['clean:img','imagemin','svgmin']);
