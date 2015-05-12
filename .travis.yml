@@ -6,7 +6,7 @@ node_js:
 before_install:
   - sudo apt-get update
   - sudo apt-get install php5
-  - mkdir $HOME/tmp git && clone git://github.com/CHH/phpenv.git $HOME/tmp && sh $HOME/tmp/bin/phpenv-install.sh
+  - mkdir $HOME/tmp && git clone git://github.com/CHH/phpenv.git $HOME/tmp && sh $HOME/tmp/bin/phpenv-install.sh
   - export PATH="/Users/ben/.phpenv/bin:$PATH"
   - eval "$(phpenv init -)"
   - ls $HOME/.phpenv
