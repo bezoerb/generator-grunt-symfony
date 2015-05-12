@@ -5,14 +5,11 @@ node_js:
   - '0.12'
 before_install:
   - sudo apt-get update
+  - sudo apt-get install python-software-properties
+  - sudo add-apt-repository ppa:ondrej/php5 -y
+  - sudo apt-get update
   - sudo apt-get install php5
-  - mkdir $HOME/tmp && git clone git://github.com/CHH/phpenv.git $HOME/tmp && sh $HOME/tmp/bin/phpenv-install.sh
-  - export PATH="/Users/ben/.phpenv/bin:$PATH"
-  - eval "$(phpenv init -)"
-  - ls $HOME/.phpenv
-  - git clone git://github.com/php-build/php-build.git $HOME/.phpenv/plugins/php-build
-  - phpenv install 5.6
-  - phpenv global 5.6
+  - sudo apt-get install php5-curl
   - php --version
   - gem update --system
   - gem install sass --version "=3.3.7"
