@@ -68,6 +68,8 @@ module.exports = function (grunt) {
         exec('npm install', {cwd: '../fixtures'}, function () {
             shell.cd('../../');
             done();
+        }).stdout.on('data', function(data) {
+            console.log(data);
         });
     });
 
@@ -79,6 +81,8 @@ module.exports = function (grunt) {
         exec('bower install', {cwd: '../fixtures'}, function () {
             shell.cd('../../');
             done();
+        }).stdout.on('data', function(data) {
+            console.log(data);
         });
     });
 
@@ -90,6 +94,8 @@ module.exports = function (grunt) {
         exec('jspm install', {cwd: '../fixtures'}, function () {
             shell.cd('../../');
             done();
+        }).stdout.on('data', function(data) {
+            console.log(data);
         });
     });
 
@@ -104,6 +110,8 @@ module.exports = function (grunt) {
                 shell.cd('../../');
                 done();
             });
+        }).stdout.on('data', function(data) {
+            console.log(data);
         });
 
 

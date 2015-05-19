@@ -67,6 +67,8 @@ function linkDeps(base, target, done) {
         fs.symlinkSync(path.join(base, 'vendor'), path.join(target, 'vendor'));
         fs.unlinkSync(path.join(target, 'composer.lock'));
         fs.symlinkSync(path.join(base, 'composer.lock'), path.join(target, 'composer.lock'));
+        fs.unlinkSync(path.join(target, 'composer.json'));
+        fs.symlinkSync(path.join(base, 'composer.json'), path.join(target, 'composer.json'));
         fs.symlinkSync(path.join(base, 'bin'), path.join(target, 'bin'));
 
         var pkg = fs.readJsonSync(path.join(target, 'package.json'));
