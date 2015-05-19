@@ -1,28 +1,15 @@
 
-n.n.n / 2015-05-19
+0.3.6 / 2015-05-19
 ==================
 
-  * Travis debug
-  * Travis debug
-  * Travis debug
-  * Travis debug
-  * Travis debug
-  * Travis debug
-  * Travis debug
-  * Travis debug
-  * Another try with travis & composer
-  * Another try with travis & composer
-  * Another try with travis & composer
-  * Another try with travis & composer
-  * try php on nodejs travis
-  * Added phpunit
-  * Travis test debug
-  * Travis test debug
-  * Travis test debug
-  * Readme
-  * Tests
-  * Add karma tests to js task
+  * Better generator tests including phpunit 
+  * Phpunit integration
   * Karma integration
+  
+0.3.5 / 2015-04-28
+==================
+  
+  * Fixed wrong allocated bootstrap js
 
 0.3.4 / 2015-04-25
 ==================
