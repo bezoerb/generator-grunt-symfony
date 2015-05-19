@@ -27,7 +27,7 @@ function withComposer(cb) {
         cb = function () {};
     }
     exec('php -r "readfile(\'https://getcomposer.org/installer\');" | php', function () {
-        exec('php composer.phar install  --no-interaction ', function (error, stdout) {
+        exec('php composer.phar install --prefer-source --no-interaction --dev', function (error, stdout) {
             cb(error, stdout);
         });
     });

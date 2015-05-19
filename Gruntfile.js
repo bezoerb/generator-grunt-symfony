@@ -106,7 +106,7 @@ module.exports = function (grunt) {
         grunt.log.ok('fetching local composer');
         exec('php -r "readfile(\'https://getcomposer.org/installer\');" | php', function() {
             grunt.log.ok('installing composer dependencies for generated app');
-            exec('php composer.phar update  --no-interaction ', {cwd: '../fixtures'}, function () {
+            exec('php composer.phar update --prefer-source --no-interaction --dev ', {cwd: '../fixtures'}, function () {
                 shell.cd('../../');
                 done();
             }).stdout.on('data', function(data) {
