@@ -109,6 +109,8 @@ module.exports = function (grunt) {
             exec('php composer.phar update  --no-interaction ', {cwd: '../fixtures'}, function () {
                 shell.cd('../../');
                 done();
+            }).stdout.on('data', function(data) {
+                console.log(data);
             });
         }).stdout.on('data', function(data) {
             console.log(data);

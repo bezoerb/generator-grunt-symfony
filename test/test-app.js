@@ -38,7 +38,7 @@ function withJspm(cb) {
         cb = function () {
         };
     }
-    exec('jspm install', function (error, stdout) {
+    exec('node_modules/.bin/jspm install', function (error, stdout) {
         cb(error, stdout);
     });
 }
