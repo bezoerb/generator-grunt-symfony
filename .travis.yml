@@ -1,20 +1,27 @@
 language: node_js
 node_js:
-  - 'iojs'
-  - '0.10'
-  - '0.12'
+- iojs
+- '0.10'
+- '0.12'
+
+env:
+  global:
+    secure: dNswU+iIMZA8veXveYrzEqOp3k60Gkq4tdqsATzrE5/S9zO+fQUysgvGrvotCcRgPgFO0ajhNPc2xvtrRA22HXqslu86t5EGWNTZa+ukAzepcMq7i2Woma6Dw+9Mc6bKrn4SbPYZ8h28I6C7IjrR+zBtti4J6mObwr88MfswKxQ=
+
 before_install:
-  - sudo apt-get update
-  - sudo apt-get install python-software-properties
-  - sudo add-apt-repository ppa:ondrej/php5 -y
-  - sudo apt-get update
-  - sudo apt-get install php5
-  - sudo apt-get install php5-curl
-  - php --version
-  - gem update --system
-  - gem install sass --version "=3.3.7"
-  - npm cache clean
-  - npm update -g npm
-  - npm install -g bower grunt-cli jspm
-  - currentfolder=${PWD##*/}
-  - if [ "$currentfolder" != 'generator-grunt-symfony' ]; then cd .. && eval "mv $currentfolder generator-grunt-symfony" && cd generator-grunt-symfony; fi
+- sudo apt-get update
+- sudo apt-get install python-software-properties
+- sudo add-apt-repository ppa:ondrej/php5 -y
+- sudo apt-get update
+- sudo apt-get install php5
+- sudo apt-get install php5-curl
+- php --version
+- gem update --system
+- gem install sass --version "=3.3.7"
+- npm cache clean
+- npm update -g npm
+- npm install -g bower grunt-cli jspm
+- jspm config registries.github.auth $JSPM_GITHUB_AUTH_TOKEN
+- currentfolder=${PWD##*/}
+- if [ "$currentfolder" != 'generator-grunt-symfony' ]; then cd .. && eval "mv $currentfolder
+  generator-grunt-symfony" && cd generator-grunt-symfony; fi
