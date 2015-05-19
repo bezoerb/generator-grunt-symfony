@@ -42,8 +42,6 @@ function withJspm(cb) {
     }
     exec('jspm init -y', function (error, stdout) {
         cb(error, stdout);
-    }).stdout.on('data', function(data) {
-        console.log(data);
     });
 }
 
