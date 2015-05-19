@@ -40,7 +40,7 @@ function withJspm(cb) {
         cb = function () {
         };
     }
-    exec('node_modules/.bin/jspm install', function (error, stdout) {
+    exec('jspm init -y', function (error, stdout) {
         cb(error, stdout);
     }).stdout.on('data', function(data) {
         console.log(data);
