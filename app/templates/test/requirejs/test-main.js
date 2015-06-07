@@ -20,7 +20,7 @@ require.config({
         app: '../app/Resources/public/scripts/app',
         modules: '../app/Resources/public/scripts/modules',
         jquery: 'jquery/dist/jquery',
-        loglevel: 'loglevel/dist/loglevel.min',<% if (useFoundation) { %>
+        loglevel: 'loglevel/dist/loglevel.min'<% if (useFoundation) { %>,
         foundation: 'foundation/js/foundation',
         'foundation/core': 'foundation/js/foundation/foundation',
         'foundation/abide': 'foundation/js/foundation/foundation.abide',
@@ -38,7 +38,7 @@ require.config({
         'foundation/slider': 'foundation/js/foundation/foundation.slider',
         'foundation/tab': 'foundation/js/foundation/foundation.tab',
         'foundation/tooltip': 'foundation/js/foundation/foundation.tooltip',
-        'foundation/topbar': 'foundation/js/foundation/foundation.topbar',<% } else if (useBootstrap && !useSass) { %>
+        'foundation/topbar': 'foundation/js/foundation/foundation.topbar'<% } else if (useBootstrap && !useSass) { %>,
         bootstrap: 'bootstrap/dist/js/bootstrap',
         'bootstrap/affix': 'bootstrap/js/affix',
         'bootstrap/alert': 'bootstrap/js/alert',
@@ -51,7 +51,7 @@ require.config({
         'bootstrap/scrollspy': 'bootstrap/js/scrollspy',
         'bootstrap/tab': 'bootstrap/js/tab',
         'bootstrap/tooltip': 'bootstrap/js/tooltip',
-        'bootstrap/transition': 'bootstrap/js/transition',<% } else if (useBootstrap) { %>
+        'bootstrap/transition': 'bootstrap/js/transition'<% } else if (useBootstrap) { %>,
         bootstrap: 'bootstrap-sass-official/assets/javascripts/bootstrap',
         'bootstrap/affix': 'bootstrap-sass-official/assets/javascripts/bootstrap/affix',
         'bootstrap/alert': 'bootstrap-sass-official/assets/javascripts/bootstrap/alert',
