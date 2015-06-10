@@ -239,7 +239,8 @@ module.exports = function(grunt) {
         filerev: {
             dist: {
                 src: [
-                    '<%%= config.dist %>/img/**/*.{jpg,jpeg,gif,png,webp}',
+                    // enable if you need it. Can cause some conflicts when dynamically creating filenames via twig
+                    //'<%%= paths.dist %>/img/**/*.{jpg,jpeg,gif,png,webp}',
                     '<%%= config.dist %>/styles/main.css',
                     '<%%= config.dist %>/scripts/main.js'
                 ]

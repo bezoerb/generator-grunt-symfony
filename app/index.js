@@ -855,7 +855,7 @@ module.exports = AppGenerator.extend({
 
                 } else if (!this.options['skip-install-message']) {
                     this.log('');
-                    this.log('I\'m all done. Just run ' + chalk.bold.yellow('npm install & bower install &' + ((this.useJspm) ? ' jspm install &' : '') + ' composer update') + '  to install the required dependencies.');
+                    this.log('I\'m all done. Just run ' + chalk.bold.yellow('npm install && bower install &&' + ((this.useJspm) ? ' jspm install &&' : '') + ' composer update') + '  to install the required dependencies.');
                     this.log('');
                 }
             }.bind(this)
