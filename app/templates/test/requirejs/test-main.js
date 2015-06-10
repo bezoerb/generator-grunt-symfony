@@ -51,7 +51,7 @@ require.config({
         'bootstrap/scrollspy': 'bootstrap/js/scrollspy',
         'bootstrap/tab': 'bootstrap/js/tab',
         'bootstrap/tooltip': 'bootstrap/js/tooltip',
-        'bootstrap/transition': 'bootstrap/js/transition'<% } else if (useBootstrap) { %>
+        'bootstrap/transition': 'bootstrap/js/transition'<% } else if (useBootstrap) { %>,
         bootstrap: 'bootstrap-sass-official/assets/javascripts/bootstrap',
         'bootstrap/affix': 'bootstrap-sass-official/assets/javascripts/bootstrap/affix',
         'bootstrap/alert': 'bootstrap-sass-official/assets/javascripts/bootstrap/alert',
