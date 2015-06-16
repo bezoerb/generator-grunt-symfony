@@ -1,4 +1,10 @@
 
+0.3.7 / 2015-06-10
+==================
+
+  * Fixed issue with comma after loglevel [Bruno Wego]
+  * Minor tweaks
+
 0.3.6 / 2015-05-19
 ==================
 
