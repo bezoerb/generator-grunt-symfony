@@ -7,7 +7,6 @@ var files = require('./helper/fileHelper');
 var fixtureHelper = require('./helper/fixturesHelper');
 var chai = require('chai');
 var expect = chai.expect;
-var glob = require('glob');
 var exec = require('child_process').exec;
 
 
@@ -27,16 +26,17 @@ function withComposer(cb) {
         cb = function () {};
     }
     exec('php -r "readfile(\'https://getcomposer.org/installer\');" | php', function () {
-        exec('php composer.phar install --prefer-source --no-interaction --dev', function (error, stdout) {
-            cb(error, stdout);
+        exec('php composer.phar install --prefer-source --no-interaction --dev', function () {
+            exec('php ./vendor/sensio/distribution-bundle/Sensio/Bundle/DistributionBundle/Resources/bin/build_bootstrap.php', function (error, stdout) {
+                cb(error, stdout);
+            });
         });
     });
 }
 
 function withJspm(cb) {
     if (!cb) {
-        cb = function () {
-        };
+        cb = function () {};
     }
     exec('jspm init -y', function (error, stdout) {
         cb(error, stdout);
