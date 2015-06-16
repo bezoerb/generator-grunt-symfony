@@ -4,7 +4,7 @@ module.exports = function(grunt) {
     require('jit-grunt')(grunt);
 
     var _ = require('lodash');
-    var fs = require('fs');
+    var fs = require('fs-extra');
     var path = require('path');
     var parseurl = require('parseurl');
     var php = require('php-proxy-middleware');
@@ -239,8 +239,7 @@ module.exports = function(grunt) {
         filerev: {
             dist: {
                 src: [
-                    // enable if you need it. Can cause some conflicts when dynamically creating filenames via twig
-                    //'<%%= paths.dist %>/img/**/*.{jpg,jpeg,gif,png,webp}',
+                    '<%%= paths.dist %>/img/**/*.{jpg,jpeg,gif,png,webp}',
                     '<%%= config.dist %>/styles/main.css',
                     '<%%= config.dist %>/scripts/main.js'
                 ]
@@ -250,30 +249,8 @@ module.exports = function(grunt) {
         usemin: {
             css: ['<%%= config.dist %>/styles/**/*.css'],
             js: ['<%%= config.dist %>/scripts/**/*.js'],
-            html: 'app/Resources/views/**/*.html.twig',
             options: {
-                assetsDirs: ['<%%= config.dist %>'],
-                patterns: {
-                    html: [[
-                        /asset\(['"]([^'"]+(?:css|js|jpg|jpeg|gif|png|webp))['"]\)/gm,
-                        'Update references to reved assets',
-                        function (m) {
-                            var matched = _.chain(grunt.config.get('usemin.options.assetsDirs')).reduce(function(dirs,dir){
-                                return _.map([
-                                    /\.[\w\d]{8}\.(css|js|jpg|jpeg|gif|png|webp)/m,
-                                    /\.(?:[\w\d]{8}\.)+(css|js|jpg|jpeg|gif|png|webp)/m
-                                ],function(r){
-                                    return path.join(dir,m.replace(r,'.$1'));
-                                }).concat(dirs);
-                            },[]).uniq().intersection(_.keys(grunt.filerev.summary)).first().value();
-                            return matched ? grunt.filerev.summary[matched] : m;
-                        },
-
-                        function (m) {
-                            return m.replace(new RegExp('^(' + grunt.config.get('usemin.options.assetsDirs').join('|') + ')/'),'');
-                        }
-                    ]]
-                }
+                assetsDirs: ['<%%= config.dist %>']
             }
         },
 
@@ -358,7 +335,7 @@ module.exports = function(grunt) {
             }
         },<% } %>
         exec: {
-            sfcl: 'php app/console cache:clear -e prod'<% if (useJspm && globalJspm) { %>,
+            sfcl: 'php app/console cache:clear'<% if (useJspm && globalJspm) { %>,
             jspm: 'jspm bundle-sfx scripts/main .tmp/scripts/main.js'<% } else if (useJspm && !globalJspm) { %>,
             jspm: 'node_modules/.bin/jspm bundle-sfx scripts/main .tmp/scripts/main.js'<% } %>
         },<% if (useJspm) { %>
@@ -489,12 +466,18 @@ module.exports = function(grunt) {
         grunt.task.run(['connect', 'http']);
     });
     <% } %>
-
+    grunt.registerTask('revdump', function(){
+        var file = 'src/Utils/GruntBundle/Resources/config/filerev.json';
+        fs.outputJsonSync(file, _.reduce(grunt.filerev.summary, function(acc,val,key){
+        acc[key.replace('web','')] = val.replace('web','');
+            return acc;
+        },{}));
+    });
     grunt.registerTask('test', ['jshint',<% if (useRequirejs) { %>'wiredep:test','bowerRequirejs:test',<% } %>'karma','phpunit']);
     grunt.registerTask('css', ['clean:css','<% if (useLess) { %>less<% } else if (useStylus) { %>stylus<% } else if (useSass) { %>sass<% } else if (noPreprocessor) { %>concat:css<% } %>','autoprefixer', <% if (useCritical || useUncss) { %>'fetch',<% } if (useUncss) { %> 'uncss', <% } %> 'cssmin'<% if (useCritical) { %>, 'critical'<% } %>]);
     grunt.registerTask('js', ['clean:js', 'test', '<% if (useRequirejs) { %>bowerRequirejs', 'requirejs<% } else if (useJspm) { %>exec:jspm', 'uglify:dist<% } %>']);
     grunt.registerTask('img', ['clean:img','imagemin','svgmin']);
-    grunt.registerTask('rev', ['filerev', 'usemin']);
+    grunt.registerTask('rev', ['filerev', 'revdump', 'usemin']);
     grunt.registerTask('assets', ['js', 'css', 'img', 'rev', 'copy','clean:tmp']);
     grunt.registerTask('build', ['assets','exec:sfcl']);
 };

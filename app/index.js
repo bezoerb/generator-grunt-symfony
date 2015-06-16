@@ -316,13 +316,13 @@ var AppGenerator = yeoman.generators.Base.extend({
         newAppKernelContents = newAppKernelContents.replace('array(\'dev\', \'test\')', 'array(\'node\', \'dev\', \'test\')');
 
         // add bundle
-        newAppKernelContents = addBundle(newAppKernelContents,'new Utils\GruntBundle\GruntBundle(),');
+        newAppKernelContents = addBundle(newAppKernelContents,'new Utils\\GruntBundle\\GruntBundle(),');
         fs.unlinkSync(appKernelPath);
         fs.writeFileSync(appKernelPath, newAppKernelContents);
     },
 
     addBundles: function addBundles() {
-        fse.copySync(this.templatePath('img/Utils'), 'src/Utils/');
+        fse.copySync(this.templatePath('symfony/Utils'), 'src/Utils/');
     },
 
 

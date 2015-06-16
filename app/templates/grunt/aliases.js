@@ -1,4 +1,6 @@
 module.exports = function (grunt, options) {
+    var _ = require('lodash');
+    var fs = require('fs-extra');
     var path = require('path');
     var php = require('php-proxy-middleware');
 
@@ -49,6 +51,7 @@ module.exports = function (grunt, options) {
         ],
         rev: [
             'filerev',
+            'revdump',
             'usemin'
         ],
         assets: [
@@ -71,6 +74,13 @@ module.exports = function (grunt, options) {
             grunt.connectMiddleware = getMiddleware();
             grunt.task.run(['connect', 'http']);
         },<% } %>
+        revdump: function(){
+            var file = 'src/Utils/GruntBundle/Resources/config/filerev.json';
+            fs.outputJsonSync(file, _.reduce(grunt.filerev.summary, function(acc,val,key){
+                acc[key.replace('web','')] = val.replace('web','');
+                return acc;
+            },{}));
+        },
         serve: function(target) {
             // clean tmp
             grunt.task.run(['clean:tmp']);

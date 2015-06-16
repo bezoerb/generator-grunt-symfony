@@ -51,7 +51,8 @@
         "phantomjs-polyfill": "0.0.1",<% } else if (useRequirejs) { %>
         "karma-requirejs": "^0.2.2",
         "grunt-wiredep": "^2.0.0",<% } %>
-        "time-grunt": "^1.1.0"
+        "time-grunt": "^1.1.0",
+        "fs-extra": "^0.19.0"
     }<% if (useJspm) { %>,
     "jspm": {
         "directories": {
