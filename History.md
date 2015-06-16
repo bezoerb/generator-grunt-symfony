@@ -1,4 +1,10 @@
 
+0.4.0 / 
+==================
+
+  * Replace usemin for twig with filerev bundle
+  * Added filerev bundle
+
 0.3.7 / 2015-06-10
 ==================
 
