@@ -1,0 +1,14 @@
+services:
+#    grunt_utils_filerev.example:
+#        class: GruntUtils\FilerevBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]
+services:
+  grunt_utils_filerev.eventlistener.filerevpackage:
+    class: Utils\GruntBundle\Eventlistener\HttpKernel\FilerevPackageInjector
+    scope: request
+    tags:
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+    arguments: [@service_container]
+#    calls:
+#      - [setAssetHelper, [@templating.helper.assets]]
+#      - [setContainer, [@kernel]]

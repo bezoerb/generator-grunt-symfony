@@ -303,21 +303,33 @@ var AppGenerator = yeoman.generators.Base.extend({
      *
      * see http://symfony.com/doc/current/best_practices/web-assets.html
      */
-    updateAppKernel: function () {
+    updateAppKernel: function updateAppKernel() {
+        function addBundle(contents,str) {
+            return contents.replace(/(\$bundles\s*=\s.*\n(?:[^;]*\n)+)/,'$&            '+str+'\n');
+        }
+
+
         var appKernelPath = 'app/AppKernel.php';
         var appKernelContents = this.readFileAsString(appKernelPath);
 
         var newAppKernelContents = appKernelContents.replace('new Symfony\\Bundle\\AsseticBundle\\AsseticBundle(),', '');
         newAppKernelContents = newAppKernelContents.replace('array(\'dev\', \'test\')', 'array(\'node\', \'dev\', \'test\')');
+
+        // add bundle
+        newAppKernelContents = addBundle(newAppKernelContents,'new Utils\GruntBundle\GruntBundle(),');
         fs.unlinkSync(appKernelPath);
         fs.writeFileSync(appKernelPath, newAppKernelContents);
+    },
+
+    addBundles: function addBundles() {
+        fse.copySync(this.templatePath('img/Utils'), 'src/Utils/');
     },
 
 
     /**
      * Set template directories and templates
      */
-    updateView: function () {
+    updateView: function updateView() {
         fse.removeSync(this.destinationPath('app/Resources/views'));
         fse.mkdirsSync(this.destinationPath('app/Resources/views/controller/default'));
 
@@ -818,6 +830,7 @@ module.exports = AppGenerator.extend({
     install: function () {
         this.addScripts();
         this.addStyles();
+        this.addBundles();
         this.updateGitignore();
         this.updateConfig();
         this.updateParameters();
