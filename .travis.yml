@@ -20,5 +20,4 @@ before_install:
 - mkdir ~/.composer
 - echo "{ \"config\": { \"github-oauth\": { \"github.com\": \"$COMPOSER_AUTH\" } } }" > ~/.composer/config.json
 - currentfolder=${PWD##*/}
-- if [ "$currentfolder" != 'generator-grunt-symfony' ]; then cd .. && eval "mv $currentfolder
-  generator-grunt-symfony" && cd generator-grunt-symfony; fi
+- if [ "$currentfolder" != 'generator-grunt-symfony' ]; then cd .. && eval "mv $currentfolder generator-grunt-symfony" && cd generator-grunt-symfony; fi
