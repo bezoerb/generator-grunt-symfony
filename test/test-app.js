@@ -20,23 +20,29 @@ var exec = require('child_process').exec;
 // loader (requirejs|jspm)
 //
 
+//
 
 function withComposer(cb) {
     if (!cb) {
-        cb = function () {};
+        cb = function () {
+        };
     }
     exec('php -r "readfile(\'https://getcomposer.org/installer\');" | php', function () {
-        exec('php composer.phar install --prefer-source --no-interaction --dev', function (error, stdout) {
-            //exec('php ./vendor/sensio/distribution-bundle/Sensio/Bundle/DistributionBundle/Resources/bin/build_bootstrap.php', function (error, stdout) {
-                cb(error, stdout);
-            //});
+        exec('php composer.phar install --prefer-dist --no-interaction', function (error, stdout, stderr) {
+            if (stderr) {
+                console.log(stderr.toString());
+            }
+     //       //exec('php ./vendor/sensio/distribution-bundle/Sensio/Bundle/DistributionBundle/Resources/bin/build_bootstrap.php', function (error, stdout) {
+            cb(error, stdout);
+     //       //});
         });
     });
 }
 
 function withJspm(cb) {
     if (!cb) {
-        cb = function () {};
+        cb = function () {
+        };
     }
     exec('jspm init -y', function (error, stdout) {
         cb(error, stdout);
@@ -78,7 +84,10 @@ describe('grunt-symfony generator', function () {
             });
 
             it('should pass jshint, karma (mocha) and phpunit', function (done) {
-                withComposer(function(error){
+                withComposer(function (error) {
+                    if (error) {
+                        console.log(error.message);
+                    }
                     expect(error).to.be.null;
                     exec('grunt test --no-color', function (error, stdout) {
                         expect(stdout).to.contain('Done, without errors.');
