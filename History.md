@@ -1,5 +1,11 @@
 
-0.4.0 / 
+0.4.1 / 2015-06-18
+==================
+
+  * Init picturefill for jspm
+  * picturefill version bump
+
+0.4.0 / 2015-06-17
 ==================
 
   * Replace usemin for twig with filerev bundle
