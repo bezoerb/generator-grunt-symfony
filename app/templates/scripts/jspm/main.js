@@ -3,7 +3,9 @@ import $ from 'jquery'; <% if (useBootstrap) { %>
 import 'bootstrap'; <% } else if (useUikit) { %>
 import UI from 'uikit';<% } else if (useFoundation) { %>
 import Foundation from 'foundation';<% } %>
+import picturefill from  'picturefill';
 
+picturefill();
 
 
 log.setLevel(0);
