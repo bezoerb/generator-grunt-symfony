@@ -12,8 +12,8 @@ before_install:
 - sudo apt-get install php5-curl
 - php --version
 - php -r "readfile('https://getcomposer.org/installer');" | php
-- php composer.phar config --global github-oauth.github.com $COMPOSER_AUTH
-- php composer.phar config --global --list
+- travis_retry php composer.phar config --global github-oauth.github.com $COMPOSER_AUTH
+- travis_retry php composer.phar config --global --list
 - gem update --system
 - gem install sass --version "=3.3.7"
 - npm cache clean

@@ -335,8 +335,7 @@ module.exports = function(grunt) {
             }
         },<% } %>
         exec: {
-            sfcl: 'php app/console cache:clear',
-            bootstrap: 'php vendor/sensio/distribution-bundle/Sensio/Bundle/DistributionBundle/Resources/bin/build_bootstrap.php'<% if (useJspm && globalJspm) { %>,
+            sfcl: 'php app/console cache:clear'<% if (useJspm && globalJspm) { %>,
             jspm: 'jspm bundle-sfx scripts/main .tmp/scripts/main.js'<% } else if (useJspm && !globalJspm) { %>,
             jspm: 'node_modules/.bin/jspm bundle-sfx scripts/main .tmp/scripts/main.js'<% } %>
         },<% if (useJspm) { %>
@@ -474,7 +473,7 @@ module.exports = function(grunt) {
             return acc;
         },{}));
     });
-    grunt.registerTask('test', ['jshint',<% if (useRequirejs) { %>'wiredep:test','bowerRequirejs:test',<% } %> 'karma','exec:bootstrap', 'phpunit']);
+    grunt.registerTask('test', ['jshint',<% if (useRequirejs) { %>'wiredep:test','bowerRequirejs:test',<% } %>'karma','phpunit']);
     grunt.registerTask('css', ['clean:css','<% if (useLess) { %>less<% } else if (useStylus) { %>stylus<% } else if (useSass) { %>sass<% } else if (noPreprocessor) { %>concat:css<% } %>','autoprefixer', <% if (useCritical || useUncss) { %>'fetch',<% } if (useUncss) { %> 'uncss', <% } %> 'cssmin'<% if (useCritical) { %>, 'critical'<% } %>]);
     grunt.registerTask('js', ['clean:js', 'test', '<% if (useRequirejs) { %>bowerRequirejs', 'requirejs<% } else if (useJspm) { %>exec:jspm', 'uglify:dist<% } %>']);
     grunt.registerTask('img', ['clean:img','imagemin','svgmin']);
