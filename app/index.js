@@ -10,6 +10,7 @@ var stringLength = require('string-length');
 var path = require('path');
 var exec = require('child_process').exec;
 var yaml = require('js-yaml');
+var readFileAsString = require("html-wiring").readFileAsString;
 var fse = require('fs-extra');
 
 
@@ -177,13 +178,13 @@ var AppGenerator = yeoman.generators.Base.extend({
                 this.log('See: http://symfony.com/doc/current/book/installation.html#book-installation-permissions');
 
                 // Without using ACL
-                var consoleContents = this.readFileAsString('app/console').replace('<?php', '<?php' + os.EOL + 'umask(0002);');
+                var consoleContents = readFileAsString('app/console').replace('<?php', '<?php' + os.EOL + 'umask(0002);');
                 fse.outputFileSync('app/console', consoleContents);
 
-                var appContents = this.readFileAsString('web/app.php').replace('<?php', '<?php' + os.EOL + 'umask(0002);');
+                var appContents = readFileAsString('web/app.php').replace('<?php', '<?php' + os.EOL + 'umask(0002);');
                 fse.outputFileSync('web/app.php', appContents);
 
-                var appDevContents = this.readFileAsString('web/app_dev.php').replace('<?php', '<?php' + os.EOL + 'umask(0002);');
+                var appDevContents = readFileAsString('web/app_dev.php').replace('<?php', '<?php' + os.EOL + 'umask(0002);');
                 fse.outputFileSync('web/app_dev.php', appDevContents);
 
                 cb();
@@ -281,7 +282,7 @@ var AppGenerator = yeoman.generators.Base.extend({
      */
     updateParameters: function updateParameters() {
         var parametersDistPath = 'app/config/parameters.yml.dist';
-        var parametersDistContents = this.readFileAsString(parametersDistPath);
+        var parametersDistContents = readFileAsString(parametersDistPath);
         var newparametersDistContents = parametersDistContents.replace(/(database|mailer)_(.*):/g, '$1.$2:');
         fs.unlinkSync(parametersDistPath);
         fs.writeFileSync(parametersDistPath, newparametersDistContents);
@@ -310,7 +311,7 @@ var AppGenerator = yeoman.generators.Base.extend({
 
 
         var appKernelPath = 'app/AppKernel.php';
-        var appKernelContents = this.readFileAsString(appKernelPath);
+        var appKernelContents = readFileAsString(appKernelPath);
 
         var newAppKernelContents = appKernelContents.replace('new Symfony\\Bundle\\AsseticBundle\\AsseticBundle(),', '');
         newAppKernelContents = newAppKernelContents.replace('array(\'dev\', \'test\')', 'array(\'node\', \'dev\', \'test\')');
@@ -334,13 +335,23 @@ var AppGenerator = yeoman.generators.Base.extend({
         fse.mkdirsSync(this.destinationPath('app/Resources/views/controller/default'));
 
         // copy base template
-        var templateContent = this.readFileAsString(this.templatePath('symfony/base.html.twig'));
-        fs.writeFileSync('app/Resources/views/base.html.twig', this.engine(templateContent, this));
+        this.fs.copyTpl(
+            this.templatePath('symfony/base.html.twig'),
+            this.destinationPath('app/Resources/views/base.html.twig'),
+            this
+        );
+        //var templateContent = readFileAsString(this.templatePath('symfony/base.html.twig'));
+        //fs.writeFileSync('app/Resources/views/base.html.twig', this.engine(templateContent, this));
 
 
         // copy default action template
-        var actionContent = this.readFileAsString(this.templatePath('symfony/index.html.twig'));
-        fs.writeFileSync('app/Resources/views/controller/default/index.html.twig', this.engine(actionContent, this));
+        //var actionContent = readFileAsString(this.templatePath('symfony/index.html.twig'));
+        //fs.writeFileSync('app/Resources/views/controller/default/index.html.twig', this.engine(actionContent, this));
+        this.fs.copyTpl(
+            this.templatePath('symfony/index.html.twig'),
+            this.destinationPath('app/Resources/views/controller/default/index.html.twig'),
+            this
+        );
 
         fse.copySync(this.templatePath('img'), 'app/Resources/public/img/');
     },
@@ -375,17 +386,27 @@ var AppGenerator = yeoman.generators.Base.extend({
      */
     addScripts: function addScripts() {
         // copy scripts
-        this.mkdir(this.destinationPath('app/Resources/public/scripts'));
+        fse.mkdirsSync(this.destinationPath('app/Resources/public/scripts'));
         if (this.useRequirejs) {
             _.forEach(['app.js', 'main.js', 'config.js'], function (file) {
-                var content = this.readFileAsString(this.templatePath('scripts/requirejs/' + file));
-                fs.writeFileSync(this.destinationPath('app/Resources/public/scripts/' + file), this.engine(content, this));
+                //var content = readFileAsString(this.templatePath('scripts/requirejs/' + file));
+                //fs.writeFileSync(this.destinationPath('app/Resources/public/scripts/' + file), this.engine(content, this));
+                this.fs.copyTpl(
+                    this.templatePath('scripts/requirejs/' + file),
+                    this.destinationPath('app/Resources/public/scripts/' + file),
+                    this
+                );
             }, this);
             fse.copySync(this.templatePath('scripts/requirejs/modules'),this.destinationPath('app/Resources/public/scripts/modules'));
         } else if (this.useJspm) {
             _.forEach(['main.js', 'config.js'], function (file) {
-                var content = this.readFileAsString(this.templatePath('scripts/jspm/' + file));
-                fs.writeFileSync(this.destinationPath('app/Resources/public/scripts/' + file), this.engine(content, this));
+                //var content = readFileAsString(this.templatePath('scripts/jspm/' + file));
+                //fs.writeFileSync(this.destinationPath('app/Resources/public/scripts/' + file), this.engine(content, this));
+                this.fs.copyTpl(
+                    this.templatePath('scripts/jspm/' + file),
+                    this.destinationPath('app/Resources/public/scripts/' + file),
+                    this
+                );
             }, this);
             fse.copySync(this.templatePath('scripts/jspm/modules'),this.destinationPath('app/Resources/public/scripts/modules'));
         }
@@ -395,7 +416,7 @@ var AppGenerator = yeoman.generators.Base.extend({
 
     addStyles: function addScripts() {
         // copy styles
-        this.mkdir(this.destinationPath('app/Resources/public/styles'));
+        fse.mkdirsSync(this.destinationPath('app/Resources/public/styles'));
         var styles = [];
         if (this.useSass) {
             styles.push('main.scss');
@@ -409,14 +430,19 @@ var AppGenerator = yeoman.generators.Base.extend({
 
         _.forEach(styles, function (file) {
             // copy default action template
-            var content = this.readFileAsString(this.templatePath('styles/' + file));
-            fs.writeFileSync(this.destinationPath('app/Resources/public/styles/' + file), this.engine(content, this));
+            //var content = readFileAsString(this.templatePath('styles/' + file));
+            //fs.writeFileSync(this.destinationPath('app/Resources/public/styles/' + file), this.engine(content, this));
+            this.fs.copyTpl(
+                this.templatePath('styles/' + file),
+                this.destinationPath('app/Resources/public/styles/' + file),
+                this
+            );
         }, this);
     },
 
     copyFonts: function copyFonts() {
         var dest = this.destinationPath('app/Resources/public/fonts');
-        this.mkdir(dest);
+        fse.mkdirsSync(dest);
         var src = this.destinationPath('bower_components');
 
         var fontpath = path.join(src, 'sass-bootstrap-glyphicons', 'fonts');
@@ -442,7 +468,7 @@ var AppGenerator = yeoman.generators.Base.extend({
      * remove assetic
      */
     updateComposerJson: function () {
-        var composerContents = this.readFileAsString('composer.json');
+        var composerContents = readFileAsString('composer.json');
         var composerParse = JSON.parse(composerContents);
 
         // remove assetic
@@ -458,9 +484,14 @@ var AppGenerator = yeoman.generators.Base.extend({
     },
 
     updateGitignore: function updateGitignore() {
-        var gitignore = this.readFileAsString(this.templatePath('gitignore'));
+        //var gitignore = readFileAsString(this.templatePath('gitignore'));
         fs.unlinkSync(this.destinationPath('.gitignore'));
-        fs.writeFileSync(this.destinationPath('.gitignore'), this.engine(gitignore, this));
+        //fs.writeFileSync(this.destinationPath('.gitignore'), this.engine(gitignore, this));
+        this.fs.copyTpl(
+            this.destinationPath('.gitignore'),
+            this.destinationPath('.gitignore'),
+            this
+        );
     }
 });
 
@@ -658,10 +689,15 @@ module.exports = AppGenerator.extend({
 
     writing: {
         app: function () {
-            this.template('_package.json', 'package.json');
+            this.fs.copyTpl(
+                this.templatePath('_package.json'),
+                this.destinationPath('package.json'),
+                _.assign(this,{ safeProjectName: _.camelCase(this.appname)})
+            );
+        //    this.template('_package.json', 'package.json');
 
             var bower = {
-                name: this._.slugify(this.appname),
+                name: _.camelCase(this.appname),
                 private: true,
                 dependencies: {}
             };
@@ -818,9 +854,14 @@ module.exports = AppGenerator.extend({
             if (this.useGit) {
                 var done = this.async();
                 this.spawnCommand('git', ['init']).on('exit', function () {
-                    var content = this.readFileAsString(this.templatePath('hooks/post-merge'));
-                    fs.writeFileSync(this.destinationPath('.git/hooks/post-merge'), this.engine(content, this));
-                    fs.chmodSync(this.destinationPath('.git/hooks/post-merge'), '0755');
+                    this.fs.copyTpl(
+                        this.templatePath('hooks/post-merge'),
+                        this.destinationPath('.git/hooks/post-merge'),
+                        this
+                    );
+                    //var content = readFileAsString(this.templatePath('hooks/post-merge'));
+                    //fs.writeFileSync(this.destinationPath('.git/hooks/post-merge'), this.engine(content, this));
+                    this.fs.chmodSync(this.destinationPath('.git/hooks/post-merge'), '0755');
                     done();
                 }.bind(this));
             }
@@ -842,7 +883,6 @@ module.exports = AppGenerator.extend({
 
         this.updateComposerJson();
 
-        this.setupPermissions();
 
 
         this.installDependencies({
@@ -850,10 +890,7 @@ module.exports = AppGenerator.extend({
             skipMessage: this.options['skip-install-message'] || this.options['skip-install'],
             callback: function () {
                 if (!this.options['skip-install']) {
-                    // copy fonts
-                    if (!this.skipInstall) {
-                        this.copyFonts();
-                    }
+
 
                     this.jspmInstall(function () {
                         this.composerUpdate(function () {
@@ -876,6 +913,14 @@ module.exports = AppGenerator.extend({
     },
 
     end: function () {
+
+        this.setupPermissions();
+
+        // copy fonts
+        if (!this.skipInstall) {
+            this.copyFonts();
+        }
+
         // add postinstall script here before Gruntfile is not available during initial bower install
         if (this.useRequirejs) {
             var bowerrc = fse.readJsonSync(this.destinationPath('.bowerrc'));
