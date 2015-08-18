@@ -3,59 +3,36 @@
 'use strict';
 module.exports = function(config) {
     config.set({
-
         // base path that will be used to resolve all patterns (eg. files, exclude)
         basePath: '../',
-
         plugins: [
-            'karma-systemjs',
+            'karma-jspm',
             'karma-mocha',
             'karma-chai',
-            'karma-phantomjs-launcher',
-            'karma-mocha-reporter'
+            'karma-mocha-reporter',
+            'karma-phantomjs-launcher'
         ],
 
         // frameworks to use
         // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-        frameworks: ['systemjs','mocha', 'chai'],
+        frameworks: ['jspm', 'mocha', 'chai'],
 
         // list of files / patterns to load in the browser
         files: [
-           {pattern: 'jspm_packages/npm/**/*.js', included: false},
-           {pattern: 'jspm_packages/github/**/*.js', included: false},
-           {pattern: 'app/Resources/public/scripts/**/*.js', included: false},
-           {pattern: 'test/**/*Spec.js', included: false}
+            'node_modules/phantomjs-polyfill/bind-polyfill.js'
         ],
 
-        systemjs: {
-            // Path to your SystemJS configuration file
-            configFile: 'app/Resources/public/scripts/config.js',
-
-            // File patterns for your application code, dependencies, and test suites
-            files: [
-                'app/Resources/public/scripts/modules/**/*.js',
-                'test/**/*Spec.js'
-            ],
-
-            // SystemJS configuration specifically for tests, added after your config file.
-            // Good for adding test libraries and mock modules
-            config: {
-                paths: {
-                    '*': 'app/Resources/public/scripts/*.js',
-                    'test\/*': 'test/*.js',
-                    'github:*': 'jspm_packages/github/*.js',
-                    'npm:*': 'jspm_packages/npm/*.js',
-                    'babel': 'node_modules/babel-core/browser.js',
-                    'systemjs': 'node_modules/systemjs/dist/system.js',
-                    'system-polyfills': 'node_modules/systemjs/dist/system-polyfills.js',
-                    'es6-module-loader': 'node_modules/es6-module-loader/dist/es6-module-loader.js',
-                    'phantomjs-polyfill': 'node_modules/phantomjs-polyfill/bind-polyfill.js'
-                },
-                transpiler: 'babel'
-            },
-
-            // Specify the suffix used for test suite file names.  Defaults to .test.js, .spec.js, _test.js, and _spec.js
-            testFileSuffix: 'Spec.js'
+        jspm: {
+            // Edit this to your needs
+            config: 'app/Resources/public/scripts/config.js',
+            loadFiles: ['test/**/*Spec.js'],
+            serveFiles : ['app/Resources/public/scripts/**/*.js'],
+            paths: {
+                '*': 'app/Resources/public/scripts/*.js',
+                'test\/*': 'test/*.js',
+                'github:*': 'jspm_packages/github/*.js',
+                'npm:*': 'jspm_packages/npm/*.js'
+            }
         },
 
         // list of files to exclude

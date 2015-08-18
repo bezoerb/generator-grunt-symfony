@@ -44,7 +44,7 @@
         "karma-mocha": "^0.2.0",
         "karma-mocha-reporter": "^1.0.2",
         "karma-phantomjs-launcher": "^0.2.1",<% if (useJspm) { %>
-        "karma-systemjs": "^0.7.2",
+        "karma-jspm": "^1.1.5",
         "systemjs": "^0.18.10",
         "babel": "^5.2.17",
         "es6-module-loader": "^0.17.6",
