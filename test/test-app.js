@@ -111,9 +111,6 @@ describe('grunt-symfony generator', function () {
 
             it('should pass jshint, karma (mocha) and phpunit', function (done) {
                 withComposer(function (error) {
-                    if (error) {
-                        console.log(error.message);
-                    }
                     expect(error).to.be.null;
                     var testProcess = exec('grunt test --no-color', function (error, stdout) {
                         expect(stdout).to.contain('Done, without errors.');
