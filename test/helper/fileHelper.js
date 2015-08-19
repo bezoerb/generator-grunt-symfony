@@ -54,7 +54,7 @@ Base.prototype.addSass = function () {
     return this;
 };
 
-Base.prototype.done = function () {
+Base.prototype.toArray = function () {
     return this.files;
 };
 

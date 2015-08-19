@@ -52,6 +52,7 @@
         "karma-requirejs": "^0.2.2",
         "grunt-wiredep": "^2.0.0",<% } %>
         "time-grunt": "^1.1.0",
+        "phantomjs": ">=1.9",
         "fs-extra": "^0.23.1"
     }<% if (useJspm) { %>,
     "jspm": {

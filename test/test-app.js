@@ -2,6 +2,7 @@
 /*jshint expr: true*/
 var path = require('path');
 var helpers = require('yeoman-generator').test;
+var assert = require('yeoman-assert');
 var _ = require('lodash');
 var files = require('./helper/fileHelper');
 var fixtureHelper = require('./helper/fixturesHelper');
@@ -70,7 +71,6 @@ describe('grunt-symfony generator', function () {
         return function () {
             before(function (done) {
                 this.timeout(60000);
-
                 helpers.run(path.join(__dirname, '../app'))
                     .inDir(__dirname + '/temp')
                     .withOptions({'skip-install': true})
@@ -79,7 +79,33 @@ describe('grunt-symfony generator', function () {
             });
 
             it('should create files', function (done) {
-                helpers.assertFile(files(__dirname + '/temp').addLess().addRequirejs().done());
+                var usedFiles = files(__dirname + '/temp');
+                switch (opts.preprocessor) {
+                    case 'less':
+                        usedFiles = usedFiles.addLess();
+                        break;
+                    case 'stylus':
+                        usedFiles = usedFiles.addStylus();
+                        break;
+                    case 'sass':
+                        usedFiles = usedFiles.addSass();
+                        break;
+                    default:
+                        usedFiles = usedFiles.addNop();
+                        break;
+                }
+
+                switch (opts.loader) {
+                    case 'requirejs':
+                        usedFiles = usedFiles.addRequirejs();
+                        break;
+                    case 'jspm':
+                        usedFiles = usedFiles.addJspm();
+                        break;
+                }
+
+                assert.file(usedFiles.toArray());
+
                 done();
             });
 
@@ -89,7 +115,7 @@ describe('grunt-symfony generator', function () {
                         console.log(error.message);
                     }
                     expect(error).to.be.null;
-                    exec('grunt test --no-color', function (error, stdout) {
+                    var testProcess = exec('grunt test --no-color', function (error, stdout) {
                         expect(stdout).to.contain('Done, without errors.');
                         done();
                     });
