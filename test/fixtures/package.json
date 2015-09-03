@@ -52,6 +52,7 @@
     "karma-requirejs": "^0.2.2",
     "grunt-wiredep": "^2.0.0",
     "phantomjs": ">=1.9",
+    "slash": "^1.0.0",
     "fs-extra": "^0.23.1"
   },
   "jspm": {

@@ -45,7 +45,7 @@ function withJspm(cb) {
         cb = function () {
         };
     }
-    exec('jspm init -y', function (error, stdout) {
+    exec('node_modules/.bin/jspm init -y', function (error, stdout) {
         cb(error, stdout);
     });
 }
