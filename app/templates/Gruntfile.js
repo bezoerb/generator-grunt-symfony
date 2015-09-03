@@ -335,8 +335,7 @@ module.exports = function(grunt) {
             }
         },<% } %>
         exec: {
-            sfcl: 'php app/console cache:clear'<% if (useJspm && globalJspm) { %>,
-            jspm: 'jspm bundle-sfx scripts/main .tmp/scripts/main.js'<% } else if (useJspm && !globalJspm) { %>,
+            sfcl: 'php app/console cache:clear'<% if (useJspm) { %>,
             jspm: 'node_modules/.bin/jspm bundle-sfx scripts/main .tmp/scripts/main.js'<% } %>
         },<% if (useJspm) { %>
         uglify: {

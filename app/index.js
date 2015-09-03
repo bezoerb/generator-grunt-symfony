@@ -71,26 +71,10 @@ var AppGenerator = yeoman.generators.Base.extend({
             cb = function () {};
         }
 
-        var cmd = 'jspm';
-        if (!this.globalJspm) {
-            cmd = 'node_modules/.bin/jspm';
-        }
-        return this.spawnCommand(cmd, args, options || {}).on('error', cb).on('exit', cb);
+        return this.spawnCommand('node_modules/.bin/jspm', args, options || {}).on('error', cb).on('exit', cb);
     },
 
 
-    /**
-     * Check for installed jspm
-     */
-    checkJspm: function checkJspm() {
-        // Check if jspm is installed globally
-        this.globalJspm = false;
-        this.spawnCommand('jspm', ['-v'], {stdio: 'ignore'}).on('exit', function () {
-            this.globalJspm = true;
-        }.bind(this)).on('error', function () {
-            this.globalJspm = false;
-        }.bind(this));
-    },
 
     /**
      * Check for installed git
@@ -109,10 +93,6 @@ var AppGenerator = yeoman.generators.Base.extend({
         if (this.useJspm) {
             this.log('');
             this.log('Running ' + chalk.bold.yellow('jspm install') + ' for you to install the required dependencies.');
-            if (!this.globalJspm) {
-                this.log(chalk.bold.red('Warning: ') + 'Using local jspm. Run ' + chalk.bold.yellow('npm install -g jspm') + ' to install globally.');
-            }
-
             this.jspm(['install'], cb);
         } else {
             cb();
@@ -526,7 +506,6 @@ module.exports = AppGenerator.extend({
             ));
         }
 
-        this.checkJspm();
         this.checkGit();
         this.checkComposer();
     },

@@ -1,14 +1,18 @@
 services:
-#    grunt_utils_filerev.example:
-#        class: GruntUtils\FilerevBundle\Example
-#        arguments: [@service_id, "plain_value", %parameter%]
-services:
-  grunt_utils_filerev.eventlistener.filerevpackage:
-    class: Utils\GruntBundle\Eventlistener\HttpKernel\FilerevPackageInjector
+#  grunt_utils_filerev.eventlistener.filerevpackage:
+#    class: Utils\GruntBundle\Eventlistener\HttpKernel\FilerevPackageInjector
+#    scope: request
+#    arguments: [@service_container]
+#    tags:
+#      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+  grunt.filerev.templating.asset.path_package:
+    public: false
+    class: Utils\GruntBundle\Templating\Asset\PathPackage
+    arguments: [@request,"","","",""]
     scope: request
-    tags:
-      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
-    arguments: [@service_container]
-#    calls:
-#      - [setAssetHelper, [@templating.helper.assets]]
-#      - [setContainer, [@kernel]]
+
+  grunt.filerev.templating.asset.url_package:
+      public: false
+      class: Utils\GruntBundle\Templating\Asset\UrlPackage
+      arguments: ["","","","",""]

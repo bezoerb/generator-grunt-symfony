@@ -24,7 +24,6 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->booleanNode('debug')->defaultValue('%kernel.debug%')->end()
-                ->scalarNode('environment')->defaultValue('node')->end()
             ->end();
 
 
@@ -35,13 +34,58 @@ class Configuration implements ConfigurationInterface
 
     private function addFilerevSection(ArrayNodeDefinition $rootNode)
     {
+
+        $organizeUrls = function ($urls) {
+            $urls += array(
+                'http' => array(),
+                'ssl' => array(),
+            );
+
+            foreach ($urls as $i => $url) {
+                if (is_int($i)) {
+                    if (0 === strpos($url, 'https://') || 0 === strpos($url, '//')) {
+                        $urls['http'][] = $urls['ssl'][] = $url;
+                    } else {
+                        $urls['http'][] = $url;
+                    }
+                    unset($urls[$i]);
+                }
+            }
+
+            return $urls;
+        };
+
         $rootNode
             ->children()
                 ->arrayNode('filerev')
-                ->addDefaultsIfNotSet()
-                ->children()
-                    ->scalarNode('root_dir')->defaultValue('%kernel.root_dir%/../web')->end()
+                    ->info('grunt filerev configuration')
+                    ->canBeDisabled()
+                    ->children()
+                        ->scalarNode('root_dir')->defaultValue('%kernel.root_dir%/../web')->end()
+                        ->scalarNode('summary_file')->defaultValue('filerev.json')->end()
+                        ->arrayNode('assets_base_urls')
+                            ->performNoDeepMerging()
+                            ->addDefaultsIfNotSet()
+                            ->beforeNormalization()
+                                ->ifTrue(function ($v) { return !is_array($v); })
+                                ->then(function ($v) { return array($v); })
+                            ->end()
+                            ->beforeNormalization()
+                                ->always()
+                                ->then($organizeUrls)
+                            ->end()
+                            ->children()
+                                ->arrayNode('http')
+                                    ->prototype('scalar')->end()
+                                ->end()
+                                ->arrayNode('ssl')
+                                    ->prototype('scalar')->end()
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
                 ->end()
-            ->end();
+            ->end()
+        ;
     }
 }

@@ -2,6 +2,7 @@ module.exports = function (grunt, options) {
     var _ = require('lodash');
     var fs = require('fs-extra');
     var path = require('path');
+    var slash = require('slash');
     var php = require('php-proxy-middleware');
 
     // helper
@@ -77,7 +78,7 @@ module.exports = function (grunt, options) {
         revdump: function(){
             var file = 'src/Utils/GruntBundle/Resources/config/filerev.json';
             fs.outputJsonSync(file, _.reduce(grunt.filerev.summary, function(acc,val,key){
-                acc[key.replace('web','')] = val.replace('web','');
+                acc[key.replace('web','')] = slash(val.replace('web',''));
                 return acc;
             },{}));
         },

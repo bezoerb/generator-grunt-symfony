@@ -1,3 +1,2 @@
 parameters:
-    grunt.filerev.cache_dir: %kernel.cache_dir%/grunt
     grunt.filerev.root_dir: %kernel.root_dir%/../web
