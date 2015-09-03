@@ -42,15 +42,11 @@ function withComposer(cb) {
 
 function withJspm(cb) {
     if (!cb) {
-        cb = function () {
-        };
+        cb = function () {};
     }
-    exec('node_modules/.bin/jspm dl-loader babel', function (error, stdout) {
+    exec('node_modules/.bin/jspm init -y', function (error, stdout) {
         console.log(stdout);
-        exec('node_modules/.bin/jspm init -y', function (error, stdout) {
-            console.log(stdout);
-            cb(error, stdout);
-        });
+        cb(error, stdout);
     });
 }
 
