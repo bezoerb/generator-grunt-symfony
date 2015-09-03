@@ -31,7 +31,7 @@ function withComposer(cb) {
     exec('php -r "readfile(\'https://getcomposer.org/installer\');" | php', function () {
         exec('php composer.phar install --prefer-dist --no-interaction', function (error, stdout, stderr) {
             if (stderr) {
-                console.log(stderr.toString());
+     //           console.log(stderr.toString());
             }
      //       //exec('php ./vendor/sensio/distribution-bundle/Sensio/Bundle/DistributionBundle/Resources/bin/build_bootstrap.php', function (error, stdout) {
             cb(error, stdout);
@@ -111,11 +111,13 @@ describe('grunt-symfony generator', function () {
 
             it('should pass jshint, karma (mocha) and phpunit', function (done) {
                 withComposer(function (error) {
-                    expect(error).to.be.null;
-                    var testProcess = exec('grunt test --no-color', function (error, stdout) {
-                        expect(stdout).to.contain('Done, without errors.');
-                        done();
-                    });
+                    withJspm(function (error) {
+                        expect(error).to.be.null;
+                        var testProcess = exec('grunt test --no-color', function (error, stdout) {
+                            expect(stdout).to.contain('Done, without errors.');
+                            done();
+                        });
+                    }); 
                 });
             });
 
