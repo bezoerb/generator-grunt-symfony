@@ -92,8 +92,13 @@ module.exports = function (grunt) {
         shell.cd('test/fixtures');
         grunt.log.ok('installing jspm dependencies for generated app');
         exec('jspm install', {cwd: '../fixtures'}, function () {
+            exec('npm install --save jspm', {cwd: '../fixtures'}, function () {
+
             shell.cd('../../');
             done();
+            }).stdout.on('data', function(data) {
+                console.log(data);
+            });
         }).stdout.on('data', function(data) {
             console.log(data);
         });
