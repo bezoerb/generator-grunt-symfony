@@ -459,7 +459,7 @@ var AppGenerator = yeoman.generators.Base.extend({
 
         var data = JSON.stringify(composerParse, null, 4);
 
-        fse.deleteSync(this.templatePath('composer.json'));
+        fse.removeSync(this.templatePath('composer.json'));
         fs.writeFileSync('composer.json', data);
     },
 
