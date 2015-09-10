@@ -78,7 +78,7 @@ module.exports = function (grunt, options) {
         revdump: function(){
             var file = 'src/Utils/GruntBundle/Resources/config/filerev.json';
             fs.outputJsonSync(file, _.reduce(grunt.filerev.summary, function(acc,val,key){
-                acc[key.replace('web','')] = slash(val.replace('web',''));
+                acc[slash(key.replace('web',''))] = slash(val.replace('web',''));
                 return acc;
             },{}));
         },
