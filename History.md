@@ -1,4 +1,20 @@
 
+0.5.2 / 2015-09-10
+==================
+
+  * Fixed filerev paths for windows (#18)
+
+0.5.1 / 2015-09-10
+==================
+
+  * Fixed missing fs.deleteSync
+
+0.5.0 / 2015-09-10
+==================
+
+  * Filerev bundle improvments
+  * bump deps
+
 0.4.1 / 2015-06-18
 ==================
 
