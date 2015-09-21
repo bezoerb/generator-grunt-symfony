@@ -838,9 +838,6 @@ module.exports = AppGenerator.extend({
                         this.destinationPath('.git/hooks/post-merge'),
                         this
                     );
-                    //var content = readFileAsString(this.templatePath('hooks/post-merge'));
-                    //fs.writeFileSync(this.destinationPath('.git/hooks/post-merge'), this.engine(content, this));
-                    this.fs.chmodSync(this.destinationPath('.git/hooks/post-merge'), '0755');
                     done();
                 }.bind(this));
             }
@@ -898,6 +895,10 @@ module.exports = AppGenerator.extend({
         // copy fonts
         if (!this.skipInstall) {
             this.copyFonts();
+        }
+
+        if (this.useGit) {
+            fs.chmodSync(this.destinationPath('.git/hooks/post-merge'), '0755');
         }
 
         // add postinstall script here before Gruntfile is not available during initial bower install
