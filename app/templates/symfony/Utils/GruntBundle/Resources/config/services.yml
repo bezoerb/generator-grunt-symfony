@@ -7,12 +7,11 @@ services:
 #      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
   grunt.filerev.templating.asset.path_package:
-    public: false
     class: Utils\GruntBundle\Templating\Asset\PathPackage
-    arguments: [@request,"","","",""]
-    scope: request
+    abstract: true
+    arguments: ["","","","",""]
 
   grunt.filerev.templating.asset.url_package:
-      public: false
-      class: Utils\GruntBundle\Templating\Asset\UrlPackage
-      arguments: ["","","","",""]
+    class: Utils\GruntBundle\Templating\Asset\UrlPackage
+    abstract: true
+    arguments: ["","","","",""]
