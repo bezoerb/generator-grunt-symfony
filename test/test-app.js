@@ -34,14 +34,7 @@ function withComposer(cb) {
         }
 
         exec('php composer.phar install --prefer-dist --no-interaction', function (error, stdout, stderr) {
-            if (stderr) {
-                cb(error);
-                return;
-            }
-
-            exec('php ./vendor/sensio/distribution-bundle/Sensio/Bundle/DistributionBundle/Resources/bin/build_bootstrap.php', function (error, stdout) {
-                cb(error, stdout);
-            });
+            cb(error, stdout);
         });
     });
 }
