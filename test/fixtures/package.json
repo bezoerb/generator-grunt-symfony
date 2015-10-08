@@ -51,7 +51,7 @@
     "karma-mocha-reporter": "^1.0.2",
     "karma-phantomjs-launcher": "^0.2.1",
     "karma-jspm": "^2.0.1",
-    "systemjs": "^0.18.10",
+    "systemjs": "^0.19.3",
     "babel": "^5.2.17",
     "es6-module-loader": "^0.17.6",
     "phantomjs-polyfill": "0.0.1",
