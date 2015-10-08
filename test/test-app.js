@@ -25,17 +25,16 @@ var exec = require('child_process').exec;
 
 function withComposer(cb) {
     if (!cb) {
-        cb = function () {
-        };
+        cb = function () {};
     }
-    exec('php -r "readfile(\'https://getcomposer.org/installer\');" | php', function () {
+    exec('php -r "readfile(\'https://getcomposer.org/installer\');" | php', function (error) {
+        if (error) {
+            cb(error);
+            return;
+        }
+
         exec('php composer.phar install --prefer-dist --no-interaction', function (error, stdout, stderr) {
-            if (stderr) {
-     //           console.log(stderr.toString());
-            }
-     //       //exec('php ./vendor/sensio/distribution-bundle/Sensio/Bundle/DistributionBundle/Resources/bin/build_bootstrap.php', function (error, stdout) {
             cb(error, stdout);
-     //       //});
         });
     });
 }
@@ -45,7 +44,6 @@ function withJspm(cb) {
         cb = function () {};
     }
     exec('node_modules/.bin/jspm init -y', function (error, stdout) {
-      //  console.log(stdout);
         cb(error, stdout);
     });
 }
@@ -117,7 +115,7 @@ describe('grunt-symfony generator', function () {
                             expect(stdout).to.contain('Done, without errors.');
                             done();
                         });
-                    }); 
+                    });
                 });
             });
 
