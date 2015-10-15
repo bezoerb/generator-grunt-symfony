@@ -47,7 +47,7 @@
   "devDependencies": {
     "chai": "3.3.0",
     "cross-spawn": "2.0.0",
-    "glob": "5.0.14",
+    "glob": "5.0.15",
     "grunt": "0.4.5",
     "grunt-contrib-clean": "0.6.0",
     "grunt-contrib-jshint": "0.11.3",
