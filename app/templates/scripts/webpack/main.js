@@ -1,12 +1,12 @@
 import log from 'loglevel';
 import $ from 'jquery'; <% if (useBootstrap) { %>
 import 'bootstrap'; <% } else if (useUikit) { %>
-import UI from 'uikit';<% } else if (useFoundation) { %>
-import Foundation from 'foundation';<% } %>
+import UI from 'uikit/js/uikit';<% } else if (useFoundation) { %>
+import 'foundation';<% } %>
+
+/* global picturefill */
 import 'picturefill';
-
 picturefill();
-
 
 log.setLevel(0);
 log.debug('\'Allo \'Allo');
