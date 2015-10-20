@@ -1,13 +1,38 @@
 'use strict';
 module.exports = function(grunt, options) {
-    var parseurl = require('parseurl');
+    <% if (useWebpack) { %>var path = require('path');
+    <% } %>var parseurl = require('parseurl');
+    var cache;
 
     // just a helper to prevent double config
     function bsOptions() {
-        return {
+        if (cache) {
+            return cache;
+        }
+        <% if (useWebpack) { %>
+        var webpack = require('webpack');
+        var webpackDevMiddleware = require('webpack-dev-middleware');
+        var webpackHotMiddleware = require('webpack-hot-middleware');
+        var webpackConfig = require('../webpack.config').dev;
+        var bundler = webpack(webpackConfig);<% } %>
+
+        cache = {
             server: {
                 baseDir: Array.prototype.slice.call(arguments),
-                middleware: [
+                middleware: [<% if (useWebpack) { %>
+                    webpackDevMiddleware(bundler, {
+                        publicPath: webpackConfig.output.publicPath,
+                        noInfo: true,
+                        stats: {colors: true}
+
+                        // for other settings see
+                        // http://webpack.github.io/docs/webpack-dev-middleware.html
+                    }),
+
+                    // bundler should be the same as above
+                    webpackHotMiddleware(bundler),
+                    <% } %>
+                    // use php proxy 
                     function(req, res, next) {
                         var obj = parseurl(req);
                         if (!/\.\w{2,}$/.test(obj.pathname) || /\.php/.test(obj.pathname)) {
@@ -29,14 +54,16 @@ module.exports = function(grunt, options) {
                 forms: true
             }
         };
+
+        return cache;
     }
 
     return {
         dev: {
             bsFiles: {
                 src: [
-                    '<%%= paths.app %>/scripts/**/*.js',
-                    '<%%= paths.app %>/images/**/*.{jpg,jpeg,gif,png,webp}',
+                    <% if (!useWebpack) { %>'<%%= paths.app %>/scripts/**/*.js',
+                    <% } %>'<%%= paths.app %>/images/**/*.{jpg,jpeg,gif,png,webp}',
                     'app/Resources/views/**/*.html.twig',
                     '.tmp/styles/*.css'
                 ]

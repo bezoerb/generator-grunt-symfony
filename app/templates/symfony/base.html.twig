@@ -16,7 +16,7 @@
     </head>
     <body>
         {% block body %}{% endblock %}
-        {% block javascripts %}
+        {% block javascripts %}<% if (!useWebpack) { %>
             {% if app.environment == 'node' %}<% if (useRequirejs) { %>
                 <script type="text/javascript" src="scripts/config.js"></script>
                 <script type="text/javascript" data-main="main" src="bower_components/requirejs/require.js"></script>
@@ -27,7 +27,8 @@
                 </script><% } %>
             {% else %}
                 <script type="text/javascript" src="{{ asset('scripts/main.js') }}"></script>
-            {% endif %}
+            {% endif %}<% } else { %> 
+            <script type="text/javascript" src="{{ asset('scripts/main.js') }}"></script><% } %>            
         {% endblock %}
     </body>
 </html>

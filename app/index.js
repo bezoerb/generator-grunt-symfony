@@ -389,6 +389,13 @@ var AppGenerator = yeoman.generators.Base.extend({
                 );
             }, this);
             fse.copySync(this.templatePath('scripts/jspm/modules'),this.destinationPath('app/Resources/public/scripts/modules'));
+        } else if (this.useWebpack) {
+            this.fs.copyTpl(
+                this.templatePath('scripts/webpack/main.js'),
+                this.destinationPath('app/Resources/public/scripts/main.js'),
+                this
+            );
+            fse.copySync(this.templatePath('scripts/webpack/modules'),this.destinationPath('app/Resources/public/scripts/modules'));
         }
 
 
@@ -601,6 +608,7 @@ module.exports = AppGenerator.extend({
             message: 'Which module loader would you like to use?',
             choices: [
                 {name: 'SystemJS (jspm)', value: 'jspm'},
+                {name: 'Webpack + HMR + Babel', value: 'webpack'},
                 {name: 'RequireJS', value: 'requirejs'}
             ]
         // deprecated default gruntfile - skip one question and always use load-grunt-config
@@ -652,6 +660,7 @@ module.exports = AppGenerator.extend({
             var useLoader = _.partial(has, 'loader');
             this.useRequirejs = useLoader('requirejs');
             this.useJspm = useLoader('jspm');
+            this.useWebpack = useLoader('webpack');
             this.useBrowserify = useLoader('browserify');
 
 
@@ -778,6 +787,9 @@ module.exports = AppGenerator.extend({
                     this.template('grunt/requirejs.js', 'grunt/requirejs.js');
                 } else if (this.useJspm) {
                     this.template('grunt/uglify.js', 'grunt/uglify.js');
+                } else if (this.useWebpack) {
+                    this.template('grunt/webpack.js', 'grunt/webpack.js');
+                    this.template('webpack.config.js', 'webpack.config.js');
                 }
             }
         },
@@ -821,6 +833,11 @@ module.exports = AppGenerator.extend({
             } else if (this.useJspm) {
                 fse.copySync(
                     this.templatePath(path.join('test','jspm')),
+                    this.destinationPath('test')
+                );
+            } else if (this.useWebpack) {
+                fse.copySync(
+                    this.templatePath(path.join('test','webpack')),
                     this.destinationPath('test')
                 );
             }
