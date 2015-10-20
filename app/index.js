@@ -608,7 +608,7 @@ module.exports = AppGenerator.extend({
             message: 'Which module loader would you like to use?',
             choices: [
                 {name: 'SystemJS (jspm)', value: 'jspm'},
-                {name: 'Webpack + HMR + Babel', value: 'webpack'},
+                {name: 'Webpack (babel)', value: 'webpack'},
                 {name: 'RequireJS', value: 'requirejs'}
             ]
         // deprecated default gruntfile - skip one question and always use load-grunt-config
