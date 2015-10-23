@@ -45,7 +45,7 @@
     "yosay": "1.0.5"
   },
   "devDependencies": {
-    "chai": "3.3.0",
+    "chai": "3.4.0",
     "cross-spawn": "2.0.0",
     "glob": "5.0.14",
     "grunt": "0.4.5",
