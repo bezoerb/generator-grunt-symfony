@@ -581,7 +581,8 @@ module.exports = AppGenerator.extend({
                 {name: 'UIkit', value: 'uikit'},
                 {name: 'Twitter Bootstrap', value: 'bootstrap', checked: true},
                 {name: 'Foundation', value: 'foundation'},
-                {name: 'PureCSS + Suit', value: 'pure'},
+                // should use postcss bem linter
+                //{name: 'PureCSS + Suit', value: 'pure'},
                 {name: 'No Framework', value: 'noframework'}
             ]
         }, {
