@@ -118,14 +118,14 @@ function checkTests () {
         return new Promise(function (resolve) {
             withComposer(function (error, stdout) {
                 /*jshint expr: true*/
-                log(stdout);
+                log(os.EOL+stdout);
                 expect(error).to.be.null;
                 withJspm(function (error, stdout) {
                     /*jshint expr: true*/
-                    log(stdout);
+                    log(os.EOL+stdout);
                     expect(error).to.be.null;
                     exec('grunt test --no-color', function (error, stdout) {
-                        log(stdout);
+                        log(os.EOL+stdout);
                         /*jshint expr: true*/
                         expect(error).to.be.null;
                         expect(stdout).to.contain('Done, without errors.');
