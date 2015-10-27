@@ -80,3 +80,32 @@ function linkDeps(base, target, done) {
 }
 
 module.exports.linkDeps = linkDeps;
+
+
+
+module.exports.withComposer = function(cb) {
+    if (!cb) {
+        cb = function () {
+        };
+    }
+    exec('php -r "readfile(\'https://getcomposer.org/installer\');" | php', function (error) {
+        if (error) {
+            cb(error);
+            return;
+        }
+
+        exec('php composer.phar install --prefer-dist --no-interaction', function (error, stdout, stderr) {
+            cb(error, stdout);
+        });
+    });
+}
+
+module.exports.withJspm = function(cb) {
+    if (!cb) {
+        cb = function () {
+        };
+    }
+    exec('node_modules/.bin/jspm init -y', function (error, stdout) {
+        cb(error, stdout);
+    });
+}

@@ -380,8 +380,6 @@ var AppGenerator = yeoman.generators.Base.extend({
             fse.copySync(this.templatePath('scripts/requirejs/modules'),this.destinationPath('app/Resources/public/scripts/modules'));
         } else if (this.useJspm) {
             _.forEach(['main.js', 'config.js'], function (file) {
-                //var content = readFileAsString(this.templatePath('scripts/jspm/' + file));
-                //fs.writeFileSync(this.destinationPath('app/Resources/public/scripts/' + file), this.engine(content, this));
                 this.fs.copyTpl(
                     this.templatePath('scripts/jspm/' + file),
                     this.destinationPath('app/Resources/public/scripts/' + file),
