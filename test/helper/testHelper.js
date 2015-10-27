@@ -34,7 +34,7 @@ var defaultOptions = {
 };
 
 function log(text) {
-    process.stdout.write(indentString(chalk.grey(text),chalk.grey('      ...')));
+    process.stdout.write(indentString(chalk.grey(text),chalk.grey('      ')));
 }
 
 function markDone() {
@@ -81,7 +81,7 @@ function install (prompts) {
  */
 function checkFiles (prompts) {
     return function () {
-        log('check files');
+        log('...check files');
         var usedFiles = files(target);
         switch (prompts.preprocessor) {
             case 'less':
@@ -114,15 +114,18 @@ function checkFiles (prompts) {
 
 function checkTests () {
     return function() {
-        log('check jshint, karma (mocha) and phpunit');
+        log('...check jshint, karma (mocha) and phpunit');
         return new Promise(function (resolve) {
-            withComposer(function (error) {
+            withComposer(function (error, stdout) {
                 /*jshint expr: true*/
+                log(stdout);
                 expect(error).to.be.null;
-                withJspm(function (error) {
+                withJspm(function (error, stdout) {
                     /*jshint expr: true*/
+                    log(stdout);
                     expect(error).to.be.null;
                     exec('grunt test --no-color', function (error, stdout) {
+                        log(stdout);
                         /*jshint expr: true*/
                         expect(error).to.be.null;
                         expect(stdout).to.contain('Done, without errors.');
@@ -137,7 +140,7 @@ function checkTests () {
 
 function checkJs(prompts) {
     return function(){
-        log('check js build');
+        log('...check js build');
         return new Promise(function (resolve) {
             if (prompts.loader === 'jspm') {
                 withJspm(function (error) {
@@ -166,7 +169,7 @@ function checkJs(prompts) {
 
 function checkCss() {
     return function() {
-        log('check css build');
+        log('...check css build');
         return new Promise(function (resolve) {
             exec('grunt css --no-color', function (error, stdout) {
                 /*jshint expr: true*/
@@ -189,7 +192,7 @@ module.exports.testPrompts = function(opts, done) {
         .then(checkCss())
         .then(done)
         .catch(function(err){
-            process.stderr.write(err.message || err);
+            process.stderr.write(os.EOL + (err.message || err));
             /*jshint expr: true*/
             expect(err).to.be.null;
         });
