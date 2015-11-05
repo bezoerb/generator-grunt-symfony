@@ -11,10 +11,11 @@ namespace Utils\GruntBundle\Templating\Asset;
 
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Templating\Asset\Package;
+use Symfony\Component\Asset\Package;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Translation\Loader\JsonFileLoader;
 use Symfony\Component\Translation\MessageCatalogue;
+use Symfony\Component\Asset\VersionStrategy\EmptyVersionStrategy;
 
 /**
  * The path packages adds a version and a base path to asset URLs for use with node's filerev .
@@ -54,7 +55,7 @@ class BasePackage extends Package
      */
     public function __construct($rootDir, $summaryFile, $cacheDir, $debug)
     {
-        parent::__construct();
+        parent::__construct(new EmptyVersionStrategy());
 
         $this->rootDir = $rootDir;
         $this->summaryFile = $summaryFile;
@@ -65,6 +66,17 @@ class BasePackage extends Package
     }
 
 
+    /**
+     * {@inheritdoc}
+     */
+    public function getUrl($path, $version = null)
+    {
+        if ($this->isAbsoluteUrl($path)) {
+            return $path;
+        }
+
+        return $this->applyVersion($path, $version);
+    }
 
     /**
      * Get filerev summary

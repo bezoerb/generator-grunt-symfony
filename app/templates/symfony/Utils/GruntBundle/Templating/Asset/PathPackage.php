@@ -36,11 +36,9 @@ class PathPackage extends BasePackage
      * @param string  $cacheDir    Kernel cache dir
      * @param string  $debug       Debug?
      */
-    public function __construct(Request $request, $rootDir, $summaryFile, $cacheDir, $debug)
+    public function __construct($basePath, $rootDir, $summaryFile, $cacheDir, $debug)
     {
         parent::__construct($rootDir, $summaryFile, $cacheDir, $debug);
-
-        $basePath = $request->getBasePath();
 
         if (!$basePath) {
             $this->basePath = '/';

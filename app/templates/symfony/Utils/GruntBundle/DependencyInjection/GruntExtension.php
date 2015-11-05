@@ -34,17 +34,25 @@ class GruntExtension extends Extension implements PrependExtensionInterface
             return;
         }
 
-        // assets_base_urls are cloned from framework configuration in `prepend`
-        $httpUrls = $config['filerev']['assets_base_urls']['http'];
-        $sslUrls = $config['filerev']['assets_base_urls']['ssl'];
+        // base_urls and base_path are cloned from framework configuration in `prepend`
+        $basePath = $config['filerev']['base_path'];
+        $httpUrls = $config['filerev']['base_urls']['http'];
+        $sslUrls = $config['filerev']['base_urls']['ssl'];
+
         $rootDir = $config['filerev']['root_dir'];
         $summaryFile = $config['filerev']['summary_file'];
         $cacheDir = $container->getParameter('kernel.cache_dir').'/grunt';
 
-        $defaultPackage = $this->createPackageDefinition($container, $httpUrls , $sslUrls, $rootDir, $summaryFile, $cacheDir, $config['debug']);
-
         // overwrite symfony default package
-        $container->setDefinition('templating.asset.default_package', $defaultPackage);
+        $defaultPackage = $this->createPackageDefinition($container, $basePath, $httpUrls , $sslUrls, $rootDir, $summaryFile, $cacheDir, $config['debug']);
+        $container->setDefinition('assets._default_package', $defaultPackage);
+
+        foreach ($config['filerev']['packages'] as $name => $package) {
+            $baseUrlsHttp = empty($package['base_urls']['http']) ? array() : $package['base_urls']['http'];
+            $baseUrlsSsl = empty($package['base_urls']['ssl']) ? array() : $package['base_urls']['ssl'];
+
+            $container->setDefinition('assets._package_'.$name, $this->createPackageDefinition($container, $package['base_path'], $baseUrlsHttp , $baseUrlsSsl, $rootDir, $summaryFile, $cacheDir, $config['debug']));
+        }
     }
 
     /**
@@ -61,13 +69,13 @@ class GruntExtension extends Extension implements PrependExtensionInterface
      *
      * @return DefinitionDecorator
      */
-    private function createPackageDefinition(ContainerBuilder $container, array $httpUrls, array $sslUrls, $rootDir, $summaryFile, $cacheDir, $debug, $name = null)
+    private function createPackageDefinition(ContainerBuilder $container, $basePath, array $httpUrls, array $sslUrls, $rootDir, $summaryFile, $cacheDir, $debug, $name = null)
     {
         if (!$httpUrls) {
             $package = new DefinitionDecorator('grunt.filerev.templating.asset.path_package');
             $package
                 ->setPublic(false)
-                ->setScope('request')
+                ->replaceArgument(0, $basePath)
                 ->replaceArgument(1, $rootDir)
                 ->replaceArgument(2, $summaryFile)
                 ->replaceArgument(3, $cacheDir)
@@ -112,7 +120,7 @@ class GruntExtension extends Extension implements PrependExtensionInterface
         } else {
             $sslPackage = new DefinitionDecorator('grunt.filerev.templating.asset.path_package');
             $sslPackage
-                ->setScope('request')
+                ->replaceArgument(0, $basePath)
                 ->replaceArgument(1, $rootDir)
                 ->replaceArgument(2, $summaryFile)
                 ->replaceArgument(3, $cacheDir)
@@ -131,7 +139,7 @@ class GruntExtension extends Extension implements PrependExtensionInterface
     }
 
     /**
-     * Set assets_base_urls configuration from framework config
+     * Set assets configuration from framework config
      *
      * @param ContainerBuilder $container
      */
@@ -143,10 +151,20 @@ class GruntExtension extends Extension implements PrependExtensionInterface
         // use the FrameworkConfiguration class to generate a config
         $config = $this->processConfiguration(new FrameworkConfiguration(false), $configs);
 
-        // check if entity_manager_name is set in the "acme_hello" configuration
-        if (isset($config['templating']) && isset($config['templating']['assets_base_urls'])) {
-            // prepend the acme_something settings with the entity_manager_name
-            $innerConfig = array('assets_base_urls' => $config['templating']['assets_base_urls']);
+        if (isset($config['assets'])) {
+            $innerConfig = array();
+
+            if (isset($config['assets']['base_urls'])) {
+                $innerConfig['base_urls'] = $config['assets']['base_urls'];
+            }
+            if (isset($config['assets']['base_path'])) {
+                $innerConfig['base_path'] = $config['assets']['base_path'];
+            }
+
+            if (isset($config['assets']['packages'])) {
+                $innerConfig['packages'] = $config['assets']['packages'];
+            }
+
             $config = array('filerev' => $innerConfig);
             $container->prependExtensionConfig($this->getAlias(), $config);
         }
