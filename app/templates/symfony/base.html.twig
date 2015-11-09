@@ -3,15 +3,17 @@
     <head>
         <meta charset="UTF-8" />
         <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}
-            {% if app.environment == 'node' %}
-                <link rel="stylesheet" href="styles/main.css?no-rev"/>
-            {% else %}<% if (useCritical) { %>
-                {% block stylesheetsDist %}<% } %>
-                <link rel="stylesheet" href="{{ asset('styles/main.css') }}"/><% if (useCritical) { %>
-                {% endblock stylesheetsDist %}<% } %>
-            {% endif %}
-        {% endblock %}
+        {% block stylesheets %}<% if (useCritical) { %>
+                {% if app.environment == 'node' %}
+                    <link rel="stylesheet" href="{{ asset('styles/main.css') }}"/>
+                {% else %}
+                    {% block stylesheetsDist %}
+                    <link rel="stylesheet" href="{{ asset('styles/main.css') }}"/>
+                    {% endblock stylesheetsDist %}
+                {% endif %}
+            <% } else { %>
+                <link rel="stylesheet" href="{{ asset('styles/main.css') }}"/>
+        <% } %>{% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     </head>
     <body>

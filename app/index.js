@@ -302,8 +302,13 @@ var AppGenerator = yeoman.generators.Base.extend({
         fs.writeFileSync(appKernelPath, newAppKernelContents);
     },
 
+	/**
+     * Add filerev utils based on symfony version
+     */
     addBundles: function addBundles() {
-        fse.copySync(this.templatePath('symfony/Utils'), 'src/Utils/');
+        var branch = parseFloat(this.symfonyDistribution.commit);
+        var version = branch < 2.7? '2.6' : '2.7';
+        fse.copySync(this.templatePath('symfony/' + version + '/Utils'), 'src/Utils/');
     },
 
 
@@ -484,7 +489,7 @@ module.exports = AppGenerator.extend({
         this.symfonyDefaults = {
             username: 'symfony',
             repository: 'symfony-standard',
-            commit: '2.6'
+            commit: '2.7'
         };
 
 
@@ -536,7 +541,7 @@ module.exports = AppGenerator.extend({
         var prompts = [{
             type: 'confirm',
             name: 'symfonyStandard',
-            message: 'Would you like to use the Symfony "Standard Edition 2.6" distribution',
+            message: 'Would you like to use the Symfony "Standard Edition '+ this.symfonyDefaults.commit +'" distribution',
             default: true
         }, {
             type: 'input',

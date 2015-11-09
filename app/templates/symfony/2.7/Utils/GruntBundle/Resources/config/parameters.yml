@@ -1,0 +1,2 @@
+parameters:
+    grunt.filerev.root_dir: %kernel.root_dir%/../web

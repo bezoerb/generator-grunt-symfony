@@ -1,0 +1,17 @@
+services:
+#  grunt_utils_filerev.eventlistener.filerevpackage:
+#    class: Utils\GruntBundle\Eventlistener\HttpKernel\FilerevPackageInjector
+#    scope: request
+#    arguments: [@service_container]
+#    tags:
+#      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+  grunt.filerev.templating.asset.path_package:
+    class: Utils\GruntBundle\Templating\Asset\PathPackage
+    abstract: true
+    arguments: ["","","","",""]
+
+  grunt.filerev.templating.asset.url_package:
+    class: Utils\GruntBundle\Templating\Asset\UrlPackage
+    abstract: true
+    arguments: ["","","","",""]
