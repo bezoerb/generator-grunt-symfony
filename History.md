@@ -1,41 +1,11 @@
 
-n.n.n / 2015-11-09
+0.6.0 / 2015-11-09
 ==================
 
-  * Merge pull request #39 from bezoerb/greenkeeper-fs-extra-0.26.2
-  * chore(package): update fs-extra to version 0.26.2
-  * Merge pull request #35 from bezoerb/greenkeeper-fs-extra-0.25.0
-  * chore(package): update fs-extra to version 0.25.0
-  * Merge pull request #31 from bezoerb/greenkeeper-chai-3.4.0
-  * Merge pull request #32 from bezoerb/greenkeeper-inquirer-0.11.0
-  * Merge pull request #34 from bezoerb/greenkeeper-yeoman-generator-0.21.1
-  * chore(package): update yeoman-generator to version 0.21.1
-  * chore(package): update inquirer to version 0.11.0
-  * chore(package): update chai to version 3.4.0
-  * Merge pull request #25 from bezoerb/greenkeeper-yo-1.4.8
-  * run tests locally
-  * Merge branch 'master' into greenkeeper-yo-1.4.8
-  * Merge pull request #27 from bezoerb/greenkeeper-lodash-3.10.1
-  * Merge branch 'master' into greenkeeper-lodash-3.10.1
-  * Merge pull request #28 from bezoerb/greenkeeper-mocha-2.3.3
-  * Merge branch 'master' into greenkeeper-mocha-2.3.3
-  * Merge pull request #26 from bezoerb/greenkeeper-chalk-1.1.1
-  * Merge branch 'master' into greenkeeper-chalk-1.1.1
-  * Merge pull request #24 from bezoerb/greenkeeper-inquirer-0.10.1
-  * Merge branch 'master' into greenkeeper-inquirer-0.10.1
-  * test tweak
-  * Merge pull request #23 from bezoerb/greenkeeper-pin
-  * bump systemjs
-  * chore(package): update mocha to version 2.3.3
-  * chore(package): update chalk to version 1.1.1
-  * chore(package): update lodash to version 3.10.1
-  * chore(package): update yo to version 1.4.8
-  * tweaked tests
-  * chore(package): update inquirer to version 0.10.1
-  * added test script to package.json
-  * chore(package): pinned dependencies
-  * travis
-  * travis
+  * Added support for Symfony 2.7
+  * Added support for Webpack
+  * Bump dependencies
+  * test tweaks
   * jspm bump
   * locked jspm
   * fixed chmod issue when using git (#19)

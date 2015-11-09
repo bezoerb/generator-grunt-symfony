@@ -13,17 +13,39 @@ module.exports = function(grunt) {
     });
 
 
-    var appConfig = {
+    var cache, appConfig = {
         app: 'app/Resources/public',
         dist: 'web'
     };
 
     // just a helper to prevent double config
     function bsOptions() {
-        return {
+        if (cache) {
+            return cache;
+        }
+        <% if (useWebpack) { %>
+        var webpack = require('webpack');
+        var webpackDevMiddleware = require('webpack-dev-middleware');
+        var webpackHotMiddleware = require('webpack-hot-middleware');
+        var webpackConfig = require('./webpack.config').dev;
+        var bundler = webpack(webpackConfig);<% } %>
+
+        cache = {
             server: {
                 baseDir: Array.prototype.slice.call(arguments),
-                middleware: [
+                middleware: [<% if (useWebpack) { %>
+                    webpackDevMiddleware(bundler, {
+                        publicPath: webpackConfig.output.publicPath,
+                        noInfo: true,
+                        stats: {colors: true}
+
+                        // for other settings see
+                        // http://webpack.github.io/docs/webpack-dev-middleware.html
+                    }),
+
+                    // bundler should be the same as above
+                    webpackHotMiddleware(bundler),
+                    <% } %>
                     function(req, res, next) {
                         var obj = parseurl(req);
                         if (!/\.\w{2,}$/.test(obj.pathname) || /\.php/.test(obj.pathname)) {
@@ -45,6 +67,8 @@ module.exports = function(grunt) {
                 forms: true
             }
         };
+
+        return cache;
     }
 
     // helper
@@ -381,13 +405,27 @@ module.exports = function(grunt) {
                     ]
                 }]
             }
-        },
+        },<% if (useWebpack) { %>
+        webpack: {
+            options: require('./webpack.config').dist,
+            build: {
+                stats: {
+                    // Configure the console output
+                    colors: true,
+                    modules: true,
+                    reasons: true,
+                    errorDetails: true
+                },
+
+                keepalive: false
+            }
+        },<% } %>
         // Server
         browserSync: {
             dev: {
                 bsFiles: {
-                    src: [
-                        appConfig.app + '/scripts/**/*.js',
+                    src: [<% if (!useWebpack) { %>
+                        appConfig.app + '/scripts/**/*.js',<% } %>
                         appConfig.app + '/images/**/*.{jpg,jpeg,gif,png,webp}',
                         'app/Resources/views/**/*.html.twig',
                         '.tmp/styles/*.css'
