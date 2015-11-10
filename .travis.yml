@@ -5,10 +5,10 @@ node_js:
 before_install:
 - sudo apt-get update
 - sudo apt-get install python-software-properties
-- sudo add-apt-repository ppa:ondrej/php5 -y --assume-yes --force-yes
+- sudo add-apt-repository ppa:ondrej/php5 -y
 - sudo apt-get update
-- sudo apt-get install php5
-- sudo apt-get install php5-curl
+- sudo apt-get install php5 -y
+- sudo apt-get install php5-curl -y
 - php --version
 - php -r "readfile('https://getcomposer.org/installer');" | php
 - travis_retry php composer.phar config --global github-oauth.github.com $COMPOSER_AUTH
