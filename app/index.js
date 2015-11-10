@@ -728,7 +728,7 @@ module.exports = AppGenerator.extend({
             }
 
             bower.dependencies.loglevel = '~1.2.0';
-            bower.dependencies.picturefill = '~2.1.0';
+            bower.dependencies.picturefill = '~3.0.1';
             bower.dependencies.modernizr = '~2.8.3';
 
             this.fs.copy(

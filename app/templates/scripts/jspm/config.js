@@ -22,7 +22,7 @@ System.config({
         "core-js": "npm:core-js@1.2.1",
         "jquery": "github:components/jquery@2.1.4",
         "loglevel": "npm:loglevel@1.4.0",
-        "picturefill": "npm:picturefill@2.3.1",
+        "picturefill": "npm:picturefill@3.0.1",
         "github:jspm/nodelibs-assert@0.1.0": {
             "assert": "npm:assert@1.3.0"
         },
@@ -59,9 +59,9 @@ System.config({
         "npm:loglevel@1.4.0": {
             "process": "github:jspm/nodelibs-process@0.1.2"
         },
-        "npm:picturefill@2.3.1": {
+        "npm:picturefill@3.0.1": {
             "child_process": "github:jspm/nodelibs-child_process@0.1.0",
-                "process": "github:jspm/nodelibs-process@0.1.2"
+            "process": "github:jspm/nodelibs-process@0.1.2"
         }
     }
 });
