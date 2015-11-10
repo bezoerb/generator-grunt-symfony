@@ -4,10 +4,9 @@
 
   * Added support for Symfony 2.7
   * Added support for Webpack
+  * Dropped support for Pure CSS
   * Bump dependencies
-  * test tweaks
-  * jspm bump
-  * locked jspm
+  * Tweaked tests
   * fixed chmod issue when using git (#19)
 
 0.5.2 / 2015-09-10

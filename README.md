@@ -24,7 +24,7 @@ Just scaffold your app, run `grunt serve` and you are ready to go.
 * Choose Javascript module loader
   * [RequireJS](http://requirejs.org/)
   * [JSPM](http://jspm.io/) + [SystemJS](https://github.com/systemjs/systemjs) (ES6)
-  * [Webpack](https://webpack.github.io/)(ES6)
+  * [Webpack](https://webpack.github.io/) (ES6)
 * File revving
 * Image optimization
 * [Critical](https://github.com/addyosmani/critical) (Extract & Inline Critical-path CSS) 
@@ -35,7 +35,7 @@ Just scaffold your app, run `grunt serve` and you are ready to go.
 
 ## Things to come
 
-  * ... feel free to add feature requests ;)
+  * Feel free to add feature requests ;)
 
 ## Getting Started
 
