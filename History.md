@@ -5,6 +5,7 @@
   * Added support for Symfony 2.7
   * Added support for Webpack
   * Dropped support for Pure CSS
+  * Picturefill 3
   * Bump dependencies
   * Tweaked tests
   * fixed chmod issue when using git (#19)
