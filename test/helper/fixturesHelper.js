@@ -8,31 +8,11 @@ var glob = require('glob');
 var path = require('path');
 var exec = require('child_process').exec;
 
-
-function reset () {
-    return function (fp) {
-        if (!/\.unused/.test(fp)) {
-            return fp;
-        }
-        var newPath = fp.replace(/\.unused/, '');
-        fs.renameSync(fp, newPath);
-        return newPath;
-
-    };
-}
-
 function inArray (arr) {
     return function (fp) {
         var name = path.basename(fp);
         var suit = _.indexOf(arr, 'suit') !== -1 && /^suit-/.test(name);
         return suit || _.indexOf(['karma'], name) !== -1 || _.indexOf(arr, name) !== -1;
-    };
-}
-
-function rename () {
-    return function (fp) {
-        fs.renameSync(fp, fp + '.unused');
-        return fp + '.unused';
     };
 }
 
@@ -119,12 +99,17 @@ module.exports.withComposer = function (cb) {
             cb(error);
             return;
         }
-
-        exec('php composer.phar install --prefer-dist --no-interaction', function (error, stdout, stderr) {
-            cb(error, stdout);
-        });
+        // give installer some time to write composer.phar
+        setTimeout(function() {
+            exec('php composer.phar install --prefer-dist --no-interaction', function (error, stdout) {
+                // give composer some time to write bootstrap.php.cache
+                setTimeout(function () {
+                    cb(error, stdout);
+                }, 500);
+            });
+        },500);
     });
-}
+};
 
 module.exports.withJspm = function (cb) {
     if (!cb) {
@@ -134,4 +119,4 @@ module.exports.withJspm = function (cb) {
     exec('node_modules/.bin/jspm init -y', function (error, stdout) {
         cb(error, stdout);
     });
-}
+};
