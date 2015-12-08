@@ -103,32 +103,39 @@ module.exports.withComposer = function (cb) {
             cb(error);
             return;
         }
-        exec('php composer.phar install --prefer-dist --no-interaction', function (error,stdout) {
+        exec('php composer.phar clear-cache', function(error, stdout) {
             if (error) {
-                debug('ERROR: composer install -> ',error);
+                debug('ERROR: composer clear-cache -> ', error);
                 cb(error);
                 return;
             }
-            debug('SUCCESS: composer install -> ',stdout);
-            // app/bootstrap.php.cache should be ready
-            var bootstrap = path.resolve('app/bootstrap.php.cache');
-            /* jshint -W016 */
-            try {
-                var stats = fs.statSync(bootstrap, fs.R_OK | fs.W_OK);
-                debug('bootstrap.php.cache -> ',stats);
-            } catch (err) {
-                debug('ERROR: bootstrap.php.cache -> ',err.message || err);
-            }
+            debug('SUCCESS: composer clear-cache -> ', stdout);
+            
+            exec('php composer.phar install --prefer-dist --no-interaction', function (error, stdout) {
+                debug('ERROR: composer install -> ', error);
+                debug('SUCCESS: composer install -> ', stdout);
+                // app/bootstrap.php.cache should be ready
+                var bootstrap = path.resolve('app/bootstrap.php.cache');
+                /* jshint -W016 */
+                try {
+                    fs.statSync(bootstrap, fs.R_OK | fs.W_OK);
+                    debug('SUCCESS bootstrap.php.cache -> available');
+                } catch (err) {
+                    debug('ERROR: bootstrap.php.cache -> ', err.message || err);
+                }
 
-            // and do an install afterwards... maybe the bootstrap.php.cache problem is solved by this?
-            exec('php composer.phar run-script post-install-cmd --no-interaction', function (error, stdout) {
-                // give composer some time to write bootstrap.php.cache
-                debug('ERROR: composer run-script -> ',error);
-                debug('SUCCESS: composer run-script -> ',stdout);
+                cb(error, stdout);
 
-                setTimeout(function () {
-                    cb(error, stdout);
-                }, 500);
+                // and do an install afterwards... maybe the bootstrap.php.cache problem is solved by this?
+                exec('php composer.phar run-script post-install-cmd --no-interaction', function (error, stdout) {
+                    // give composer some time to write bootstrap.php.cache
+                    debug('ERROR: composer run-script -> ', error);
+                    debug('SUCCESS: composer run-script -> ', stdout);
+
+                    setTimeout(function () {
+                        cb(error, stdout);
+                    }, 500);
+                });
             });
         });
     });
