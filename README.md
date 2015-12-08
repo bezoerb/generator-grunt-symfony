@@ -1,5 +1,5 @@
 # generator-grunt-symfony 
-[![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][depstat-image]][depstat-url]
+[![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][depstat-image]][depstat-url] [![Download][dlcounter-image]][dlcounter-url]
 
 This [Yeoman](http://yeoman.io) generator scaffolds a symfony2 app with full featured frontend tooling. 
 Just scaffold your app, run `grunt serve` and you are ready to go. 
@@ -39,8 +39,11 @@ Just scaffold your app, run `grunt serve` and you are ready to go.
 
 ## Getting Started
 
+Install dependencies
+```bash
+npm install -g yo grunt bower
+```
 To install generator-grunt-symfony from npm, run:
-
 ```bash
 npm install -g generator-grunt-symfony
 ```
@@ -87,3 +90,6 @@ MIT
 
 [depstat-url]: https://david-dm.org/bezoerb/generator-grunt-symfony
 [depstat-image]: https://david-dm.org/bezoerb/generator-grunt-symfony.svg
+
+[dlcounter-url]: https://www.npmjs.com/package/generator-grunt-symfony
+[dlcounter-image]: https://img.shields.io/npm/dm/generator-grunt-symfony.svg
