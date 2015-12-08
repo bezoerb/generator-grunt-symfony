@@ -1,4 +1,15 @@
 
+0.7.0 / 2015-12-08
+==================
+
+  * Travis composer tweaks
+  * Use bem syntax for inuit
+  * Add inuit css
+  * Fixed webpack dist target dir
+  * Symfony 3.0 compatibility
+  * Separated Bundle for handling filerev asset rewrites
+  * Bump dependencies
+
 0.6.0 / 2015-11-09
 ==================
 
