@@ -1,6 +1,6 @@
 {
   "name": "generator-grunt-symfony",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "Yeoman generator to scaffold Symfony PHP apps with full featured frontend tooling incl. browsersync",
   "license": "MIT",
   "main": "app/index.js",
