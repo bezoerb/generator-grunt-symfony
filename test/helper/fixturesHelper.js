@@ -103,17 +103,19 @@ module.exports.withComposer = function (cb) {
             cb(error);
             return;
         }
-        exec('php composer.phar clear-cache', function(error, stdout) {
+        exec('php composer.phar clear-cache', function(error, stdout, stderr) {
+            debug('stdout: composer install -> ', stdout);
+            debug('stderr: composer install -> ', stderr);
             if (error) {
-                debug('ERROR: composer clear-cache -> ', error);
+                debug('error: composer clear-cache -> ', error);
                 cb(error);
                 return;
             }
-            debug('SUCCESS: composer clear-cache -> ', stdout);
-            
-            exec('php composer.phar install --prefer-dist --no-interaction', function (error, stdout) {
-                debug('ERROR: composer install -> ', error);
-                debug('SUCCESS: composer install -> ', stdout);
+
+            exec('php composer.phar install --prefer-dist --no-interaction', function (error, stdout, stderr) {
+                debug('error: composer install -> ', error);
+                debug('stdout: composer install -> ', stdout);
+                debug('stderr: composer install -> ', stderr);
                 // app/bootstrap.php.cache should be ready
                 var bootstrap = path.resolve('app/bootstrap.php.cache');
                 /* jshint -W016 */
@@ -125,17 +127,6 @@ module.exports.withComposer = function (cb) {
                 }
 
                 cb(error, stdout);
-
-                // and do an install afterwards... maybe the bootstrap.php.cache problem is solved by this?
-                exec('php composer.phar run-script post-install-cmd --no-interaction', function (error, stdout) {
-                    // give composer some time to write bootstrap.php.cache
-                    debug('ERROR: composer run-script -> ', error);
-                    debug('SUCCESS: composer run-script -> ', stdout);
-
-                    setTimeout(function () {
-                        cb(error, stdout);
-                    }, 500);
-                });
             });
         });
     });
