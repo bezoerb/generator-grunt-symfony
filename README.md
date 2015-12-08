@@ -20,6 +20,7 @@ Just scaffold your app, run `grunt serve` and you are ready to go.
   * [uikit](http://getuikit.com)  
   * [Bootstrap](http://getbootstrap.com)
   * [Foundation](http://foundation.zurb.com)
+  * [inuitcss](http://inuitcss.com)
   * no framework?
 * Choose Javascript module loader
   * [RequireJS](http://requirejs.org/)
