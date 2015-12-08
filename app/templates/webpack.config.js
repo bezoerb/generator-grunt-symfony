@@ -86,7 +86,7 @@ module.exports.dist = {
     ],
 
     output: {
-        path: path.join(__dirname, '.tmp', 'scripts'),
+        path: path.join(__dirname, 'web', 'scripts'),
         publicPath: '/scripts/',
         filename: 'main.js'
     },
