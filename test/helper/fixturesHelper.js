@@ -101,10 +101,16 @@ module.exports.withComposer = function (cb) {
         }
         // give installer some time to write composer.phar
         setTimeout(function() {
-            exec('php composer.phar install --prefer-dist --no-interaction', function (error, stdout) {
+            exec('php composer.phar update --prefer-dist --no-interaction', function (error, stdout) {
                 // give composer some time to write bootstrap.php.cache
                 setTimeout(function () {
-                    cb(error, stdout);
+                    // and do an install afterwards... maybe the bootstrap.php.cache problem is solved by this?
+                    exec('php composer.phar install --prefer-dist --no-interaction', function (error, stdout) {
+                        // give composer some time to write bootstrap.php.cache
+                        setTimeout(function () {
+                            cb(error, stdout);
+                        }, 500);
+                    });
                 }, 500);
             });
         },500);
