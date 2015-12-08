@@ -115,21 +115,23 @@ var AppGenerator = yeoman.generators.Base.extend({
         if (!cb) {
             cb = function () {};
         }
-        this.log(os.EOL + 'Set up permissions for ' + chalk.cyan('app/cache') + ' and ' + chalk.cyan('app/logs') + '.');
+        var folder = this.sfVersion >= 3 ? 'var' : 'app';
+
+        this.log(os.EOL + 'Set up permissions for ' + chalk.cyan(folder+'/cache') + ' and ' + chalk.cyan(folder+'/logs') + '.');
 
         var acl = {
             // Use ACL on a system that does support chmod +a
             chmod: [
                 'HTTPDUSER=`ps aux | grep -E \'[a]pache|[h]ttpd|[_]www|[w]ww-data|[n]ginx\' | grep -v root | head -1 | cut -d\\  -f1`',
-                'chmod +a "$HTTPDUSER allow delete,write,append,file_inherit,directory_inherit" app/cache app/logs',
-                'chmod +a "`whoami` allow delete,write,append,file_inherit,directory_inherit" app/cache app/logs'
+                'chmod +a "$HTTPDUSER allow delete,write,append,file_inherit,directory_inherit" ' + folder+ '/cache ' + folder+ '/logs',
+                'chmod +a "`whoami` allow delete,write,append,file_inherit,directory_inherit" ' + folder+ '/cache ' + folder+ '/logs'
             ],
 
             // Use ACL on a system that does not support chmod +a
             setfacl: [
                 'HTTPDUSER=`ps aux | grep -E \'[a]pache|[h]ttpd|[_]www|[w]ww-data|[n]ginx\' | grep -v root | head -1 | cut -d\\  -f1`',
-                'setfacl -R -m u:"$HTTPDUSER":rwX -m u:`whoami`:rwX app/cache app/logs',
-                'setfacl -dR -m u:"$HTTPDUSER":rwX -m u:`whoami`:rwX app/cache app/logs'
+                'setfacl -R -m u:"$HTTPDUSER":rwX -m u:`whoami`:rwX ' + folder+ '/cache ' + folder+ '/logs',
+                'setfacl -dR -m u:"$HTTPDUSER":rwX -m u:`whoami`:rwX ' + folder+ '/cache ' + folder+ '/logs'
             ]
         };
 
@@ -221,6 +223,7 @@ var AppGenerator = yeoman.generators.Base.extend({
             };
         }
 
+        this.sfVersion = parseFloat(this.symfonyDistribution.commit);
     },
 
 
@@ -273,7 +276,11 @@ var AppGenerator = yeoman.generators.Base.extend({
      */
     updateApp: function updateApp() {
         fs.unlinkSync(this.destinationPath('web/app.php'));
-        fse.copySync(this.templatePath('symfony/app.php'), 'web/app.php');
+        this.fs.copyTpl(
+            this.templatePath('symfony/app.php'),
+            this.destinationPath('web/app.php'),
+            this
+        );
     },
 
     /**
@@ -297,20 +304,10 @@ var AppGenerator = yeoman.generators.Base.extend({
         newAppKernelContents = newAppKernelContents.replace('array(\'dev\', \'test\')', 'array(\'node\', \'dev\', \'test\')');
 
         // add bundle
-        newAppKernelContents = addBundle(newAppKernelContents,'new Utils\\GruntBundle\\GruntBundle(),');
+        newAppKernelContents = addBundle(newAppKernelContents,'new Zoerb\\Bundle\\FilerevBundle\\ZoerbFilerevBundle(),');
         fs.unlinkSync(appKernelPath);
         fs.writeFileSync(appKernelPath, newAppKernelContents);
     },
-
-	/**
-     * Add filerev utils based on symfony version
-     */
-    addBundles: function addBundles() {
-        var branch = parseFloat(this.symfonyDistribution.commit);
-        var version = branch < 2.7? '2.6' : '2.7';
-        fse.copySync(this.templatePath('symfony/' + version + '/Utils'), 'src/Utils/');
-    },
-
 
     /**
      * Set template directories and templates
@@ -406,28 +403,31 @@ var AppGenerator = yeoman.generators.Base.extend({
 
     addStyles: function addScripts() {
         // copy styles
-        fse.mkdirsSync(this.destinationPath('app/Resources/public/styles'));
-        var styles = [];
-        if (this.useSass) {
-            styles.push('main.scss');
-        } else if (this.useLess) {
-            styles.push('main.less');
-        } else if (this.useStylus) {
-            styles.push('main.styl');
+        if (this.useInuit) {
+            fse.copySync(this.templatePath('styles/inuit'), this.destinationPath('app/Resources/public/styles'))
         } else {
-            styles.push('main.css');
+            var styles = [];
+            if (this.useSass) {
+                styles.push('main.scss');
+            } else if (this.useLess) {
+                styles.push('main.less');
+            } else if (this.useStylus) {
+                styles.push('main.styl');
+            } else {
+                styles.push('main.css');
+            }
+            fse.mkdirsSync(this.destinationPath('app/Resources/public/styles'));
+            _.forEach(styles, function (file) {
+                // copy default action template
+                //var content = readFileAsString(this.templatePath('styles/' + file));
+                //fs.writeFileSync(this.destinationPath('app/Resources/public/styles/' + file), this.engine(content, this));
+                this.fs.copyTpl(
+                    this.templatePath('styles/' + file),
+                    this.destinationPath('app/Resources/public/styles/' + file),
+                    this
+                );
+            }, this);
         }
-
-        _.forEach(styles, function (file) {
-            // copy default action template
-            //var content = readFileAsString(this.templatePath('styles/' + file));
-            //fs.writeFileSync(this.destinationPath('app/Resources/public/styles/' + file), this.engine(content, this));
-            this.fs.copyTpl(
-                this.templatePath('styles/' + file),
-                this.destinationPath('app/Resources/public/styles/' + file),
-                this
-            );
-        }, this);
     },
 
     copyFonts: function copyFonts() {
@@ -463,6 +463,13 @@ var AppGenerator = yeoman.generators.Base.extend({
 
         // remove assetic
         delete composerParse.require['symfony/assetic-bundle'];
+
+        // add filerev bundle
+        if (this.sfVersion >= 2.7) {
+            composerParse.require['zoerb/filerevbundle'] = '~1.0'
+        } else {
+            composerParse.require['zoerb/filerevbundle'] = '~0.1.2'
+        }
 
         // add phpunit
         composerParse['require-dev'] = _.assign(composerParse['require-dev'] || {},{'phpunit/phpunit': '~4.6'});
@@ -542,6 +549,10 @@ module.exports = AppGenerator.extend({
             return hasFeature(answers, 'preprocessor', 'sass');
         };
 
+        var dontUseSass = function (answers) {
+            return !hasFeature(answers, 'preprocessor', 'sass');
+        };
+
 
         var prompts = [{
             type: 'confirm',
@@ -575,23 +586,11 @@ module.exports = AppGenerator.extend({
             when: symfonyCustom
         }, {
             type: 'list',
-            name: 'framework',
+            name: 'preprocessor',
             message: function () {
                 this.log('--------------------------------------------------------------------------------');
-                return 'Would you like to include a CSS framework?';
+                return 'Would you like to use a CSS preprocessor?';
             }.bind(this),
-            choices: [
-                {name: 'UIkit', value: 'uikit'},
-                {name: 'Twitter Bootstrap', value: 'bootstrap', checked: true},
-                {name: 'Foundation', value: 'foundation'},
-                // should use postcss bem linter
-                //{name: 'PureCSS + Suit', value: 'pure'},
-                {name: 'No Framework', value: 'noframework'}
-            ]
-        }, {
-            type: 'list',
-            name: 'preprocessor',
-            message: 'Would you like to use a CSS preprocessor?',
             choices: [
                 {name: 'Sass', value: 'sass'},
                 {name: 'Less', value: 'less'},
@@ -607,6 +606,29 @@ module.exports = AppGenerator.extend({
             chalk.green('https://github.com/andrew/node-sass#node-sass'),
             default: true
         }, {
+            when: useSass,
+            type: 'list',
+            name: 'framework',
+            message: 'Would you like to include a CSS framework?',
+            choices: [
+                {name: 'UIkit', value: 'uikit'},
+                {name: 'Twitter Bootstrap', value: 'bootstrap', checked: true},
+                {name: 'Foundation', value: 'foundation'},
+                {name: 'Inuit CSS', value: 'inuit'},
+                {name: 'No Framework', value: 'noframework'}
+            ]
+        }, {
+            when: dontUseSass,
+            type: 'list',
+            name: 'framework',
+            message: 'Would you like to include a CSS framework?',
+            choices: [
+                {name: 'UIkit', value: 'uikit'},
+                {name: 'Twitter Bootstrap', value: 'bootstrap', checked: true},
+                {name: 'Foundation', value: 'foundation'},
+                {name: 'No Framework', value: 'noframework'}
+            ]
+        },{
             type: 'list',
             name: 'loader',
             message: 'Which module loader would you like to use?',
@@ -615,14 +637,6 @@ module.exports = AppGenerator.extend({
                 {name: 'Webpack (babel)', value: 'webpack'},
                 {name: 'RequireJS', value: 'requirejs'}
             ]
-        // deprecated default gruntfile - skip one question and always use load-grunt-config
-        //}, {
-        //    type: 'confirm',
-        //    name: 'loadGruntConfig',
-        //    value: 'loadGruntConfig',
-        //    message: 'Would you like to use load-grunt-config to organize your Gruntfile?' + os.EOL +
-        //    chalk.green('http://firstandthird.github.io/load-grunt-config'),
-        //    default: true
         }, {
             type: 'checkbox',
             name: 'additional',
@@ -650,6 +664,7 @@ module.exports = AppGenerator.extend({
             this.noFramework = useFramework('noframework');
             this.useBootstrap = useFramework('bootstrap');
             this.usePure = useFramework('pure');
+            this.useInuit = useFramework('inuit');
             this.useFoundation = useFramework('foundation');
             this.useUikit = useFramework('uikit');
 
@@ -713,6 +728,29 @@ module.exports = AppGenerator.extend({
                 bower.dependencies.jquery = '~2.1.3';
             } else if (this.useUikit) {
                 bower.dependencies.uikit = '~2.18.0';
+            } else if (this.useInuit) {
+                bower.dependencies['inuit-starter-kit'] = '~0.2.9';
+                bower.dependencies['inuit-widths'] = '~0.4.2';
+                bower.dependencies['inuit-clearfix'] = '~0.2.2';
+                bower.dependencies['inuit-layout'] = '~0.3.2';
+                bower.dependencies['inuit-spacing'] = '~0.7.0';
+                bower.dependencies['inuit-images'] = '~0.3.3';
+                bower.dependencies['inuit-reset'] = '~0.1.1';
+                bower.dependencies['inuit-headings'] = '~0.3.1';
+                bower.dependencies['inuit-media'] = '~0.4.2';
+                bower.dependencies['inuit-shared'] = '~0.1.5';
+                bower.dependencies['inuit-box'] = '~0.4.4';
+                bower.dependencies['inuit-buttons'] = '~0.4.2';
+                bower.dependencies['inuit-lists'] = '~0.1.0';
+                bower.dependencies['inuit-responsive-tools'] = '~0.1.3';
+                bower.dependencies['inuit-flag'] = '~0.3.2';
+                bower.dependencies['inuit-widths-responsive'] = '~0.2.2';
+                bower.dependencies['inuit-paragraphs'] = '~0.1.4';
+                bower.dependencies['inuit-tables'] = '~0.2.1';
+                bower.dependencies['inuit-tabs'] = '~0.2.1';
+                bower.dependencies['inuit-list-inline'] = '~0.3.2';
+                bower.dependencies['inuit-list-ui'] = '~0.4.1';
+
             } else {
                 bower.dependencies.jquery = '~2.1.3';
             }
@@ -869,7 +907,6 @@ module.exports = AppGenerator.extend({
     install: function () {
         this.addScripts();
         this.addStyles();
-        this.addBundles();
         this.updateGitignore();
         this.updateConfig();
         this.updateParameters();

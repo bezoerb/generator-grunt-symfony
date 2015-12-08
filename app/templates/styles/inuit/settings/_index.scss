@@ -1,0 +1,13 @@
+/*------------------------------------*\
+    Settings
+\*------------------------------------*/
+@import "inuit-defaults/settings.defaults";
+@import "inuit-responsive-settings/settings.responsive";
+
+$inuit-enable-margins: true;
+$inuit-enable-margins--large: true;
+$inuit-enable-margins--huge: true;
+$inuit-enable-box--flush: true;
+
+
+$page-width: 1024px;

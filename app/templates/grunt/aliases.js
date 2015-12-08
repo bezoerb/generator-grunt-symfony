@@ -43,7 +43,8 @@ module.exports = function (grunt, options) {
             'bowerRequirejs:dist',
             'requirejs'<% } else if (useJspm) { %>
             'exec:jspm',
-            'uglify:dist'<% } %>
+            'uglify:dist'<% } else if (useWebpack) { %>
+            'webpack'<% } %>
         ],
         img: [
             'clean:img',
@@ -76,7 +77,7 @@ module.exports = function (grunt, options) {
             grunt.task.run(['connect', 'http']);
         },<% } %>
         revdump: function(){
-            var file = 'src/Utils/GruntBundle/Resources/config/filerev.json';
+            var file = 'app/config/filerev.json';
             fs.outputJsonSync(file, _.reduce(grunt.filerev.summary, function(acc,val,key){
                 acc[slash(key.replace('web',''))] = slash(val.replace('web',''));
                 return acc;

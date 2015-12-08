@@ -1,0 +1,31 @@
+.Nav {
+    list-style:none;
+    margin-left:0;
+    @extend .clearfix;
+
+    > li {
+        display:inline-block;
+        *display:inline;
+        zoom:1;
+    }
+}
+
+.Nav-item {
+    color: #fff;
+    text-decoration: none;
+    transition: color 100ms;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+
+    &:hover {
+        color: #bbb;
+    }
+
+    &--first {
+        padding-left: 0;
+    }
+
+    &--last {
+        padding-right: 0;
+    }
+}

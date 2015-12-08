@@ -245,6 +245,62 @@
                 </dl>
             </div>
         </div>
+    <% } else if (useInuit) { %>
+
+    <header  role="banner" class="Header u-mb+">
+        <div class="Header-content">
+            <div itemscope itemtype="http://schema.org/WPHeader">
+                <h1 class="Header-title" itemprop="headline"><%= appname %></h1>
+                <div class="Header-description" itemprop="description">Site Description</div>
+            </div>
+            <nav role="navigation" itemscope itemtype="http://schema.org/SiteNavigationElement">
+                <ul class="Nav">
+                    <li itemprop="url">
+                        <a class="Nav-item Nav-item--first" href="http://mysite.com/" title="Home" itemprop="name">Home</a>
+                    </li>
+                    <li itemprop="url">
+                        <a class="Nav-item Nav-item--last" href="http://mysite.com//about.php" title="About" itemprop="name">About</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <main role="main" class="Content">
+        <div class="Panel flag flag--rev u-mb+">
+            <div class="flag__body">
+                <h2>'Allo, 'Allo!</h2>
+                <p class="u-mb">Always a pleasure scaffolding your apps.</p>
+                <button class="btn">Splendit</button>
+            </div>
+            <div class="flag__image">
+                <img class="yeoman-team" src="{{ asset('img/yo-grunt-bower-symfony.png') }}" width="600" alt=""/>
+            </div>
+        </div>
+
+        <div class="box box--flush">
+            <h3 class="u-mb">Here's what you got</h3>
+            <b>Symfony</b>
+            <p>High Performance PHP Framework for Web Development</p>
+            <b>Browsersync</b>
+            <p>Keep multiple browsers & devices in sync when building websites.</p>
+
+            <% if (useLess) { %><b>Less</b>
+            <p>Less is a mature, stable, and powerful professional grade CSS extension language.</p>
+            <% } else if (useSass) { %><b>Sass</b>
+            <p>Sass is a mature, stable, and powerful professional grade CSS extension language.</p>
+            <% } else if (useStylus) { %><b>Stylus</b>
+            <p>Stylus is a revolutionary new language, providing an efficient, dynamic, and expressive way to generate CSS. Supporting both an indented syntax and regular CSS style.</p>
+            <% } %>
+            <% if (useCritical) { %><b>Critical</b>
+            <p>Extracts & inlines critical-path (above-the-fold) CSS from HTML.</p><% } %>
+            <b>Bootstrap</b>
+            <p>Sleek, intuitive, and powerful mobile first front-end framework for faster and easier web development.</p>
+            <% if (useRequirejs) { %><b>RequireJS</b>
+            <p>A JavaScript file and module loader optimized for in-browser use.</p><% } %>
+            <% if (useJspm) { %><b>JSPM</b>
+            <p>jspm is a package manager for the SystemJS universal module loader, built on top of the dynamic ES6 module loader</p><% } %>
+        </div>
+    </main>
     <% } else { %>
     <div class="container">
             <h1><%= appname %></h1>

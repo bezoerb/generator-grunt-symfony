@@ -1,0 +1,55 @@
+@charset "utf-8";
+/*
+ * This project follows Inverted Triangle CSS (ITCSS) by Harry "CSS Wizardry" Roberts.
+ * Files should be organized in groups from:
+ *  - Generic to explicit
+ *  - Far-reaching to localised
+ *  - Low specificity to high specificity
+ *
+ */
+
+
+/*
+ * Variables, config switches, etc.
+ * Split up into logical sections, the smaller and simpler the better.
+ */
+@import "settings/index";
+
+/*
+ * Tools / mixins
+ */
+@import "tools/index";
+
+/*
+ * Generic rules are project-agnostic.
+ * These can be copied from any project to the next
+ */
+@import "generic/index";
+
+/*
+ * Base are rules for classless HTML tags.
+ */
+@import "base/index";
+
+/*
+ * Objects are "formless", in other words invisible to the user, no cosmetics
+ * Eg. wrappers, grid systems, etc.
+ * This is the first layer of classes and should be agnostically named
+ */
+@import "objects/index";
+
+/*
+ * Components like buttons, teaser, etc.
+ */
+@import "components/index";
+
+/*
+ * Vendor styles and e.g. theme overwrites
+ */
+@import "vendor/index";
+
+/*
+ * Trumps are overrides, helpers, utilities. They should only affect
+ * one piece of DOM at a time and usually carry !important
+ */
+@import "trumps/index";
