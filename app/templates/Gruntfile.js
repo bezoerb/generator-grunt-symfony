@@ -504,7 +504,7 @@ module.exports = function(grunt) {
     });
     <% } %>
     grunt.registerTask('revdump', function(){
-        var file = 'src/Utils/GruntBundle/Resources/config/filerev.json';
+        var file = 'app/config/filerev.json';
         fs.outputJsonSync(file, _.reduce(grunt.filerev.summary, function(acc,val,key){
         acc[key.replace('web','')] = val.replace('web','');
             return acc;
