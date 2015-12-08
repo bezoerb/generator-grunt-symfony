@@ -1,4 +1,4 @@
-.Nav {
+.nav {
     list-style:none;
     margin-left:0;
     @extend .clearfix;
@@ -10,7 +10,7 @@
     }
 }
 
-.Nav-item {
+.nav__item {
     color: #fff;
     text-decoration: none;
     transition: color 100ms;

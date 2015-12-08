@@ -1,11 +1,11 @@
-.Header {
+.header {
     background: rgba(#000,0.1);
     color: #fff;
     background: #444;
 }
 
 
-.Header-content {
+.header__content {
     max-width: $page-width;
     margin: 0 auto;
     display: flex;
@@ -14,10 +14,10 @@
     padding: 0.5em 0;
 }
 
-.Header-title {
+.header__title {
     @include inuit-font-size(30px,1);
 }
 
-.Header-description {
+.header__description {
     @include inuit-font-size(14px,1);
 }
