@@ -103,30 +103,40 @@ module.exports.withComposer = function (cb) {
             cb(error);
             return;
         }
-        exec('php composer.phar clear-cache', function(error, stdout, stderr) {
-            debug('stdout: composer install -> ', stdout);
-            debug('stderr: composer install -> ', stderr);
+
+        var cmd = process.env.COMPOSER_AUTH ? 'config github-oauth.github.com ' + process.env.COMPOSER_AUTH : ' --version';
+        exec('php composer.phar ' + cmd, function(error, stdout, stderr) {
+            debug('stdout: composer config -> ', stdout);
+            debug('stderr: composer config -> ', stderr);
             if (error) {
-                debug('error: composer clear-cache -> ', error);
-                cb(error);
-                return;
+                debug('error: composer config -> ', error);
             }
 
-            exec('php composer.phar install --prefer-dist --no-interaction', function (error, stdout, stderr) {
-                debug('error: composer install -> ', error);
+            exec('php composer.phar clear-cache', function(error, stdout, stderr) {
                 debug('stdout: composer install -> ', stdout);
                 debug('stderr: composer install -> ', stderr);
-                // app/bootstrap.php.cache should be ready
-                var bootstrap = path.resolve('app/bootstrap.php.cache');
-                /* jshint -W016 */
-                try {
-                    fs.statSync(bootstrap, fs.R_OK | fs.W_OK);
-                    debug('SUCCESS bootstrap.php.cache -> available');
-                } catch (err) {
-                    debug('ERROR: bootstrap.php.cache -> ', err.message || err);
+                if (error) {
+                    debug('error: composer clear-cache -> ', error);
+                    cb(error);
+                    return;
                 }
 
-                cb(error, stdout);
+                exec('php composer.phar install --prefer-dist --no-interaction', function (error, stdout, stderr) {
+                    debug('error: composer install -> ', error);
+                    debug('stdout: composer install -> ', stdout);
+                    debug('stderr: composer install -> ', stderr);
+                    // app/bootstrap.php.cache should be ready
+                    var bootstrap = path.resolve('app/bootstrap.php.cache');
+                    /* jshint -W016 */
+                    try {
+                        fs.statSync(bootstrap, fs.R_OK | fs.W_OK);
+                        debug('SUCCESS bootstrap.php.cache -> available');
+                    } catch (err) {
+                        debug('ERROR: bootstrap.php.cache -> ', err.message || err);
+                    }
+
+                    cb(error, stdout);
+                });
             });
         });
     });
@@ -137,7 +147,25 @@ module.exports.withJspm = function (cb) {
         cb = function () {
         };
     }
-    exec('node_modules/.bin/jspm init -y', function (error, stdout) {
-        cb(error, stdout);
+
+    var cmd = process.env.JSPM_AUTH ? 'config registries.github.auth ' + process.env.JSPM_AUTH : ' --version';
+    exec('node_modules/.bin/jspm ' + cmd, function (error, stdout, stderr) {
+        debug('stdout: jspm config -> ', stdout);
+        debug('stderr: jspm config -> ', stderr);
+
+        if (error) {
+            debug('stderr: jspm config -> ', stderr);
+        }
+        exec('node_modules/.bin/jspm init -y', function (error, stdout, stderr) {
+            debug('stdout: jspm init -> ', stdout);
+            debug('stderr: jspm init -> ', stderr);
+
+            if (error) {
+                debug('error: jspm init -> ', error);
+                cb(error);
+                return;
+            }
+            cb(error, stdout);
+        });
     });
 };
