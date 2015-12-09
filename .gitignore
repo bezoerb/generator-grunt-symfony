@@ -1,6 +1,8 @@
 node_modules/
 test/fixtures/bin/
 test/fixtures/bower_components/
-test/fixtures/vendor/
-test/fixtures/app/
 test/fixtures/jspm_packages/
+test/fixtures/vendor/
+test/fixtures/app/bootstrap.php.cache
+test/fixtures/app/check.php
+test/fixtures/app/SymfonyRequirements.php

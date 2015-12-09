@@ -1,0 +1,14 @@
+# This file is auto-generated during the composer install
+parameters:
+    database.driver: pdo_mysql
+    database.host: 127.0.0.1
+    database.port: ''
+    database.name: symfony
+    database.user: root
+    database.password: ''
+    mailer.transport: smtp
+    mailer.host: 127.0.0.1
+    mailer.user: ''
+    mailer.password: ''
+    locale: en
+    secret: ThisTokenIsNotSoSecretChangeIt

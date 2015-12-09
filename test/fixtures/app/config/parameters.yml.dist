@@ -1,0 +1,20 @@
+# This file is a "template" of what your parameters.yml file should look like
+parameters:
+    database.driver:   pdo_mysql
+    database.host:     127.0.0.1
+    database.port:     ""
+    database.name:     symfony
+    database.user:     root
+    database.password: ""
+    # You should uncomment this if you want use pdo_sqlite
+    # database.path: "%kernel.root_dir%/data.db3"
+
+    mailer.transport:  smtp
+    mailer.host:       127.0.0.1
+    mailer.user:       ""
+    mailer.password:   ""
+
+    locale:            en
+
+    # A secret key that's used to generate certain security-related tokens
+    secret:            ThisTokenIsNotSoSecretChangeIt

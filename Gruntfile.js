@@ -3,6 +3,7 @@ var shell = require('shelljs');
 var exec = require('child_process').exec;
 var fs = require('fs-extra');
 var path = require('path');
+var debug = require('debug')('yeoman:generator-grunt-symfony');
 
 module.exports = function (grunt) {
     require('load-grunt-tasks')(grunt);
@@ -22,7 +23,16 @@ module.exports = function (grunt) {
             }
         },
         clean: {
-            test: ['test/fixtures/node_modules', 'test/fixtures/bower_components', 'test/fixtures/jspm_packages']
+            test: [
+                'test/fixtures/node_modules',
+                'test/fixtures/bower_components',
+                'test/fixtures/jspm_packages',
+                'test/fixtures/composer.phar',
+                'test/fixtures/app/bootstrap.php.cache',
+                'test/fixtures/app/check.php',
+                'test/fixtures/app/SymfonyRequirements.php',
+                'test/fixtures/vendor'
+            ]
         },
         simplemocha: {
             all: ['test/*.js'],
@@ -110,9 +120,25 @@ module.exports = function (grunt) {
         grunt.log.ok('fetching local composer');
         exec('php -r "readfile(\'https://getcomposer.org/installer\');" | php', function() {
             grunt.log.ok('installing composer dependencies for generated app');
-            exec('php composer.phar update --prefer-source --no-interaction --dev ', {cwd: '../fixtures'}, function () {
-                shell.cd('../../');
-                done();
+            exec('php composer.phar update --prefer-source --no-interaction --dev ', {cwd: '../fixtures'}, function (error, stdout, stderr) {
+                debug('stdout: jspm config -> ', stdout);
+                debug('stderr: jspm config -> ', stderr);
+
+                if (error) {
+                    debug('stderr: jspm config -> ', stderr);
+                }
+                exec('php composer.phar run-script post-update-cmd --no-interaction ', {cwd: '../fixtures'}, function (error, stdout, stderr) {
+                    debug('stdout: jspm config -> ', stdout);
+                    debug('stderr: jspm config -> ', stderr);
+
+                    if (error) {
+                        debug('stderr: jspm config -> ', stderr);
+                    }
+                    shell.cd('../../');
+                    done();
+                }).stdout.on('data', function(data) {
+                    console.log(data);
+                });
             }).stdout.on('data', function(data) {
                 console.log(data);
             });
