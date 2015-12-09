@@ -1,4 +1,17 @@
 
+0.7.1 / 2015-12-09
+==================
+
+  * tweaked .travis.yml
+  * unfixed lodash version
+  * debugging composer in travis
+  * use composer post-install-cmd
+  * travis debug
+  * local jspm & composer auth
+  * more debug + composer cache-clear
+  * added travis debug logs
+  * try container-based travis
+
 0.7.0 / 2015-12-08
 ==================
 
