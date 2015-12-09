@@ -113,8 +113,8 @@ module.exports.withComposer = function (cb) {
             }
 
             exec('php composer.phar clear-cache', function(error, stdout, stderr) {
-                debug('stdout: composer install -> ', stdout);
-                debug('stderr: composer install -> ', stderr);
+                debug('stdout: composer clear-cache  -> ', stdout);
+                debug('stderr: composer clear-cache  -> ', stderr);
                 if (error) {
                     debug('error: composer clear-cache -> ', error);
                     cb(error);
