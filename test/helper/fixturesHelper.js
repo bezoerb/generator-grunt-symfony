@@ -79,6 +79,8 @@ function linkDeps (base, target, done) {
         fs.ensureSymlinkSync(path.join(base, 'bin'), path.join(target, 'bin'));
         fs.copySync(path.join(base, 'app/autoload.php'), path.join(target, 'app/autoload.php'));
         fs.copySync(path.join(base, 'app/bootstrap.php.cache'), path.join(target, 'app/bootstrap.php.cache'));
+        fs.copySync(path.join(base, 'app/config/parameters.yml'), path.join(target, 'app/config/parameters.yml'));
+        fs.copySync(path.join(base, 'app/config/parameters.yml.dist'), path.join(target, 'app/config/parameters.yml.dist'));
 
 
         var pkg = fs.readJsonSync(path.join(target, 'package.json'));
