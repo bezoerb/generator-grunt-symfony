@@ -77,6 +77,9 @@ function linkDeps (base, target, done) {
         fs.removeSync(path.join(target, 'composer.json'));
         fs.ensureSymlinkSync(path.join(base, 'composer.json'), path.join(target, 'composer.json'));
         fs.ensureSymlinkSync(path.join(base, 'bin'), path.join(target, 'bin'));
+        fs.copySync(path.join(base, 'app/autoload.php'), path.join(target, 'app/autoload.php'));
+        fs.copySync(path.join(base, 'app/bootstrap.php.cache'), path.join(target, 'app/bootstrap.php.cache'));
+
 
         var pkg = fs.readJsonSync(path.join(target, 'package.json'));
         if (pkg.jspm) {
@@ -121,7 +124,8 @@ module.exports.withComposer = function (cb) {
                     return;
                 }
 
-                exec('php composer.phar install --prefer-dist --no-interaction', function (error, stdout, stderr) {
+                exec('php composer.phar run-script post-install-cmd --no-interaction', function (error, stdout, stderr) {
+                //exec('php composer.phar install --prefer-dist --no-interaction', function (error, stdout, stderr) {
                     debug('error: composer install -> ', error);
                     debug('stdout: composer install -> ', stdout);
                     debug('stderr: composer install -> ', stderr);
