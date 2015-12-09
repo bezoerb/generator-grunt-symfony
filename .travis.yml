@@ -23,4 +23,4 @@ before_install:
 - jspm config registries.github.auth $JSPM_AUTH
 - currentfolder=${PWD##*/}
 - if [ "$currentfolder" != 'generator-grunt-symfony' ]; then cd .. && eval "mv $currentfolder generator-grunt-symfony" && cd generator-grunt-symfony; fi
-- npm install lodash
+- npm install
