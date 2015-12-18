@@ -799,6 +799,7 @@ module.exports = AppGenerator.extend({
                 this.template('grunt/svgmin.js', 'grunt/svgmin.js');
                 this.template('grunt/browserSync.js', 'grunt/browserSync.js');
                 this.template('grunt/phpunit.js', 'grunt/phpunit.js');
+                this.template('grunt/availabletasks.js', 'grunt/availabletasks.js');
 
                 // css
                 if (this.noPreprocessor) {
