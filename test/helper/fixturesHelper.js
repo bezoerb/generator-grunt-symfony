@@ -168,10 +168,18 @@ module.exports.withJspm = function (cb) {
 
             if (error) {
                 debug('error: jspm init -> ', error);
-                cb(error);
-                return;
             }
-            cb(error, stdout);
+            exec('node_modules/.bin/jspm install', function (error, stdout, stderr) {
+                debug('stdout: jspm install -> ', stdout);
+                debug('stderr: jspm install -> ', stderr);
+
+                if (error) {
+                    debug('error: jspm install -> ', error);
+                    cb(error);
+                    return;
+                }
+                cb(error, stdout);
+            });
         });
     });
 };

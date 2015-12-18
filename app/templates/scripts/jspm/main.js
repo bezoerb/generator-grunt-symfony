@@ -8,8 +8,8 @@ import picturefill from  'picturefill';
 let debug = debugFn('<%= safeProjectName %>:main');
 picturefill();
 
-log('\'Allo \'Allo');
-log('Running jQuery:',$().jquery);<% if (useBootstrap) { %>
-log('Running Bootstrap:',Boolean($.fn.scrollspy)? '~3.3.0' : false);<% } else if (useUikit) { %>
-log('Running UIkit:',UI.version);<% } else if (useFoundation) { %>
-log('Running Foundation:',Foundation.version);<% } %>
+debug('\'Allo \'Allo');
+debug('Running jQuery:',$().jquery);<% if (useBootstrap) { %>
+debug('Running Bootstrap:',Boolean($.fn.scrollspy)? '~3.3.0' : false);<% } else if (useUikit) { %>
+debug('Running UIkit:',UI.version);<% } else if (useFoundation) { %>
+debug('Running Foundation:',Foundation.version);<% } %>
