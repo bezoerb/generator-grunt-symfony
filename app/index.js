@@ -236,7 +236,8 @@ var AppGenerator = yeoman.generators.Base.extend({
      */
     updateConfig: function () {
         // remove assetic from config_dev.yml
-        var confDev = yaml.safeLoad(fs.readFileSync('app/config/config_dev.yml'));
+        var configDevSource = fs.readFileSync('app/config/config_dev.yml','utf8').replace(/\[([^"']+)\]/igm,'["$1"]');
+        var confDev = yaml.safeLoad(configDevSource);
         delete confDev.assetic;
         var newConfDev = yaml.dump(confDev, {indent: 4});
         fs.unlinkSync(this.destinationPath('app/config/config_dev.yml'));
