@@ -1,11 +1,11 @@
-import debug from 'debug';
+import debugFn from 'debug';
 import $ from 'jquery'; <% if (useBootstrap) { %>
 import 'bootstrap'; <% } else if (useUikit) { %>
 import UI from 'uikit';<% } else if (useFoundation) { %>
 import Foundation from 'foundation';<% } %>
 import picturefill from  'picturefill';
 
-let log = debug('<%= safeProjectName %>:main');
+let debug = debugFn('<%= safeProjectName %>:main');
 picturefill();
 
 log('\'Allo \'Allo');

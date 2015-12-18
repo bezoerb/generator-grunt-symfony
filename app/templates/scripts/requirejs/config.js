@@ -6,7 +6,7 @@ var require = {
         app: '../app/Resources/public/scripts/app',
         modules: '../app/Resources/public/scripts/modules',
         jquery: 'jquery/dist/jquery',
-        loglevel: 'loglevel/dist/loglevel.min'<% if (useFoundation) { %>,
+        'visionmedia-debug': 'visionmedia-debug/dist/debug'<% if (useFoundation) { %>,
         foundation: 'foundation/js/foundation',
         'foundation/core': 'foundation/js/foundation/foundation',
         'foundation/abide': 'foundation/js/foundation/foundation.abide',

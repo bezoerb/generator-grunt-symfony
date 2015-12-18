@@ -764,9 +764,9 @@ module.exports = AppGenerator.extend({
             if (this.useRequirejs) {
                 bower.dependencies.requirejs = '2.1.15';
                 bower.dependencies.almond = '~0.3.0';
+                bower.dependencies['visionmedia-debug'] = '~2.2.0';
             }
 
-            bower.dependencies.loglevel = '~1.2.0';
             bower.dependencies.picturefill = '~3.0.1';
             bower.dependencies.modernizr = '~2.8.3';
 
