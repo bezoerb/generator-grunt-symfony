@@ -6,6 +6,7 @@ module.exports = function(grunt) {
     var _ = require('lodash');
     var fs = require('fs-extra');
     var path = require('path');
+    var chalk = require('chalk');
     var parseurl = require('parseurl');
     var php = require('php-proxy-middleware');
     var env = _.defaults(fs.existsSync('.envrc') && grunt.file.readJSON('.envrc') || {},{
@@ -107,6 +108,33 @@ module.exports = function(grunt) {
             scripts: {
                 files: ['<%%= config.app %>/scripts/**/*.js'],
                 tasks: ['jshint']
+            }
+        },
+
+        availabletasks: {
+            tasks: {
+                options: {
+                    hideUngrouped: true,
+                    sort: ['default', 'serve','assets','test','js','css','img','copy','rev','jshint','karma','phpunit'],
+                    descriptions: {
+                        default: 'Show help',
+                        serve: 'Start development server. Use ' + chalk.cyan('serve:dist') + ' for production environment',
+                        assets: 'Build & install all assets to public web directory ' + chalk.green('[test, js, css, img, rev, copy]'),
+                        test: 'Run tests ' + chalk.green('[jshint, karma, phpunit]'),
+                        js: 'Build & install scripts',
+                        css: 'Build & install styles',
+                        img: 'Build & install images',
+                        rev: 'Rev assets',
+                        copy: 'Copy non preprocessed assets like fonts to public web directory',
+                        jshint: 'Check javascript files with jshint',
+                        karma: 'Start karma test runner'
+                    },
+                    groups: {
+                        'Main:': ['default','serve','assets','test'],
+                        'Assets': ['js','css','img','copy','rev'],
+                        'Tests': ['jshint', 'karma', 'phpunit']
+                    }
+                }
             }
         },
 
@@ -477,7 +505,7 @@ module.exports = function(grunt) {
 
     });
 
-
+    grunt.registerTask('default',['availabletasks']);
     grunt.registerTask('serve', function(target) {
         // clean tmp
         grunt.task.run(['clean:tmp']);

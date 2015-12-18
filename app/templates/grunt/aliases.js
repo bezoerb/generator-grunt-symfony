@@ -24,7 +24,7 @@ module.exports = function (grunt, options) {
 
     return {
         default: [
-            'serve'
+            'availabletasks'
         ],
         css: [
             'clean:css',<% if (useLess) { %>

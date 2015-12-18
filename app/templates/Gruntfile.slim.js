@@ -1,20 +1,22 @@
 // Generated on <%= (new Date).toISOString().split('T')[0] %> using
 // <%= pkg.name %> <%= pkg.version %>
 module.exports = function(grunt) {
-    require('jit-grunt')(grunt);
     var _ = require('lodash');
     var fs = require('fs');
     var path = require('path');
-    var env = _.defaults(fs.existsSync('.envrc') && grunt.file.readJSON('.envrc') || {},{
+    
+    var env = _.defaults(fs.existsSync('.envrc') && grunt.file.readJSON('.envrc') || {}, {
         port: parseInt(grunt.option('port'), 10) || 8000
     });
-
 
     var paths = {
         app: 'app/Resources/public',
         dist: 'web'
     };
 
+    require('jit-grunt')(grunt,{
+        availabletasks: 'grunt-available-tasks'
+    });
 
     // load grunt config
     require('load-grunt-config')(grunt, {
