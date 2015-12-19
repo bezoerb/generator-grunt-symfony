@@ -96,8 +96,8 @@
             "uikit": "github:uikit/uikit@2.18.0"<% } %>
         },
         "devDependencies": {
-            "babel": "npm:babel-core@^5.8.25",
-            "babel-runtime": "npm:babel-runtime@^5.8.25",
+            "babel": "npm:babel-core@^5.8.34",
+            "babel-runtime": "npm:babel-runtime@^5.8.34",
             "core-js": "npm:core-js@^1.1.4"
         }
     }<% } %>
