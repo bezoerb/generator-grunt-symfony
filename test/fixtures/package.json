@@ -87,15 +87,15 @@
     "configFile": "app/Resources/public/scripts/config.js",
     "dependencies": {
       "bootstrap": "github:twbs/bootstrap@^3.3.4",
-      "foundation": "github:zurb/bower-foundation@5.5.1",
       "debug": "npm:debug@^2.2.0",
+      "foundation": "github:zurb/bower-foundation@5.5.1",
       "jquery": "github:components/jquery@^2.1.4",
       "picturefill": "npm:picturefill@^3.0.1",
       "uikit": "github:uikit/uikit@2.18.0"
     },
     "devDependencies": {
-      "babel": "npm:babel-core@^5.8.25",
-      "babel-runtime": "npm:babel-runtime@^5.8.25",
+      "babel": "npm:babel-core@^5.8.34",
+      "babel-runtime": "npm:babel-runtime@^5.8.34",
       "core-js": "npm:core-js@^1.1.4"
     }
   }

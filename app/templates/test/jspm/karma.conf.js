@@ -28,10 +28,10 @@ module.exports = function(config) {
             loadFiles: ['test/**/*Spec.js'],
             serveFiles : ['app/Resources/public/scripts/**/*.js'],
             paths: {
-                '*': 'base/app/Resources/public/scripts/*.js',
-                'test\/*': 'base/test/*.js',
-                'github:*': 'base/jspm_packages/github/*.js',
-                'npm:*': 'base/jspm_packages/npm/*.js'
+                '*': 'base/app/Resources/public/scripts/*',
+                'test\/*': 'base/test/*',
+                'github:*': 'base/jspm_packages/github/*',
+                'npm:*': 'base/jspm_packages/npm/*'
             }
         },
 
