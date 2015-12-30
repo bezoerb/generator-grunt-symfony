@@ -7,7 +7,7 @@ var path = require('path');
 /*jshint -W079 */
 var Promise = require('es6-promise').Promise;
 var debug = require('debug')('yeoman:generator-grunt-symfony');
-var helpers = require('yeoman-generator').test;
+var helpers = require('yeoman-test');
 var chalk = require('chalk');
 var indentString = require('indent-string');
 var assert = require('yeoman-assert');

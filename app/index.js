@@ -14,7 +14,7 @@ var readFileAsString = require("html-wiring").readFileAsString;
 var fse = require('fs-extra');
 
 
-var AppGenerator = yeoman.generators.Base.extend({
+var AppGenerator = yeoman.Base.extend({
 
     /**
      * Check for installed composer and prompt for installing composer locally if not found
