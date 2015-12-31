@@ -1,4 +1,16 @@
 
+0.7.2 / 2015-12-31
+==================
+
+  * jspm fixes
+  * remove deprecated warnings
+  * bump deps
+  * jspm babel version
+  * fixed tests
+  * use visionmedia debug instead of loglevel
+  * Fixed #57
+  * show available grunt tasks on default
+
 0.7.1 / 2015-12-09
 ==================
 
