@@ -7,7 +7,7 @@
  * http://bezoerb.mit-license.org/
  * All rights reserved.
  */
-define(function(require,exports) {
+define(function (require, exports) {
     'use strict';
     exports.msg = 'I\'m an awesome dummy module!';
 });

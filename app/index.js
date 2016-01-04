@@ -795,7 +795,7 @@ module.exports = AppGenerator.extend({
                 this.template('grunt/exec.js', 'grunt/exec.js');
                 this.template('grunt/filerev.js', 'grunt/filerev.js');
                 this.template('grunt/usemin.js', 'grunt/usemin.js');
-                this.template('grunt/jshint.js', 'grunt/jshint.js');
+                this.template('grunt/eslint.js', 'grunt/eslint.js');
                 this.template('grunt/imagemin.js', 'grunt/imagemin.js');
                 this.template('grunt/svgmin.js', 'grunt/svgmin.js');
                 this.template('grunt/browserSync.js', 'grunt/browserSync.js');
@@ -845,7 +845,8 @@ module.exports = AppGenerator.extend({
                 this.destinationPath('.editorconfig')
             );
 
-            this.template('jshintrc', '.jshintrc');
+            this.template('eslintrc', '.eslintrc');
+            this.template('jscsrc', '.jscsrc');
         },
 
         symfonyBase: function symfonyBase() {
@@ -895,11 +896,7 @@ module.exports = AppGenerator.extend({
             if (this.useGit) {
                 var done = this.async();
                 this.spawnCommand('git', ['init']).on('exit', function () {
-                    this.fs.copyTpl(
-                        this.templatePath('hooks/post-merge'),
-                        this.destinationPath('.git/hooks/post-merge'),
-                        this
-                    );
+                    this.template('hooks/post-merge','.git/hooks/post-merge');
                     done();
                 }.bind(this));
             }

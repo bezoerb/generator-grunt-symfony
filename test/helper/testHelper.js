@@ -112,7 +112,7 @@ function checkFiles (prompts) {
 }
 
 
-function checkTests () {
+function checkTests (prompts) {
     return function () {
         log('... check jshint, karma (mocha) and phpunit');
         return new Promise(function (resolve) {
@@ -120,10 +120,24 @@ function checkTests () {
                 /*jshint expr: true*/
                 debug(os.EOL + stdout);
                 expect(error).to.be.null;
-                withJspm(function (error, stdout) {
-                    /*jshint expr: true*/
-                    debug(os.EOL + stdout);
-                    expect(error).to.be.null;
+
+                if (prompts.loader === 'jspm') {
+                    withJspm(function (error, stdout) {
+                        /*jshint expr: true*/
+                        debug(os.EOL + stdout);
+                        expect(error).to.be.null;
+                        exec('grunt test --no-color', function (error, stdout) {
+                            if (error) {
+                                log(os.EOL + stdout + os.EOL);
+                            }
+                            /*jshint expr: true*/
+                            expect(error).to.be.null;
+                            expect(stdout).to.contain('Done, without errors.');
+                            markDone();
+                            resolve();
+                        });
+                    });
+                } else {
                     exec('grunt test --no-color', function (error, stdout) {
                         if (error) {
                             log(os.EOL + stdout + os.EOL);
@@ -134,7 +148,9 @@ function checkTests () {
                         markDone();
                         resolve();
                     });
-                });
+                }
+
+
             });
         });
     };
@@ -189,7 +205,7 @@ module.exports.testPrompts = function (opts, done) {
     var prompts = _.defaults(opts, defaultOptions);
     install(prompts)
         .then(checkFiles(prompts))
-        .then(checkTests())
+        .then(checkTests(prompts))
         .then(checkJs(prompts))
         .then(checkCss())
         .then(done)

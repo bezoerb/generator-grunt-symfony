@@ -6,6 +6,6 @@ module.exports = {
     },
     scripts: {
         files: ['<%%= paths.app %>/scripts/**/*.js'],
-        tasks: ['jshint']
+        tasks: ['eslint']
     }
 };
