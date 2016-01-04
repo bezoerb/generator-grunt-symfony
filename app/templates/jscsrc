@@ -1,0 +1,142 @@
+{
+  "disallowCapitalizedComments": true,
+  "disallowEmptyBlocks": true,
+  "disallowIdentifierNames": [
+    "temp"
+  ],
+  "disallowImplicitTypeConversion": [
+    "numeric",
+    "boolean",
+    "binary",
+    "string"
+  ],
+  "disallowKeywordsOnNewLine": [
+    "else"
+  ],
+  "disallowKeywords": [
+    "with"
+  ],
+  "disallowMixedSpacesAndTabs": "smart",
+  "disallowMultipleLineBreaks": true,
+  "disallowMultipleLineStrings": true,
+  "disallowMultipleSpaces": true,
+  "disallowMultipleVarDecl": "strict",
+  "disallowNewlineBeforeBlockStatements": true,
+  "disallowNodeTypes": [
+    "LabeledStatement"
+  ],
+  "disallowNotOperatorsInConditionals": true,
+  "disallowOperatorBeforeLineBreak": [
+    "+",
+    "."
+  ],
+  "disallowPaddingNewLinesAfterUseStrict": true,
+  "disallowPaddingNewlinesInBlocks": true,
+  "disallowParenthesesAroundArrowParam": true,
+  "disallowQuotedKeysInObjects": true,
+  "disallowSpaceAfterObjectKeys": true,
+  "disallowSpaceAfterPrefixUnaryOperators": true,
+  "disallowSpaceBeforeComma": true,
+  "disallowSpaceBeforePostfixUnaryOperators": true,
+  "disallowSpaceBeforeSemicolon": true,
+  "disallowSpacesInCallExpression": true,
+  "disallowSpacesInFunctionDeclaration": {
+    "beforeOpeningRoundBrace": true
+  },
+  "disallowSpacesInsideArrayBrackets": true,
+  "disallowSpacesInsideBrackets": true,
+  "disallowSpacesInsideObjectBrackets": true,
+  "disallowSpacesInsideParentheses": true,
+  "disallowTrailingComma": true,
+  "disallowTrailingWhitespace": true,
+  "disallowYodaConditions": true,
+  "requireBlocksOnNewline": {
+    "includeComments": true
+  },
+  "requireCamelCaseOrUpperCaseIdentifiers": true,
+  "requireCapitalizedConstructors": true,
+  "requireCommaBeforeLineBreak": true,
+  "requireCurlyBraces": true,
+  "requireDollarBeforejQueryAssignment": true,
+  "requireDotNotation": "except_snake_case",
+  "requireLineBreakAfterVariableAssignment": true,
+  "requireLineFeedAtFileEnd": true,
+  "requireMatchingFunctionName": true,
+  "requireObjectKeysOnNewLine": true,
+  "requirePaddingNewLinesAfterBlocks": true,
+  "requirePaddingNewLinesBeforeExport": true,
+  "requirePaddingNewlinesBeforeKeywords": [
+    "do",
+    "for",
+    "if",
+    "switch",
+    "try",
+    "while",
+    "with"
+  ],
+  "requirePaddingNewLinesBeforeLineComments": {
+    "allExcept": "firstAfterCurly"
+  },
+  "requireParenthesesAroundIIFE": true,
+  "requireSemicolons": true,
+  "requireShorthandArrowFunctions": true,
+  "requireSpaceAfterBinaryOperators": true,
+  "requireSpaceAfterKeywords": [
+    "do",
+    "for",
+    "if",
+    "else",
+    "switch",
+    "try",
+    "catch",
+    "while",
+    "with",
+    "return",
+    "typeof",
+    "function"
+  ],
+  "requireSpaceAfterLineComment": true,
+  "requireSpaceBeforeBinaryOperators": true,
+  "requireSpaceBeforeBlockStatements": true,
+  "requireSpaceBeforeKeywords": [
+    "else",
+    "catch",
+    "while"
+  ],
+  "requireSpaceBeforeObjectValues": true,
+  "requireSpaceBetweenArguments": true,
+  "requireSpacesInAnonymousFunctionExpression": {
+    "beforeOpeningRoundBrace": true,
+    "beforeOpeningCurlyBrace": true
+  },
+  "requireSpacesInConditionalExpression": true,
+  "requireSpacesInForStatement": true,
+  "requireSpacesInFunctionDeclaration": {
+    "beforeOpeningCurlyBrace": true
+  },
+  "requireSpacesInNamedFunctionExpression": {
+    "beforeOpeningCurlyBrace": true
+  },
+  "safeContextKeyword": [
+    "self"
+  ],
+  "validateAlignedFunctionParameters": true,
+  "validateIndentation": 4,
+  "validateLineBreaks": "LF",
+  "validateParameterSeparator": ", ",
+  "validateQuoteMarks": "'",
+  "excludeFiles": [
+    "node_modules/**",
+    "bower_components/**",
+    "coverage/**",
+    "tmp/**",
+    "temp/**",
+    "**/*.min.js",
+    "**/bundle.js"
+  ],
+  "fileExtensions": [
+    ".js",
+    ".jsx"
+  ],
+  "esnext": true
+}
