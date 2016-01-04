@@ -114,7 +114,7 @@ function checkFiles (prompts) {
 
 function checkTests (prompts) {
     return function () {
-        log('... check jshint, karma (mocha) and phpunit');
+        log('... check eslint, karma (mocha) and phpunit');
         return new Promise(function (resolve) {
             withComposer(function (error, stdout) {
                 /*jshint expr: true*/

@@ -12,7 +12,8 @@ function Base(dir) {
         path.join(this._dir, 'package.json'),
         path.join(this._dir, 'Gruntfile.js'),
         path.join(this._dir, '.editorconfig'),
-        path.join(this._dir, '.jshintrc')
+        path.join(this._dir, '.eslintrc'),
+        path.join(this._dir, '.jscsrc'),
     ];
 }
 
