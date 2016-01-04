@@ -873,7 +873,6 @@ module.exports = AppGenerator.extend({
                     this.templatePath(path.join('test','requirejs','spec')),
                     this.destinationPath(path.join('test','spec'))
                 );
-                fse.copySync(this.templatePath(path.join('test','requirejs','.jshintrc')), this.destinationPath(path.join('test','.jshintrc')));
                 fse.copySync(this.templatePath(path.join('test','requirejs','karma.conf.js')),this.destinationPath(path.join('test','karma.conf.js')));
                 this.template(path.join('test','requirejs','test-main.js'), path.join('test','test-main.js'));
             } else if (this.useJspm) {
