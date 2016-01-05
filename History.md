@@ -1,4 +1,13 @@
 
+0.8.0 / 2016-01-05
+==================
+
+  * eslint fixes for requirejs config
+  * removed jshint
+  * updated tests
+  * jscsrc for webstorm code style configuration
+  * Dropped jshint & added eslint
+
 0.7.2 / 2015-12-31
 ==================
 
