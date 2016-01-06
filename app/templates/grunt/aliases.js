@@ -56,14 +56,19 @@ module.exports = function (grunt, options) {
             'revdump',
             'usemin'
         ],
+        'generate-service-worker': [
+            'copy:sw-scripts',
+            'sw-precache:dist'
+        ],
         assets: [
             'test',
             'js',
             'css',
             'img',
             'rev',
-            'copy',
-            'clean:tmp'
+            'copy:dist',
+            'clean:tmp',
+            'generate-service-worker'
         ],
         build: [
             'assets',

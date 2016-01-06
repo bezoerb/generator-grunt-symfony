@@ -2,13 +2,9 @@
 module.exports = function(grunt, options) {
     <% if (useWebpack) { %>var path = require('path');
     <% } %>var parseurl = require('parseurl');
-    var cache;
 
     // just a helper to prevent double config
     function bsOptions() {
-        if (cache) {
-            return cache;
-        }
         <% if (useWebpack) { %>
         var webpack = require('webpack');
         var webpackDevMiddleware = require('webpack-dev-middleware');
@@ -16,7 +12,7 @@ module.exports = function(grunt, options) {
         var webpackConfig = require('../webpack.config').dev;
         var bundler = webpack(webpackConfig);<% } %>
 
-        cache = {
+        return {
             server: {
                 baseDir: Array.prototype.slice.call(arguments),
                 middleware: [<% if (useWebpack) { %>
@@ -54,8 +50,6 @@ module.exports = function(grunt, options) {
                 forms: true
             }
         };
-
-        return cache;
     }
 
     return {

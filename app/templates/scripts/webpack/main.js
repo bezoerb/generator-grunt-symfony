@@ -4,6 +4,7 @@ import 'bootstrap';<% } else if (useUikit) { %>
 import UI from 'uikit/js/uikit';<% } else if (useFoundation) { %>
 import 'foundation';<% } %>
 import picturefill from 'picturefill';
+import * as SW from './modules/service-worker';
 
 let debug = debugFn('<%= safeProjectName %>:main');
 picturefill();
@@ -14,3 +15,5 @@ debug('Running Bootstrap:', Boolean($.fn.scrollspy) ? '~3.3.0' : false);<% } els
 debug('Running UIkit:', UI.version);<% } else if (useFoundation) { %>
 /* global Foundation */
 debug('Running Foundation:', Foundation.version);<% } %>
+
+SW.init();

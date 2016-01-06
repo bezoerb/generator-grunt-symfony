@@ -10,6 +10,7 @@
 define(function (require, exports) {
     'use strict';
     var $ = require('jquery');
+    var serviceWorker = require('./modules/service-worker');
     var debug = require('visionmedia-debug')('<%= safeProjectName %>:main');<% if (useUikit) { %>
     var UI = require('uikit');<% } else if (useFoundation) { %>
     var Foundation = require('foundation/core');<% } else if (useBootstrap) { %>
@@ -21,5 +22,7 @@ define(function (require, exports) {
         debug('Running Bootstrap:', Boolean($.fn.scrollspy) ? '~3.3.0' : false);<% } else if (useUikit) { %>
         debug('Running UIkit:', UI.version);<% } else if (useFoundation) { %>
         debug('Running Foundation:', Foundation.version);<% } %>
+
+        serviceWorker.init();
     };
 });

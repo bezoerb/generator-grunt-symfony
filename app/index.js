@@ -55,7 +55,8 @@ var AppGenerator = yeoman.Base.extend({
 
     composer: function (args, cb) {
         if (!_.isFunction(cb)) {
-            cb = function () {};
+            cb = function () {
+            };
         }
 
         var cmd = 'composer';
@@ -68,12 +69,12 @@ var AppGenerator = yeoman.Base.extend({
 
     jspm: function (args, cb, options) {
         if (!_.isFunction(cb)) {
-            cb = function () {};
+            cb = function () {
+            };
         }
 
         return this.spawnCommand('node_modules/.bin/jspm', args, options || {}).on('error', cb).on('exit', cb);
     },
-
 
 
     /**
@@ -103,7 +104,7 @@ var AppGenerator = yeoman.Base.extend({
         this.log('');
         this.log('Running ' + chalk.bold.yellow('composer update') + ' for you to install the required dependencies.');
         this.composer(['update'], cb || function () {
-        });
+            });
     },
 
     /**
@@ -113,25 +114,26 @@ var AppGenerator = yeoman.Base.extend({
      */
     setupPermissions: function setupPermissions(cb) {
         if (!cb) {
-            cb = function () {};
+            cb = function () {
+            };
         }
         var folder = this.sfVersion >= 3 ? 'var' : 'app';
 
-        this.log(os.EOL + 'Set up permissions for ' + chalk.cyan(folder+'/cache') + ' and ' + chalk.cyan(folder+'/logs') + '.');
+        this.log(os.EOL + 'Set up permissions for ' + chalk.cyan(folder + '/cache') + ' and ' + chalk.cyan(folder + '/logs') + '.');
 
         var acl = {
             // Use ACL on a system that does support chmod +a
             chmod: [
                 'HTTPDUSER=`ps aux | grep -E \'[a]pache|[h]ttpd|[_]www|[w]ww-data|[n]ginx\' | grep -v root | head -1 | cut -d\\  -f1`',
-                'chmod +a "$HTTPDUSER allow delete,write,append,file_inherit,directory_inherit" ' + folder+ '/cache ' + folder+ '/logs',
-                'chmod +a "`whoami` allow delete,write,append,file_inherit,directory_inherit" ' + folder+ '/cache ' + folder+ '/logs'
+                'chmod +a "$HTTPDUSER allow delete,write,append,file_inherit,directory_inherit" ' + folder + '/cache ' + folder + '/logs',
+                'chmod +a "`whoami` allow delete,write,append,file_inherit,directory_inherit" ' + folder + '/cache ' + folder + '/logs'
             ],
 
             // Use ACL on a system that does not support chmod +a
             setfacl: [
                 'HTTPDUSER=`ps aux | grep -E \'[a]pache|[h]ttpd|[_]www|[w]ww-data|[n]ginx\' | grep -v root | head -1 | cut -d\\  -f1`',
-                'setfacl -R -m u:"$HTTPDUSER":rwX -m u:`whoami`:rwX ' + folder+ '/cache ' + folder+ '/logs',
-                'setfacl -dR -m u:"$HTTPDUSER":rwX -m u:`whoami`:rwX ' + folder+ '/cache ' + folder+ '/logs'
+                'setfacl -R -m u:"$HTTPDUSER":rwX -m u:`whoami`:rwX ' + folder + '/cache ' + folder + '/logs',
+                'setfacl -dR -m u:"$HTTPDUSER":rwX -m u:`whoami`:rwX ' + folder + '/cache ' + folder + '/logs'
             ]
         };
 
@@ -140,7 +142,7 @@ var AppGenerator = yeoman.Base.extend({
             if (!err) {
                 return cb();
             } else if (/not\spermitted/.test(stderr)) {
-                this.log(chalk.bold.red('Warning: ') + 'I failed setting the folder permissions. Run the following command as admin as soon as i\'m done:' );
+                this.log(chalk.bold.red('Warning: ') + 'I failed setting the folder permissions. Run the following command as admin as soon as i\'m done:');
                 this.log(chalk.yellow(acl.chmod.join(os.EOL)));
                 this.log('');
                 return cb();
@@ -150,7 +152,7 @@ var AppGenerator = yeoman.Base.extend({
                 if (!err) {
                     return cb();
                 } else if (/not\spermitted/.test(stderr)) {
-                    this.log(chalk.bold.red('Warning: ') + 'I failed setting the folder permissions. Run the following command as admin as soon as i\'m done:' );
+                    this.log(chalk.bold.red('Warning: ') + 'I failed setting the folder permissions. Run the following command as admin as soon as i\'m done:');
                     this.log(chalk.yellow(acl.setfacl.join(os.EOL)));
                     this.log('');
                     return cb();
@@ -236,7 +238,7 @@ var AppGenerator = yeoman.Base.extend({
      */
     updateConfig: function () {
         // remove assetic from config_dev.yml
-        var configDevSource = fs.readFileSync('app/config/config_dev.yml','utf8').replace(/\[([^"']+)\]/igm,'["$1"]');
+        var configDevSource = fs.readFileSync('app/config/config_dev.yml', 'utf8').replace(/\[([^"']+)\]/igm, '["$1"]');
         var confDev = yaml.safeLoad(configDevSource);
         delete confDev.assetic;
         var newConfDev = yaml.dump(confDev, {indent: 4});
@@ -293,8 +295,8 @@ var AppGenerator = yeoman.Base.extend({
      * see http://symfony.com/doc/current/best_practices/web-assets.html
      */
     updateAppKernel: function updateAppKernel() {
-        function addBundle(contents,str) {
-            return contents.replace(/(\$bundles\s*=\s.*\n(?:[^;]*\n)+)/,'$&            '+str+'\n');
+        function addBundle(contents, str) {
+            return contents.replace(/(\$bundles\s*=\s.*\n(?:[^;]*\n)+)/, '$&            ' + str + '\n');
         }
 
 
@@ -305,7 +307,7 @@ var AppGenerator = yeoman.Base.extend({
         newAppKernelContents = newAppKernelContents.replace('array(\'dev\', \'test\')', 'array(\'node\', \'dev\', \'test\')');
 
         // add bundle
-        newAppKernelContents = addBundle(newAppKernelContents,'new Zoerb\\Bundle\\FilerevBundle\\ZoerbFilerevBundle(),');
+        newAppKernelContents = addBundle(newAppKernelContents, 'new Zoerb\\Bundle\\FilerevBundle\\ZoerbFilerevBundle(),');
         fs.unlinkSync(appKernelPath);
         fs.writeFileSync(appKernelPath, newAppKernelContents);
     },
@@ -369,36 +371,37 @@ var AppGenerator = yeoman.Base.extend({
      */
     addScripts: function addScripts() {
         // copy scripts
-        fse.mkdirsSync(this.destinationPath('app/Resources/public/scripts'));
+        fse.mkdirsSync(this.destinationPath('app/Resources/public/scripts/modules'));
+        var files = [];
+        var folder = '';
         if (this.useRequirejs) {
-            _.forEach(['app.js', 'main.js', 'config.js'], function (file) {
-                //var content = readFileAsString(this.templatePath('scripts/requirejs/' + file));
-                //fs.writeFileSync(this.destinationPath('app/Resources/public/scripts/' + file), this.engine(content, this));
-                this.fs.copyTpl(
-                    this.templatePath('scripts/requirejs/' + file),
-                    this.destinationPath('app/Resources/public/scripts/' + file),
-                    this
-                );
-            }, this);
-            fse.copySync(this.templatePath('scripts/requirejs/modules'),this.destinationPath('app/Resources/public/scripts/modules'));
+            files = ['app.js','config.js','main.js', 'modules/dummy.js', 'modules/service-worker.js'];
+            folder = 'requirejs';
         } else if (this.useJspm) {
-            _.forEach(['main.js', 'config.js'], function (file) {
-                this.fs.copyTpl(
-                    this.templatePath('scripts/jspm/' + file),
-                    this.destinationPath('app/Resources/public/scripts/' + file),
-                    this
-                );
-            }, this);
-            fse.copySync(this.templatePath('scripts/jspm/modules'),this.destinationPath('app/Resources/public/scripts/modules'));
+            files = ['config.js','main.js', 'modules/dummy.js', 'modules/service-worker.js'];
+            folder = 'jspm';
         } else if (this.useWebpack) {
-            this.fs.copyTpl(
-                this.templatePath('scripts/webpack/main.js'),
-                this.destinationPath('app/Resources/public/scripts/main.js'),
-                this
-            );
-            fse.copySync(this.templatePath('scripts/webpack/modules'),this.destinationPath('app/Resources/public/scripts/modules'));
+            files = ['main.js', 'modules/dummy.js', 'modules/service-worker.js'];
+            folder = 'webpack';
         }
 
+        _.forEach(files, function (file) {
+            //var content = readFileAsString(this.templatePath('scripts/requirejs/' + file));
+            //fs.writeFileSync(this.destinationPath('app/Resources/public/scripts/' + file), this.engine(content, this));
+            this.fs.copyTpl(
+                this.templatePath(path.join('scripts',folder,file)),
+                this.destinationPath('app/Resources/public/scripts/' + file),
+                this
+            );
+        }, this);
+
+        this.fs.copyTpl(
+            this.templatePath('scripts/sw/runtime-caching.js'),
+            this.destinationPath('app/Resources/public/scripts/sw/runtime-caching.js'),
+            this
+        );
+
+        fse.copySync(this.templatePath('scripts/sw/service-worker.js'), this.destinationPath('app/Resources/public/service-worker.js'));
 
     },
 
@@ -473,7 +476,7 @@ var AppGenerator = yeoman.Base.extend({
         }
 
         // add phpunit
-        composerParse['require-dev'] = _.assign(composerParse['require-dev'] || {},{'phpunit/phpunit': '~4.6'});
+        composerParse['require-dev'] = _.assign(composerParse['require-dev'] || {}, {'phpunit/phpunit': '~4.6'});
 
         var data = JSON.stringify(composerParse, null, 4);
 
@@ -520,7 +523,7 @@ module.exports = AppGenerator.extend({
         // Have Yeoman greet the user.
         if (!this.options['skip-welcome-message']) {
             this.log(yosay(
-                message.join(' '), {maxLength: stringLength(message[Math.min(message.length-1,1)])}
+                message.join(' '), {maxLength: stringLength(message[Math.min(message.length - 1, 1)])}
             ));
         }
 
@@ -542,7 +545,7 @@ module.exports = AppGenerator.extend({
 
         function hasFeature(answers, group, feature) {
             var val = _.result(answers, group);
-            return typeof feature !== 'undefined' && (val === feature || _.isArray(val) && _.indexOf(val,feature) !== -1);
+            return typeof feature !== 'undefined' && (val === feature || _.isArray(val) && _.indexOf(val, feature) !== -1);
         }
 
 
@@ -558,7 +561,7 @@ module.exports = AppGenerator.extend({
         var prompts = [{
             type: 'confirm',
             name: 'symfonyStandard',
-            message: 'Would you like to use the Symfony "Standard Edition '+ this.symfonyDefaults.commit +'" distribution',
+            message: 'Would you like to use the Symfony "Standard Edition ' + this.symfonyDefaults.commit + '" distribution',
             default: true
         }, {
             type: 'input',
@@ -629,7 +632,7 @@ module.exports = AppGenerator.extend({
                 {name: 'Foundation', value: 'foundation'},
                 {name: 'No Framework', value: 'noframework'}
             ]
-        },{
+        }, {
             type: 'list',
             name: 'loader',
             message: 'Which module loader would you like to use?',
@@ -700,9 +703,9 @@ module.exports = AppGenerator.extend({
             this.fs.copyTpl(
                 this.templatePath('_package.json'),
                 this.destinationPath('package.json'),
-                _.assign(this,{ safeProjectName: _.camelCase(this.appname)})
+                _.assign(this, {safeProjectName: _.camelCase(this.appname)})
             );
-        //    this.template('_package.json', 'package.json');
+            //    this.template('_package.json', 'package.json');
 
             var bower = {
                 name: _.camelCase(this.appname),
@@ -801,6 +804,7 @@ module.exports = AppGenerator.extend({
                 this.template('grunt/browserSync.js', 'grunt/browserSync.js');
                 this.template('grunt/phpunit.js', 'grunt/phpunit.js');
                 this.template('grunt/availabletasks.js', 'grunt/availabletasks.js');
+                this.template('grunt/sw-precache.js', 'grunt/sw-precache.js');
 
                 // css
                 if (this.noPreprocessor) {
@@ -870,23 +874,22 @@ module.exports = AppGenerator.extend({
         testFiles: function () {
             if (this.useRequirejs) {
                 fse.copySync(
-                    this.templatePath(path.join('test','requirejs','spec')),
-                    this.destinationPath(path.join('test','spec'))
+                    this.templatePath(path.join('test', 'requirejs', 'spec')),
+                    this.destinationPath(path.join('test', 'spec'))
                 );
-                fse.copySync(this.templatePath(path.join('test','requirejs','karma.conf.js')),this.destinationPath(path.join('test','karma.conf.js')));
-                this.template(path.join('test','requirejs','test-main.js'), path.join('test','test-main.js'));
+                fse.copySync(this.templatePath(path.join('test', 'requirejs', 'karma.conf.js')), this.destinationPath(path.join('test', 'karma.conf.js')));
+                this.template(path.join('test', 'requirejs', 'test-main.js'), path.join('test', 'test-main.js'));
             } else if (this.useJspm) {
                 fse.copySync(
-                    this.templatePath(path.join('test','jspm')),
+                    this.templatePath(path.join('test', 'jspm')),
                     this.destinationPath('test')
                 );
             } else if (this.useWebpack) {
                 fse.copySync(
-                    this.templatePath(path.join('test','webpack')),
+                    this.templatePath(path.join('test', 'webpack')),
                     this.destinationPath('test')
                 );
             }
-
 
 
         },
@@ -895,7 +898,7 @@ module.exports = AppGenerator.extend({
             if (this.useGit) {
                 var done = this.async();
                 this.spawnCommand('git', ['init']).on('exit', function () {
-                    this.template('hooks/post-merge','.git/hooks/post-merge');
+                    this.template('hooks/post-merge', '.git/hooks/post-merge');
                     done();
                 }.bind(this));
             }
@@ -915,7 +918,6 @@ module.exports = AppGenerator.extend({
         this.updateApp();
 
         this.updateComposerJson();
-
 
 
         this.installDependencies({
