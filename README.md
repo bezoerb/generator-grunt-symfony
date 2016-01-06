@@ -30,9 +30,11 @@ Just scaffold your app, run `grunt serve` and you are ready to go.
 * Image optimization
 * [Critical](https://github.com/addyosmani/critical) (Extract & Inline Critical-path CSS) 
 * [uncss](https://github.com/addyosmani/grunt-uncss) (Automatically strip off unused css)
+* Service Worker
 * Organized Gruntfile with [load-grunt-config](http://firstandthird.github.io/load-grunt-config)
 * Preconfigured testing Stack: [Karma](http://karma-runner.github.io/0.12/index.html), [Mocha](http://mochajs.org/) & [Chai](http://chaijs.com/)
 * Phpunit 
+
 
 ## Things to come
 
