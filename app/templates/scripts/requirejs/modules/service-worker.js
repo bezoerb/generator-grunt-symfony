@@ -29,7 +29,7 @@ define(function (require, exports) {
         if ('serviceWorker' in navigator && (window.location.protocol === 'https:' || isLocalhost)) {
             navigator.serviceWorker.register('service-worker.js')
                 .then(function (registration) {
-                    debug('service worker registration',registration);
+                    debug('service worker registration', registration);
 
                     // Check to see if there's an updated version of service-worker.js with
                     // new files to cache:
@@ -70,8 +70,8 @@ define(function (require, exports) {
                         }
                     };
                 }).catch(function (e) {
-                debug('Error during service worker registration:', e);
-            });
+                    debug('Error during service worker registration:', e);
+                });
         }
-    }
+    };
 });
