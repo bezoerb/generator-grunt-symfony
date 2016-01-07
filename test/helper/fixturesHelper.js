@@ -150,8 +150,7 @@ module.exports.withComposer = function (cb) {
 
 module.exports.withJspm = function (cb) {
     if (!cb) {
-        cb = function () {
-        };
+        cb = function () {};
     }
 
     var cmd = process.env.JSPM_AUTH ? 'config registries.github.auth ' + process.env.JSPM_AUTH : ' --version';

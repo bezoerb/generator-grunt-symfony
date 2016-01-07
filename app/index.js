@@ -787,7 +787,6 @@ module.exports = AppGenerator.extend({
                 this.template('Gruntfile.slim.js', 'Gruntfile.js');
                 fse.mkdirsSync(this.destinationPath('grunt'));
 
-
                 // first all basic tasks for every configuration
                 this.template('grunt/aliases.js', 'grunt/aliases.js');
                 this.template('grunt/clean.js', 'grunt/clean.js');
