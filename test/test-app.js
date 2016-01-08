@@ -8,29 +8,29 @@ describe('grunt-symfony generator', function () {
 
     var tests = [
         // jspm no framework
-        {loader: 'jspm', additional: [/* 'uncss', 'critical' */]},
+        {loader: 'jspm', additional: [ 'uncss', 'critical' ]},
         {loader: 'jspm', preprocessor: 'less'},
         {loader: 'jspm', preprocessor: 'sass', libsass: false},
         {loader: 'jspm', preprocessor: 'sass', libsass: true},
         {loader: 'jspm', preprocessor: 'stylus'},
         // jspm uikit
         {loader: 'jspm', framework: 'uikit'},
-        {loader: 'jspm', framework: 'uikit', preprocessor: 'less', additional: [/* 'uncss' */]},
-        {loader: 'jspm', framework: 'uikit', preprocessor: 'sass', libsass: false, additional: [/* 'critical' */]},
+        {loader: 'jspm', framework: 'uikit', preprocessor: 'less', additional: [ 'uncss' ]},
+        {loader: 'jspm', framework: 'uikit', preprocessor: 'sass', libsass: false, additional: [ 'critical' ]},
         {loader: 'jspm', framework: 'uikit', preprocessor: 'sass', libsass: true},
         {loader: 'jspm', framework: 'uikit', preprocessor: 'stylus'},
         // jspm bootstrap
         {loader: 'jspm', framework: 'bootstrap'},
         {loader: 'jspm', framework: 'bootstrap', preprocessor: 'less'},
-            {loader: 'jspm', framework: 'bootstrap', preprocessor: 'sass', libsass: false, additional: [/* 'uncss' */]},
+            {loader: 'jspm', framework: 'bootstrap', preprocessor: 'sass', libsass: false, additional: [ 'uncss' ]},
         {loader: 'jspm', framework: 'bootstrap', preprocessor: 'sass', libsass: true},
         {loader: 'jspm', framework: 'bootstrap', preprocessor: 'stylus'},
         // jspm foundation
         {loader: 'jspm', framework: 'foundation'},
         {loader: 'jspm', framework: 'foundation', preprocessor: 'less'},
         {loader: 'jspm', framework: 'foundation', preprocessor: 'sass', libsass: false},
-        {loader: 'jspm', framework: 'foundation', preprocessor: 'sass', libsass: true, additional: [/* 'uncss' */]},
-        {loader: 'jspm', framework: 'foundation', preprocessor: 'stylus', additional: [/* 'uncss' */]},
+        {loader: 'jspm', framework: 'foundation', preprocessor: 'sass', libsass: true, additional: [ 'uncss' ]},
+        {loader: 'jspm', framework: 'foundation', preprocessor: 'stylus', additional: [ 'uncss' ]},
 
         // webpack no framework
         {loader: 'webpack'},
@@ -46,16 +46,16 @@ describe('grunt-symfony generator', function () {
         {loader: 'webpack', framework: 'uikit', preprocessor: 'stylus'},
         // webpack bootstrap
         {loader: 'webpack', framework: 'bootstrap'},
-        {loader: 'webpack', framework: 'bootstrap', preprocessor: 'less', additional: [/* 'critical' */]},
+        {loader: 'webpack', framework: 'bootstrap', preprocessor: 'less', additional: [ 'critical' ]},
         {loader: 'webpack', framework: 'bootstrap', preprocessor: 'sass', libsass: false},
-        {loader: 'webpack', framework: 'bootstrap', preprocessor: 'sass', libsass: true, additional: [/* 'critical' */]},
+        {loader: 'webpack', framework: 'bootstrap', preprocessor: 'sass', libsass: true, additional: [ 'critical' ]},
         {loader: 'webpack', framework: 'bootstrap', preprocessor: 'stylus'},
         // webpack foundation
         {loader: 'webpack', framework: 'foundation'},
         {loader: 'webpack', framework: 'foundation', preprocessor: 'less'},
         {loader: 'webpack', framework: 'foundation', preprocessor: 'sass', libsass: false},
         {loader: 'webpack', framework: 'foundation', preprocessor: 'sass', libsass: true},
-        {loader: 'webpack', framework: 'foundation', preprocessor: 'stylus', additional: [/* 'critical' */]},
+        {loader: 'webpack', framework: 'foundation', preprocessor: 'stylus', additional: [ 'critical' ]},
 
         // requirejs no framework
         {loader: 'requirejs'},

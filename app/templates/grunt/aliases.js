@@ -3,7 +3,9 @@ module.exports = function (grunt, options) {
     var fs = require('fs-extra');
     var path = require('path');
     var slash = require('slash');
-    var php = require('php-proxy-middleware');
+    var php = require('php-proxy-middleware');<% if (useCritical || useUncss) { %>
+    var getPort = require('get-port');
+    <% } %>
 
     // helper
     function getMiddleware(target) {
@@ -78,8 +80,14 @@ module.exports = function (grunt, options) {
             'eslint',<% if (useRequirejs) { %>'wiredep:test','bowerRequirejs:test',<% } %>'karma','phpunit'
         ],<% if (useCritical || useUncss) { %>
         fetch: function(){
-            grunt.connectMiddleware = getMiddleware();
-            grunt.task.run(['connect', 'http']);
+            var done = this.async();
+
+            getPort().then(function(port){
+                grunt.connectMiddleware = getMiddleware();
+                grunt.config.set('connect.fetch.options.port', port);
+                grunt.task.run(['connect', 'http']);
+                done();
+            });
         },<% } %>
         revdump: function(){
             var file = 'app/config/filerev.json';
