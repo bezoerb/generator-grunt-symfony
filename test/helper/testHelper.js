@@ -183,10 +183,21 @@ function checkEslint() {
     };
 }
 
-function checkKarma() {
+function checkKarma(prompts) {
     return function () {
         log('... check karma');
-        return runTask('karma').then(markDone);
+        if (prompts.loader === 'requirejs') {
+            return runTask('wiredep')
+                .then(function(){
+                    return runTask('bowerRequirejs');
+                })
+                .then(function(){
+                    return runTask('karma');
+                })
+                .then(markDone);
+        } else {
+            return runTask('karma').then(markDone);
+        }
     };
 }
 
@@ -257,7 +268,7 @@ module.exports.testPrompts = function (opts, done) {
         .then(installDeps(prompts))
         .then(checkFiles(prompts))
         .then(checkEslint())
-        .then(checkKarma())
+        .then(checkKarma(prompts))
         .then(checkPhpUnit())
         .then(checkJs())
         .then(checkCss(prompts))
