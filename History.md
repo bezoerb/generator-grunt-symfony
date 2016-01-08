@@ -1,4 +1,13 @@
 
+0.9.0 / 2016-01-08
+==================
+
+  * fixed karma/require tests
+  * dynamic port
+  * even better tests
+  * fixed eslint
+  * added service worker
+
 0.8.0 / 2016-01-05
 ==================
 
@@ -6,7 +15,7 @@
   * removed jshint
   * updated tests
   * jscsrc for webstorm code style configuration
-  * Dropped jshint & added eslint
+  * dropped jshint & added eslint
 
 0.7.2 / 2015-12-31
 ==================
