@@ -45,7 +45,7 @@ function markDone(data) {
 
 function prompts2String(promts) {
     return _.reduce(promts, function (res, curr, key) {
-        if (_.indexOf(['symfonyStandard', 'continue', 'additional'], key) >= 0) {
+        if (_.indexOf(['symfonyStandard', 'continue'], key) >= 0) {
             return res;
         } else {
             res.push(key + ': ' + chalk.yellow(curr));

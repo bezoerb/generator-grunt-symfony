@@ -17,7 +17,7 @@ module.exports = function (grunt, options) {
             process.env['SYMFONY_DEBUG'] = 1;
         }
         return php({
-            address: '127.0.0.1', // which interface to bind to
+            address: '0.0.0.0', // which interface to bind to
             ini: {max_execution_time: 60, variables_order: 'EGPCS'},
             root: options.paths.dist,
             router: path.join(options.paths.dist, 'app.php')
