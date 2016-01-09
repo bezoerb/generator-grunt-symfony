@@ -4,7 +4,7 @@
 module.exports = function(config) {
     config.set({
         // base path that will be used to resolve all patterns (eg. files, exclude)
-        basePath: '../',
+        basePath: '../../',
         plugins: [
             'karma-jspm',
             'karma-mocha',
@@ -25,11 +25,11 @@ module.exports = function(config) {
         jspm: {
             // Edit this to your needs
             config: 'app/Resources/public/scripts/config.js',
-            loadFiles: ['test/**/*Spec.js'],
+            loadFiles: ['tests/Frontend/**/*Spec.js'],
             serveFiles : ['app/Resources/public/scripts/**/*.js'],
             paths: {
                 '*': 'base/app/Resources/public/scripts/*',
-                'test\/*': 'base/test/*',
+                'tests\/*': 'base/tests/*',
                 'github:*': 'base/jspm_packages/github/*',
                 'npm:*': 'base/jspm_packages/npm/*'
             }

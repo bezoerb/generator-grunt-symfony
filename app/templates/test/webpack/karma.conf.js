@@ -1,11 +1,11 @@
 // Karma configuration
 // Generated on Thu May 07 2015 20:08:12 GMT+0200 (CEST)
 'use strict';
-var webpackConfig = require('../webpack.config').dist;
+var webpackConfig = require('../../webpack.config').dist;
 module.exports = function(config) {
     config.set({
         // base path that will be used to resolve all patterns (eg. files, exclude)
-        basePath: '../',
+        basePath: '../../',
         plugins: [
             require('karma-webpack'),
             'karma-mocha',
@@ -19,12 +19,12 @@ module.exports = function(config) {
         frameworks: ['mocha', 'chai'],
 
         files: [
-            'test/**/*Spec.js'
+            'tests/Frontend/**/*Spec.js'
         ],
 
         preprocessors: {
             // add webpack as preprocessor
-            'test/**/*Spec.js': ['webpack'],
+            'tests/Frontend/**/*Spec.js': ['webpack'],
         },
 
         webpack: webpackConfig,

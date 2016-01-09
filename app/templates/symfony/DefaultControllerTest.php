@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Tests\Controller;
+namespace <% if (sfVersion < 3) { %>Tests\AppBundle\Controller<% } else { %>AppBundle\Tests\Controller;<% } %>
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 

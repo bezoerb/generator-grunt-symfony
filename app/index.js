@@ -357,12 +357,20 @@ var AppGenerator = yeoman.Base.extend({
      * update default controller test to use own template
      */
     updateControllerTest: function updateControllerTest() {
-        var controllerPath = 'src/AppBundle/Tests/Controller/DefaultControllerTest.php';
+
+
+        var controllerPath = this.sfVersion < 3 ?
+            'src/AppBundle/Tests/Controller/DefaultControllerTest.php' : 'tests/AppBundle/Controller/DefaultControllerTest.php';
         if (fs.existsSync(controllerPath)) {
             fs.unlinkSync(controllerPath);
         }
 
-        fse.copySync(this.templatePath('symfony/DefaultControllerTest.php'), controllerPath);
+        this.fs.copyTpl(
+            this.templatePath('symfony/DefaultControllerTest.php'),
+            this.destinationPath(controllerPath),
+            this
+        );
+
     },
 
 
@@ -375,10 +383,10 @@ var AppGenerator = yeoman.Base.extend({
         var files = [];
         var folder = '';
         if (this.useRequirejs) {
-            files = ['app.js','config.js','main.js', 'modules/dummy.js', 'modules/service-worker.js'];
+            files = ['app.js', 'config.js', 'main.js', 'modules/dummy.js', 'modules/service-worker.js'];
             folder = 'requirejs';
         } else if (this.useJspm) {
-            files = ['config.js','main.js', 'modules/dummy.js', 'modules/service-worker.js'];
+            files = ['config.js', 'main.js', 'modules/dummy.js', 'modules/service-worker.js'];
             folder = 'jspm';
         } else if (this.useWebpack) {
             files = ['main.js', 'modules/dummy.js', 'modules/service-worker.js'];
@@ -389,7 +397,7 @@ var AppGenerator = yeoman.Base.extend({
             //var content = readFileAsString(this.templatePath('scripts/requirejs/' + file));
             //fs.writeFileSync(this.destinationPath('app/Resources/public/scripts/' + file), this.engine(content, this));
             this.fs.copyTpl(
-                this.templatePath(path.join('scripts',folder,file)),
+                this.templatePath(path.join('scripts', folder, file)),
                 this.destinationPath('app/Resources/public/scripts/' + file),
                 this
             );
@@ -470,9 +478,9 @@ var AppGenerator = yeoman.Base.extend({
 
         // add filerev bundle
         if (this.sfVersion >= 2.7) {
-            composerParse.require['zoerb/filerevbundle'] = '~1.0'
+            composerParse.require['zoerb/filerevbundle'] = '~1.0.1';
         } else {
-            composerParse.require['zoerb/filerevbundle'] = '~0.1.2'
+            composerParse.require['zoerb/filerevbundle'] = '~0.1.2';
         }
 
         // add phpunit
@@ -871,22 +879,23 @@ module.exports = AppGenerator.extend({
         },
 
         testFiles: function () {
+            var dest = 'tests/Frontend';
             if (this.useRequirejs) {
                 fse.copySync(
                     this.templatePath(path.join('test', 'requirejs', 'spec')),
-                    this.destinationPath(path.join('test', 'spec'))
+                    this.destinationPath(path.join(dest, 'spec'))
                 );
-                fse.copySync(this.templatePath(path.join('test', 'requirejs', 'karma.conf.js')), this.destinationPath(path.join('test', 'karma.conf.js')));
-                this.template(path.join('test', 'requirejs', 'test-main.js'), path.join('test', 'test-main.js'));
+                fse.copySync(this.templatePath(path.join('test', 'requirejs', 'karma.conf.js')), this.destinationPath(path.join(dest, 'karma.conf.js')));
+                this.template(path.join('test', 'requirejs', 'test-main.js'), path.join(dest, 'test-main.js'));
             } else if (this.useJspm) {
                 fse.copySync(
                     this.templatePath(path.join('test', 'jspm')),
-                    this.destinationPath('test')
+                    this.destinationPath(dest)
                 );
             } else if (this.useWebpack) {
                 fse.copySync(
                     this.templatePath(path.join('test', 'webpack')),
-                    this.destinationPath('test')
+                    this.destinationPath(dest)
                 );
             }
 

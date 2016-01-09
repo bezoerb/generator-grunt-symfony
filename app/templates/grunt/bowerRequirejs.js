@@ -8,6 +8,6 @@ module.exports = {
         rjsConfig: '<%%= paths.app %>/scripts/config.js'
     },
     test: {
-        rjsConfig: 'test/test-main.js'
+        rjsConfig: 'tests/Frontend/test-main.js'
     }
 };

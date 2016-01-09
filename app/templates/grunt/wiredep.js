@@ -1,9 +1,9 @@
 'use strict';
 module.exports = {
     test: {
-        src: 'test/karma.conf.js',
+        src: 'tests/Frontend/karma.conf.js',
         devDependencies: false,
-        ignorePath: '../',
+        ignorePath: '../../',
         fileTypes: {
             js: {
                 block: /(([\s\t]*)\/\/\s*bower:*(\S*))(\n|\r|.)*?(\/\/\s*endbower)/gi,

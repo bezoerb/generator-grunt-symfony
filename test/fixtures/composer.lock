@@ -1502,16 +1502,16 @@
         },
         {
             "name": "zoerb/filerevbundle",
-            "version": "v1.0.0",
+            "version": "v1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bezoerb/FilerevBundle.git",
-                "reference": "4a5847b0c19db45b3d61526336de957bbfffc764"
+                "reference": "9149369c47aea8a27802f4ef9b46ba1898f2df64"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bezoerb/FilerevBundle/zipball/4a5847b0c19db45b3d61526336de957bbfffc764",
-                "reference": "4a5847b0c19db45b3d61526336de957bbfffc764",
+                "url": "https://api.github.com/repos/bezoerb/FilerevBundle/zipball/9149369c47aea8a27802f4ef9b46ba1898f2df64",
+                "reference": "9149369c47aea8a27802f4ef9b46ba1898f2df64",
                 "shasum": ""
             },
             "require": {
@@ -1541,7 +1541,7 @@
                 "filerev",
                 "library"
             ],
-            "time": "2015-12-07 06:43:39"
+            "time": "2016-01-09 21:11:10"
         }
     ],
     "packages-dev": [
