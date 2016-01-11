@@ -1,13 +1,13 @@
 # generator-grunt-symfony 
 [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][depstat-image]][depstat-url] [![Download][dlcounter-image]][dlcounter-url]
 
-This [Yeoman](http://yeoman.io) generator scaffolds a symfony2 app with full featured frontend tooling. 
+This [Yeoman](http://yeoman.io) generator scaffolds a symfony app with full featured frontend tooling. 
 Just scaffold your app, run `grunt serve` and you are ready to go. 
 
 ![The Team](https://raw.github.com/bezoerb/generator-grunt-symfony/master/app/templates/img/yo-grunt-bower-symfony.png)
 
 ## Features
-* Symfony2 framework
+* Symfony framework
 * Twig templating engine
 * Assetic removed
 * Browsersync dev/prod server with livereload
