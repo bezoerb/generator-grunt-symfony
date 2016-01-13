@@ -36,11 +36,11 @@
     "fs-extra": "0.26.4",
     "html-wiring": "1.2.0",
     "inquirer": "0.11.2",
-    "js-yaml": "3.4.6",
+    "js-yaml": "3.5.2",
     "lodash": "4.0.0",
     "string-length": "1.0.1",
     "update-notifier": "0.6.0",
-    "yeoman-generator": "0.22.2",
+    "yeoman-generator": "0.22.3",
     "yo": "1.6.0",
     "yosay": "1.1.0"
   },
