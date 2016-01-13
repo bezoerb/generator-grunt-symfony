@@ -4,7 +4,7 @@ module.exports = function(grunt) {
         css: ['<%%= paths.dist %>/styles/**/*.css'<% if (useCritical) { %>, '<%%= paths.app %>/styles/critical/*.css'<% } %>],
         js: ['<%%= paths.dist %>/scripts/**/*.js'],
         options: {
-            assetsDirs: ['<%%= paths.dist %>']
+            assetsDirs: ['<%%= paths.dist %>', '<%%= paths.dist %>/img']
         }
     };
 };
