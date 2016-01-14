@@ -410,6 +410,7 @@ var AppGenerator = yeoman.Base.extend({
         );
 
         fse.copySync(this.templatePath('scripts/sw/service-worker.js'), this.destinationPath('app/Resources/public/service-worker.js'));
+        fse.copySync(this.templatePath('scripts/sw/appcache-loader.html'), this.destinationPath('app/Resources/public/appcache-loader.html'));
 
     },
 
@@ -776,6 +777,7 @@ module.exports = AppGenerator.extend({
                 bower.dependencies.requirejs = '2.1.15';
                 bower.dependencies.almond = '~0.3.0';
                 bower.dependencies['visionmedia-debug'] = '~2.2.0';
+                bower.dependencies['appcache-nanny'] = '~1.0.3';
             }
 
             bower.dependencies.picturefill = '~3.0.1';
@@ -812,6 +814,7 @@ module.exports = AppGenerator.extend({
                 this.template('grunt/phpunit.js', 'grunt/phpunit.js');
                 this.template('grunt/availabletasks.js', 'grunt/availabletasks.js');
                 this.template('grunt/sw-precache.js', 'grunt/sw-precache.js');
+                this.template('grunt/appcache.js', 'grunt/appcache.js');
 
                 // css
                 if (this.noPreprocessor) {

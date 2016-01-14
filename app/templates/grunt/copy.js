@@ -17,7 +17,8 @@ module.exports = {
         files: [
             // includes files within path
             {expand: true, flatten: true, src: ['node_modules/sw-toolbox/sw-toolbox.js'], dest: '<%%= paths.dist %>/scripts/sw/', filter: 'isFile'},
-            {expand: true, flatten: true, src: ['<%%= paths.app %>/scripts/sw/runtime-caching.js'], dest: '<%%= paths.dist %>/scripts/sw/', filter: 'isFile'}
+            {expand: true, flatten: true, src: ['<%%= paths.app %>/scripts/sw/runtime-caching.js'], dest: '<%%= paths.dist %>/scripts/sw/', filter: 'isFile'},
+            {expand: true, flatten: true, src: ['node_modules/appcache-nanny/appcache-loader.html'], dest: '<%%= paths.dist %>/', filter: 'isFile'}
         ]
     }
 };

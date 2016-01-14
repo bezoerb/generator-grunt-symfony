@@ -7,7 +7,10 @@
  * http://bezoerb.mit-license.org/
  * All rights reserved.
  */
+/* eslint-env worker */
 import debugFn from 'debug';
+import appCacheNanny from 'appcache-nanny';
+
 let debug = debugFn('<%= safeProjectName %>:service-worker');
 
 export function init() {
@@ -71,5 +74,9 @@ export function init() {
             }).catch(function (e) {
                 debug('Error during service worker registration:', e);
             });
+    } else if ('applicationCache' in window) {
+        debug('initializing application cache');
+        // start to check for updates every 30s
+        appCacheNanny.start();
     }
 }

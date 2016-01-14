@@ -23,6 +23,8 @@
         "grunt-contrib-cssmin": "^0.14.0",
         "grunt-sw-precache": "^1.0.3",
         "sw-toolbox": "^3.0.1",
+        "appcache-nanny": "^1.0.3",
+        "grunt-appcache": "^0.1.8"
         "grunt-contrib-imagemin": "^1.0.0",<% if (includeRubySass) { %>
         "grunt-contrib-sass": "^0.9.2",<% } else if (includeLibSass) { %>
         "grunt-sass": "^1.0.0",<% } if (useLess) { %>
