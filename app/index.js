@@ -276,6 +276,7 @@ var AppGenerator = yeoman.Base.extend({
 
     /**
      * update app.php to consider environment variables SYMFONY_ENV and SYMFONY_DEBUG
+     * add extend .htaccess with best practices from h5b
      */
     updateApp: function updateApp() {
         fs.unlinkSync(this.destinationPath('web/app.php'));
@@ -284,6 +285,13 @@ var AppGenerator = yeoman.Base.extend({
             this.destinationPath('web/app.php'),
             this
         );
+
+        var htaccess = [
+            fs.readFileSync(this.destinationPath('web/.htaccess'), 'utf8'),
+            fs.readFileSync(this.templatePath('symfony/_htaccess'), 'utf8')
+        ];
+
+        fs.writeFileSync(this.destinationPath('web/.htaccess'), htaccess.join('\n'), 'utf8');
     },
 
     /**

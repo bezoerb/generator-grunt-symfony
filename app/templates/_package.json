@@ -24,7 +24,7 @@
         "grunt-sw-precache": "^1.0.3",
         "sw-toolbox": "^3.0.1",
         "appcache-nanny": "^1.0.3",
-        "grunt-appcache": "^0.1.8"
+        "grunt-appcache": "^0.1.8",
         "grunt-contrib-imagemin": "^1.0.0",<% if (includeRubySass) { %>
         "grunt-contrib-sass": "^0.9.2",<% } else if (includeLibSass) { %>
         "grunt-sass": "^1.0.0",<% } if (useLess) { %>
@@ -96,6 +96,7 @@
             "bootstrap": "github:twbs/bootstrap@^3.3.4",<% } else if (useFoundation) { %>
             "foundation": "github:zurb/bower-foundation@5.5.1",<% } %>
             "debug": "npm:debug@^2.2.0",
+            "appcache-nanny": "npm:appcache-nanny@^1.0.3",
             "jquery": "github:components/jquery@^2.1.4",
             "picturefill": "npm:picturefill@^3.0.1"<% if (useUikit) { %>,
             "uikit": "github:uikit/uikit@2.18.0"<% } %>
