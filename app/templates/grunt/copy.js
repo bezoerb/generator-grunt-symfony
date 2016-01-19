@@ -7,7 +7,7 @@ module.exports = {
             cwd: '<%%= paths.app %>',
             dest: '<%%= paths.dist %>',
             src: [
-                '*.{ico,png,txt}',
+                '*.{ico,png,txt,json,webapp,xml}',
                 'img/{,*/}*.webp',
                 'fonts/{,*/}*.*'
             ]

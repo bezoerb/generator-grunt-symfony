@@ -6,18 +6,43 @@
         <title>{% block title %}Welcome!{% endblock %}</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        {% block stylesheets %}<% if (useCritical) { %>
-                {% if app.environment == 'node' %}
-                    <link rel="stylesheet" href="{{ asset('styles/main.css') }}"/>
-                {% else %}
-                    {% block stylesheetsDist %}
-                    <link rel="stylesheet" href="{{ asset('styles/main.css') }}"/>
-                    {% endblock stylesheetsDist %}
-                {% endif %}
-            <% } else { %>
-                <link rel="stylesheet" href="{{ asset('styles/main.css') }}"/>
-        <% } %>{% endblock %}
+
+        <!-- Disable tap highlight on IE -->
+        <meta name="msapplication-tap-highlight" content="no">
+
+        <!-- Web Application Manifest -->
+        <link rel="manifest" href="{{ asset('manifest.json') }}">
+
+        <!-- Add to homescreen for Chrome on Android -->
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="application-name" content="<%= appname %>">
+        <link rel="icon" sizes="192x192" href="{{ asset('img/touch/android-chrome-192x192.png') }}">
+
+        <!-- Add to homescreen for Safari on iOS -->
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="apple-mobile-web-app-title" content="<%= appname %>">
+        <link rel="mask-icon" href="{{ asset('img/touch/safari-pinned-tab.svg') }}" color="#916E00">
+        <link rel="apple-touch-icon" href="{{ asset('img/touch/apple-touch-icon.png') }}">
+
+        <!-- Tile icon for Win8 (144x144 + tile color) -->
+        <meta name="msapplication-TileImage" content="{{ asset('img/touch/mstile-144x144.png') }}">
+        <meta name="msapplication-TileColor" content="#FFC40D">
+
+        <!-- Color the status bar on mobile devices -->
+        <meta name="theme-color" content="#1E1E1E">
+
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+        {% block stylesheets %}<% if (useCritical) { %>
+        {% if app.environment == 'node' %}
+            <link rel="stylesheet" href="{{ asset('styles/main.css') }}"/>
+        {% else %}
+            {% block stylesheetsDist %}
+            <link rel="stylesheet" href="{{ asset('styles/main.css') }}"/>
+            {% endblock stylesheetsDist %}
+        {% endif %}<% } else { %>
+        <link rel="stylesheet" href="{{ asset('styles/main.css') }}"/>
+        <% } %>{% endblock %}
     </head>
     <body>
         {% block body %}{% endblock %}

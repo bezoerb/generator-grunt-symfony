@@ -417,9 +417,6 @@ var AppGenerator = yeoman.Base.extend({
             this
         );
 
-        fse.copySync(this.templatePath('scripts/sw/service-worker.js'), this.destinationPath('app/Resources/public/service-worker.js'));
-        fse.copySync(this.templatePath('scripts/sw/appcache-loader.html'), this.destinationPath('app/Resources/public/appcache-loader.html'));
-
     },
 
     addStyles: function addScripts() {
@@ -869,6 +866,17 @@ module.exports = AppGenerator.extend({
 
             this.template('eslintrc', '.eslintrc');
             this.template('jscsrc', '.jscsrc');
+
+
+
+            this.template('public/service-worker.js', 'app/Resources/public/service-worker.js');
+            this.template('public/appcache-loader.html', 'app/Resources/public/appcache-loader.html');
+            this.template('public/browserconfig.xml', 'app/Resources/public/browserconfig.xml');
+            this.template('public/favicon.ico', 'app/Resources/public/favicon.ico');
+            this.template('public/manifest.json', 'app/Resources/public/manifest.json');
+            this.template('public/manifest.webapp', 'app/Resources/public/manifest.webapp');
+
+
         },
 
         symfonyBase: function symfonyBase() {
