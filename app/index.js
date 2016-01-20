@@ -401,7 +401,7 @@ var AppGenerator = yeoman.Base.extend({
             folder = 'webpack';
         }
 
-        _.forEach(files, function (file) {
+        _.forEach(files, _.bind(function (file) {
             //var content = readFileAsString(this.templatePath('scripts/requirejs/' + file));
             //fs.writeFileSync(this.destinationPath('app/Resources/public/scripts/' + file), this.engine(content, this));
             this.fs.copyTpl(
@@ -409,7 +409,7 @@ var AppGenerator = yeoman.Base.extend({
                 this.destinationPath('app/Resources/public/scripts/' + file),
                 this
             );
-        }, this);
+        }, this));
 
         this.fs.copyTpl(
             this.templatePath('scripts/sw/runtime-caching.js'),
@@ -435,7 +435,7 @@ var AppGenerator = yeoman.Base.extend({
                 styles.push('main.css');
             }
             fse.mkdirsSync(this.destinationPath('app/Resources/public/styles'));
-            _.forEach(styles, function (file) {
+            _.forEach(styles, _.bind(function (file) {
                 // copy default action template
                 //var content = readFileAsString(this.templatePath('styles/' + file));
                 //fs.writeFileSync(this.destinationPath('app/Resources/public/styles/' + file), this.engine(content, this));
@@ -444,7 +444,7 @@ var AppGenerator = yeoman.Base.extend({
                     this.destinationPath('app/Resources/public/styles/' + file),
                     this
                 );
-            }, this);
+            }, this));
         }
     },
 
