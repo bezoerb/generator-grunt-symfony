@@ -16,10 +16,10 @@
     <% if (useBootstrap) { %>
     <div class="container">
         <div class="header">
-            <ul class="nav nav-pills pull-right">
-                <li class="active"><a href="#">Home</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Contact</a></li>
+            <ul class="nav nav-pills pull-right" role="navigation" itemscope itemtype="http://schema.org/SiteNavigationElement">
+                <li itemprop="url" class="active"><a href="#" title="Home" itemprop="name">Home</a></li>
+                <li itemprop="url"><a href="#" title="About" itemprop="name">About</a></li>
+                <li itemprop="url"><a href="#" title="Contact" itemprop="name">Contact</a></li>
             </ul>
             <h3 class="text-muted"><%= appname %></h3>
         </div>
@@ -67,10 +67,10 @@
     <% } else if (useFoundation) { %>
     <div class="container">
             <div class="header">
-                <nav class="top-bar" data-topbar role="navigation">
+                <nav class="top-bar" data-topbar role="navigation" itemscope itemtype="http://schema.org/SiteNavigationElement">
                     <ul class="title-area">
-                        <li class="name">
-                            <h1><a href="#"><%= appname %></a></h1>
+                        <li itemprop="url" class="name">
+                            <a href="#"><h1><%= appname %></h1></a>
                         </li>
                         <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
                         <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
@@ -79,9 +79,9 @@
                     <section class="top-bar-section">
                         <!-- Right Nav Section -->
                         <ul class="right">
-                            <li class="active"><a href="#">Home</a></li>
-                            <li><a href="#">About</a></li>
-                            <li><a href="#">Contact</a></li>
+                            <li itemprop="url" class="active"><a href="#" title="Home" itemprop="name">Home</a></li>
+                            <li itemprop="url"><a href="#" title="About" itemprop="name">About</a></li>
+                            <li itemprop="url"><a href="#" title="Contact" itemprop="name">Contact</a></li>
                         </ul>
 
                         <!-- Left Nav Section -->
@@ -139,10 +139,10 @@
                 <div class="pure-menu pure-menu-open pure-menu-horizontal u-cf">
                     <a href="#" class="pure-menu-heading"><%= appname %></a>
 
-                    <ul class="u-floatRight">
-                        <li class="pure-menu-selected"><a href="#">Home</a></li>
-                        <li><a href="#">About</a></li>
-                        <li><a href="#">Contact</a></li>
+                    <ul class="u-floatRight" role="navigation" itemscope itemtype="http://schema.org/SiteNavigationElement">
+                        <li itemprop="url" class="pure-menu-selected"><a href="#" title="Home" itemprop="name">Home</a></li>
+                        <li itemprop="url"><a href="#" title="About" itemprop="name">About</a></li>
+                        <li itemprop="url"><a href="#" title="Contact" itemprop="name">Contact</a></li>
                     </ul>
                 </div>
             </div>
@@ -188,13 +188,13 @@
         </div>
     <% } else if (useUikit) { %>
         <div class="uk-navbar uk-navbar-attached uk-margin-large-bottom">
-            <div class="uk-container uk-container-center">
+            <div class="uk-container uk-container-center" role="navigation" itemscope itemtype="http://schema.org/SiteNavigationElement">
                 <a href="" class="uk-navbar-brand"><%= appname %></a>
                 <div class="uk-navbar-flip">
                     <ul class="uk-navbar-nav">
-                        <li class="uk-active"><a href="#">Home</a></li>
-                        <li><a href="#">About</a></li>
-                        <li><a href="#">Contact</a></li>
+                        <li itemprop="url" class="uk-active"><a href="#" title="Home" itemprop="name">Home</a></li>
+                        <li itemprop="url"><a href="#" title="About" itemprop="name">About</a></li>
+                        <li itemprop="url"><a href="#" tiele="Contact" itemprop="name">Contact</a></li>
                     </ul>
                 </div>
             </div>

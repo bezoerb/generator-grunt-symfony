@@ -9,7 +9,16 @@
     // See https://github.com/GoogleChrome/sw-toolbox/blob/master/README.md#options for more options
     // global.toolbox.options.debug = true;
 
+    var assets = [
+        'woff', 'woff2', 'ttf', 'eot',
+        'svg', 'gif', 'png', 'jpg',
+        'js', 'css'
+    ];
+
     // See https://github.com/GoogleChrome/sw-toolbox/blob/master/README.md#toolboxfastest
     // for more details on how this handler is defined and what the toolbox.fastest strategy does.
-    global.toolbox.router.get('/(.*)', global.toolbox.fastest);
+    global.toolbox.router.get('.*.(' + assets.join('|') + ')', global.toolbox.fastest);
+
+    // default
+    global.toolbox.router.default = global.toolbox.networkFirst;
 })(self);

@@ -7,9 +7,12 @@
  * http://bezoerb.mit-license.org/
  * All rights reserved.
  */
-import debugFn from 'debug';
-let debug = debugFn('<%= safeProjectName %>:service-worker');
 /* eslint-env worker */
+import debugFn from 'debug';
+import appCacheNanny from 'appcache-nanny';
+
+let debug = debugFn('<%= safeProjectName %>:service-worker');
+
 export function init() {
     // Check to make sure service workers are supported in the current browser,
     // and that the current page is accessed from a secure origin. Using a
@@ -71,5 +74,9 @@ export function init() {
             }).catch(function (e) {
                 debug('Error during service worker registration:', e);
             });
+    } else if ('applicationCache' in window) {
+        debug('initializing application cache');
+        // start to check for updates every 30s
+        appCacheNanny.start();
     }
 }

@@ -276,6 +276,7 @@ var AppGenerator = yeoman.Base.extend({
 
     /**
      * update app.php to consider environment variables SYMFONY_ENV and SYMFONY_DEBUG
+     * add extend .htaccess with best practices from h5b
      */
     updateApp: function updateApp() {
         fs.unlinkSync(this.destinationPath('web/app.php'));
@@ -284,6 +285,13 @@ var AppGenerator = yeoman.Base.extend({
             this.destinationPath('web/app.php'),
             this
         );
+
+        var htaccess = [
+            fs.readFileSync(this.destinationPath('web/.htaccess'), 'utf8'),
+            fs.readFileSync(this.templatePath('symfony/_htaccess'), 'utf8')
+        ];
+
+        fs.writeFileSync(this.destinationPath('web/.htaccess'), htaccess.join('\n'), 'utf8');
     },
 
     /**
@@ -408,8 +416,6 @@ var AppGenerator = yeoman.Base.extend({
             this.destinationPath('app/Resources/public/scripts/sw/runtime-caching.js'),
             this
         );
-
-        fse.copySync(this.templatePath('scripts/sw/service-worker.js'), this.destinationPath('app/Resources/public/service-worker.js'));
 
     },
 
@@ -776,6 +782,7 @@ module.exports = AppGenerator.extend({
                 bower.dependencies.requirejs = '2.1.15';
                 bower.dependencies.almond = '~0.3.0';
                 bower.dependencies['visionmedia-debug'] = '~2.2.0';
+                bower.dependencies['appcache-nanny'] = '~1.0.3';
             }
 
             bower.dependencies.picturefill = '~3.0.1';
@@ -812,6 +819,7 @@ module.exports = AppGenerator.extend({
                 this.template('grunt/phpunit.js', 'grunt/phpunit.js');
                 this.template('grunt/availabletasks.js', 'grunt/availabletasks.js');
                 this.template('grunt/sw-precache.js', 'grunt/sw-precache.js');
+                this.template('grunt/appcache.js', 'grunt/appcache.js');
 
                 // css
                 if (this.noPreprocessor) {
@@ -858,6 +866,17 @@ module.exports = AppGenerator.extend({
 
             this.template('eslintrc', '.eslintrc');
             this.template('jscsrc', '.jscsrc');
+
+
+
+            this.template('public/service-worker.js', 'app/Resources/public/service-worker.js');
+            this.template('public/appcache-loader.html', 'app/Resources/public/appcache-loader.html');
+            this.template('public/browserconfig.xml', 'app/Resources/public/browserconfig.xml');
+            this.template('public/favicon.ico', 'app/Resources/public/favicon.ico');
+            this.template('public/manifest.json', 'app/Resources/public/manifest.json');
+            this.template('public/manifest.webapp', 'app/Resources/public/manifest.webapp');
+
+
         },
 
         symfonyBase: function symfonyBase() {

@@ -60,7 +60,9 @@ module.exports = function (grunt, options) {
         ],
         'generate-service-worker': [
             'copy:sw-scripts',
-            'sw-precache:dist'
+            'sw-precache:dist',
+            // fallback for browsers not supporting service workers
+            'appcache'
         ],
         assets: [
             'test',

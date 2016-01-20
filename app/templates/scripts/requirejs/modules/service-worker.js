@@ -7,9 +7,11 @@
  * http://bezoerb.mit-license.org/
  * All rights reserved.
  */
+/* eslint-env worker */
 define(function (require, exports) {
     'use strict';
     var debug = require('visionmedia-debug')('<%= safeProjectName %>:service-worker');
+    var appCacheNanny = require('appcache-nanny');
 
     exports.init = function () {
         // Check to make sure service workers are supported in the current browser,
@@ -72,6 +74,10 @@ define(function (require, exports) {
                 }).catch(function (e) {
                     debug('Error during service worker registration:', e);
                 });
+        } else if ('applicationCache' in window) {
+            debug('initializing application cache');
+            // start to check for updates every 30s
+            appCacheNanny.start();
         }
     };
 });
