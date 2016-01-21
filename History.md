@@ -1,4 +1,14 @@
 
+0.9.2 / 2016-01-21
+==================
+
+  * tweaks for lodash 4
+  * add app icons + manifest
+  * added appcache to tests
+  * some tweaks
+  * relatrive asset filerev fix
+  * Update README.md
+
 0.9.1 / 2016-01-10
 ==================
 
