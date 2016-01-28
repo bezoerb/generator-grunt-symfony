@@ -45,7 +45,7 @@
     "yosay": "1.1.0"
   },
   "devDependencies": {
-    "chai": "3.3.0",
+    "chai": "3.5.0",
     "cross-spawn": "2.1.4",
     "debug": "2.2.0",
     "es6-promise": "3.0.2",
