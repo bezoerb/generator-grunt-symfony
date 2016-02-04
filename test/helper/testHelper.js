@@ -90,6 +90,7 @@ function install(prompts) {
     return new Promise(function (resolve) {
         var opts = prompts2String(prompts);
         process.stdout.write(os.EOL + indentString('running app with ' + opts.join(', '), '    ') + os.EOL);
+        debug(path.join(__dirname, '../../app'),target);
         helpers.run(path.join(__dirname, '../../app'))
             .inDir(target)
             .withOptions({'skip-install': true})
@@ -264,6 +265,7 @@ function checkServiceWorker() {
 
 module.exports.testPrompts = function (opts, done) {
     var prompts = _.defaults(opts, defaultOptions);
+
     install(prompts)
         .then(installDeps(prompts))
         .then(checkFiles(prompts))
