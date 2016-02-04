@@ -14,9 +14,7 @@ addons:
 
 before_install:
 - php --version
-- php -r "readfile('https://getcomposer.org/installer');" | php
-- travis_retry php composer.phar config --global github-oauth.github.com $COMPOSER_AUTH
-- travis_retry php composer.phar config --global --list
+- php -r "readfile('https://getcomposer.org/installer');" | php && php composer.phar config -g github-oauth.github.com $COMPOSER_AUTH
 - gem update --system
 - gem install sass --version "=3.3.7"
 - npm install -g bower grunt-cli jspm
