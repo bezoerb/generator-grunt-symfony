@@ -17,6 +17,7 @@ before_install:
 - php -r "readfile('https://getcomposer.org/installer');" | php && php composer.phar config -g github-oauth.github.com $GH_AUTH
 - gem update --system
 - gem install sass --version "=3.3.7"
+- npm update -g npm
 - npm install -g bower grunt-cli jspm
 - jspm config registries.github.auth $JSPM_AUTH
 - currentfolder=${PWD##*/}
