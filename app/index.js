@@ -312,7 +312,10 @@ var AppGenerator = yeoman.Base.extend({
         var appKernelContents = readFileAsString(appKernelPath);
 
         var newAppKernelContents = appKernelContents.replace('new Symfony\\Bundle\\AsseticBundle\\AsseticBundle(),', '');
+        // symfony 2.7
         newAppKernelContents = newAppKernelContents.replace('array(\'dev\', \'test\')', 'array(\'node\', \'dev\', \'test\')');
+        // symfony 3
+        newAppKernelContents = newAppKernelContents.replace('[\'dev\', \'test\']', '[\'node\', \'dev\', \'test\']');
 
         // add bundle
         newAppKernelContents = addBundle(newAppKernelContents, 'new Zoerb\\Bundle\\FilerevBundle\\ZoerbFilerevBundle(),');
