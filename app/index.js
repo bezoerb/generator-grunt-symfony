@@ -336,13 +336,8 @@ var AppGenerator = yeoman.Base.extend({
             this.destinationPath('app/Resources/views/base.html.twig'),
             this
         );
-        //var templateContent = readFileAsString(this.templatePath('symfony/base.html.twig'));
-        //fs.writeFileSync('app/Resources/views/base.html.twig', this.engine(templateContent, this));
-
 
         // copy default action template
-        //var actionContent = readFileAsString(this.templatePath('symfony/index.html.twig'));
-        //fs.writeFileSync('app/Resources/views/controller/default/index.html.twig', this.engine(actionContent, this));
         this.fs.copyTpl(
             this.templatePath('symfony/index.html.twig'),
             this.destinationPath('app/Resources/views/controller/default/index.html.twig'),
@@ -771,7 +766,7 @@ module.exports = AppGenerator.extend({
                 bower.dependencies['inuit-tabs'] = '~0.2.1';
                 bower.dependencies['inuit-list-inline'] = '~0.3.2';
                 bower.dependencies['inuit-list-ui'] = '~0.4.1';
-
+                bower.dependencies.jquery = '~2.1.3';
             } else {
                 bower.dependencies.jquery = '~2.1.3';
             }
