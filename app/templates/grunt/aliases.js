@@ -28,31 +28,50 @@ module.exports = function (grunt, options) {
         default: [
             'availabletasks'
         ],
-        css: [
-            'clean:css',<% if (useLess) { %>
-            'less',<% } else if (useStylus) { %>
-            'stylus',<% } else if (useSass) { %>
-            'sass',<% } else if (noPreprocessor) { %>
-            'concat:css',<% } %>
-            'autoprefixer',<% if (useUncss || useCritical) { %>
-            'fetch',<% } if (useUncss) { %>
-            'uncss',<% } %>
-            'cssmin'<% if (useCritical) { %>,
-            'critical'<% } %>
-        ],
-        js: [
-            'clean:js', <% if (useRequirejs) { %>
-            'bowerRequirejs:dist',
-            'requirejs'<% } else if (useJspm) { %>
-            'exec:jspm',
-            'uglify:dist'<% } else if (useWebpack) { %>
-            'webpack'<% } %>
-        ],
-        img: [
-            'clean:img',
-            'imagemin',
-            'svgmin'
-        ],
+        css: function (target) {
+            grunt.task.run([
+                'clean:css',<% if (useLess) { %>
+                'less',<% } else if (useStylus) { %>
+                'stylus',<% } else if (useSass) { %>
+                'sass',<% } else if (noPreprocessor) { %>
+                'concat:css',<% } %>
+                'autoprefixer'
+            ]);
+            if (target === 'dist') {
+                grunt.task.run([<% if (useUncss || useCritical) { %>
+                    'fetch',<% } if (useUncss) { %>
+                    'uncss',<% } %>
+                    'cssmin'<% if (useCritical) { %>,
+                    'critical'<% } %>
+                ]);
+            } else {
+                grunt.task.run(['copy:assets-css']);
+            }
+        },
+        js: function (<% if (useRequirejs || useJspm) { %>target<% } %>) {
+            grunt.task.run([
+                'clean:js'<% if (useRequirejs) { %>,
+                'bowerRequirejs:dist'<% } else if (useWebpack) { %>,
+                'webpack'<% } else if (useJspm) { %>,
+                'exec:jspm'<% } %>
+            ]);<% if (useRequirejs || useJspm) { %>
+            if (target === 'dist') {
+                grunt.task.run([<% if (useRequirejs) { %>'requirejs:dist'<% } else { %>'uglify:dist'<% } %>]);
+            } else {
+                grunt.task.run([<% if (useRequirejs) { %>'requirejs:assets'<% } else { %>'copy:assets-js'<% } %>]);
+            }<% } %>
+        },
+        img: function (target) {
+            grunt.task.run(['clean:img']);
+            if (target === 'dist') {
+                grunt.task.run([
+                    'imagemin',
+                    'svgmin'
+                ]);
+            } else {
+                grunt.task.run(['copy:assets-img']);
+            }
+        },
         rev: [
             'filerev',
             'revdump',
@@ -65,18 +84,25 @@ module.exports = function (grunt, options) {
             'appcache'
         ],
         assets: [
-            'test',
-            'js',
-            'css',
-            'img',
+            'js:assets',
+            'css:assets',
+            'img:assets',
+            'copy:sw-scripts',
             'rev',
             'copy:dist',
             'clean:tmp',
             'generate-service-worker'
         ],
         build: [
-            'assets',
-            'exec:sfcl'
+            'test',
+            'js:dist',
+            'css:dist',
+            'img:dist',
+            'copy:sw-scripts',
+            'rev',
+            'copy:dist',
+            'clean:tmp',
+            'generate-service-worker'
         ],
         test: [
             'eslint',<% if (useRequirejs) { %>'wiredep:test','bowerRequirejs:test',<% } %>'karma','phpunit'

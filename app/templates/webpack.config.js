@@ -1,9 +1,14 @@
 'use strict';
 var path = require('path');
 var webpack = require('webpack');
+var assign = require('lodash/assign');
 
 var resolveNpmPath = function (componentPath) {
     return path.resolve(path.join(__dirname, 'node_modules', componentPath));
+};
+
+var aliases = {
+    'jquery': resolveNpmPath('jquery/dist/jquery')
 };
 
 module.exports.dev = {
@@ -23,9 +28,7 @@ module.exports.dev = {
             'node_modules',
             'bower_components'
         ],
-        alias: {
-            'jquery': resolveNpmPath('jquery/dist/jquery')
-        }
+        alias: aliases
     },
 
     entry: [
@@ -76,9 +79,7 @@ module.exports.dist = {
             'node_modules',
             'bower_components'
         ],
-        alias: {
-            'jquery': resolveNpmPath('jquery/dist/jquery')
-        }
+        alias: aliases
     },
 
     entry: [

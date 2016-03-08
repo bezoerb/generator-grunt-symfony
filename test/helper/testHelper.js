@@ -212,14 +212,14 @@ function checkPhpUnit() {
 function checkJs() {
     return function () {
         log('... check js build');
-        return runTask('js').then(markDone);
+        return runTask('js:dist').then(markDone);
     };
 }
 
 function checkCss(prompts) {
     return function () {
         log('... check css build');
-        return runTask('css').then(function() {
+        return runTask('css:dist').then(function() {
             if (_.indexOf(prompts.additional,'critical') >= 0) {
                 assert.file(['app/Resources/public/styles/critical/index.css']);
                 var critical = fs.readFileSync('app/Resources/public/styles/critical/index.css','utf8');

@@ -14,8 +14,8 @@ module.exports = function (grunt) {
                 descriptions: {
                     default: 'Show help',
                     serve: 'Start development server. Use ' + chalk.cyan('serve:dist') + ' for production environment',
-                    assets: 'Build & install all assets to public web directory ' + chalk.green('[test, js, css, img, rev, copy]'),
-                    build: 'Runs ' + chalk.cyan('assets') + ' and clears symfony cache',
+                    assets: 'Copy assets without optimization to public web directory',
+                    build: 'Build & install all assets to public web directory ' + chalk.green('[test, js, css, img, rev, copy]'),
                     test: 'Run tests ' + chalk.green('[eslint, karma, phpunit]'),
                     js: 'Build & install scripts',
                     css: 'Build & install styles',
