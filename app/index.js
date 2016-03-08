@@ -10,7 +10,7 @@ var stringLength = require('string-length');
 var path = require('path');
 var exec = require('child_process').exec;
 var yaml = require('js-yaml');
-var readFileAsString = require("html-wiring").readFileAsString;
+var readFileAsString = require('html-wiring').readFileAsString;
 var fse = require('fs-extra');
 
 
@@ -420,7 +420,7 @@ var AppGenerator = yeoman.Base.extend({
     addStyles: function addScripts() {
         // copy styles
         if (this.useInuit) {
-            fse.copySync(this.templatePath('styles/inuit'), this.destinationPath('app/Resources/public/styles'))
+            fse.copySync(this.templatePath('styles/inuit'), this.destinationPath('app/Resources/public/styles'));
         } else {
             var styles = [];
             if (this.useSass) {

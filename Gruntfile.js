@@ -15,7 +15,9 @@ module.exports = function (grunt) {
             all: [
                 'Gruntfile.js',
                 'app/index.js',
-                'test/**/*.js'
+                'test/**/*.js',
+                '!test/fixtures/**/*.js',
+                '!test/temp/**/*.js'
             ],
             options: {
                 jshintrc: '.jshintrc',
@@ -178,6 +180,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('test', [
         'clean:test',
+        'jshint',
         'updateFixtures',
         'installJspmFixtures',
         'installNpmFixtures',
