@@ -517,7 +517,7 @@ module.exports = AppGenerator.extend({
         this.symfonyDefaults = {
             username: 'symfony',
             repository: 'symfony-standard',
-            commit: '2.7'
+            commit: '3.0'
         };
 
 

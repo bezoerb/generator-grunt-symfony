@@ -2,7 +2,6 @@
 /*jshint expr: true*/
 var testPrompts = require('./helper/testHelper').testPrompts;
 
-
 describe('grunt-symfony generator', function () {
     this.timeout(300000);
 
@@ -83,9 +82,14 @@ describe('grunt-symfony generator', function () {
         {loader: 'requirejs', framework: 'foundation', preprocessor: 'stylus'}
     ];
 
+    // need to inject symfony 2.7 to tests as travis node does not support min php version for symfony 3.0
+    var sf2_7 = {
+        symfonyStandard: false, symfonyCommit: '2.7'
+    };
+
     tests.forEach(function(test) {
         it('test passed', function (done) {
-            testPrompts(test, done);
+            testPrompts(Object.assign(sf2_7,test), done);
         });
     });
 });
