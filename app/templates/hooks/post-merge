@@ -16,4 +16,4 @@ dirname $(find . -maxdepth 2 -mindepth 1 -name "$1" -type f | head -n 1)
 # In this example it's used to run `npm install` if package.json changed and `bower install` if `bower.json` changed.
 check_run package.json "npm install <% if (useJspm) { %>&& jspm install<% } %>"
 check_run bower.json "bower install"
-check_run composer.json "composer install"
+check_run composer.json "<% if (!globalComposer) { %>php composer.phar<% } else { %>composer<% } %> install"
