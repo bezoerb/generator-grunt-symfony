@@ -60,7 +60,7 @@ module.exports.dev = {
     ],
     module: {
         loaders: [
-            {test: /.js$/, exclude: /node_modules/, loaders: ['monkey-hot', 'babel']}
+            {test: /.jsx?$/, exclude: /(node_modules|bower_components)/, loaders: ['monkey-hot', 'babel?presets[]=es2015,cacheDirectory=true']}
         ]
     }
 };
@@ -82,9 +82,7 @@ module.exports.dist = {
         alias: aliases
     },
 
-    entry: [
-        './main'
-    ],
+    entry: ['./main'],
 
     output: {
         path: path.join(__dirname, 'web', 'scripts'),
@@ -109,7 +107,7 @@ module.exports.dist = {
     ],
     module: {
         loaders: [
-            {test: /.js$/, exclude: /node_modules/, loaders: [ 'babel']}
+            {test: /.jsx?$/, exclude: /(node_modules|bower_components)/, loaders: ['babel?presets[]=es2015,cacheDirectory=true']}
         ]
     }
 };
