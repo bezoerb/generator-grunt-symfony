@@ -19,7 +19,7 @@ define(function (require, exports) {
     exports.init = function init() {
         debug('\'Allo \'Allo');
         debug('Running jQuery:', $().jquery);<% if (useBootstrap) { %>
-        debug('Running Bootstrap:', Boolean($.fn.scrollspy) ? '~3.3.0' : false);<% } else if (useUikit) { %>
+        debug('Running Bootstrap:', $.fn.scrollspy ? '~3.3.0' : false);<% } else if (useUikit) { %>
         debug('Running UIkit:', UI.version);<% } else if (useFoundation) { %>
         debug('Running Foundation:', Foundation.version);<% } %>
 
