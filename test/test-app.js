@@ -1,6 +1,7 @@
 'use strict';
 /*jshint expr: true*/
 var testPrompts = require('./helper/testHelper').testPrompts;
+var assign = require('lodash/assign');
 
 describe('grunt-symfony generator', function () {
     this.timeout(300000);
@@ -89,7 +90,7 @@ describe('grunt-symfony generator', function () {
 
     tests.forEach(function(test) {
         it('test passed', function (done) {
-            testPrompts(Object.assign(sf2_7,test), done);
+            testPrompts(assign(sf2_7,test), done);
         });
     });
 });
