@@ -397,6 +397,16 @@ var AppGenerator = yeoman.Base.extend({
         } else if (this.useWebpack) {
             files = ['main.js', 'modules/dummy.js', 'modules/service-worker.js'];
             folder = 'webpack';
+        } else if (this.useBrowserify) {
+            files = ['main.js', 'modules/dummy.js', 'modules/service-worker.js'];
+            if (this.useBootstrap) {
+                files.push('shim/bootstrap.js');
+            } else if (this.useFoundation) {
+                files.push('shim/foundation.js');
+            } else if (this.useUikit) {
+                files.push('shim/uikit.js');
+            }
+            folder = 'browserify';
         }
 
         _.forEach(files, _.bind(function (file) {
@@ -650,6 +660,7 @@ module.exports = AppGenerator.extend({
             message: 'Which module loader would you like to use?',
             choices: [
                 {name: 'SystemJS (jspm)', value: 'jspm'},
+                {name: 'Browserify (babel)', value: 'browserify'},
                 {name: 'Webpack (babel)', value: 'webpack'},
                 {name: 'RequireJS', value: 'requirejs'}
             ]
@@ -717,7 +728,8 @@ module.exports = AppGenerator.extend({
                 this.destinationPath('package.json'),
                 _.assign(this, {safeProjectName: _.camelCase(this.appname)})
             );
-            //    this.template('_package.json', 'package.json');
+
+            var fromNpm = (this.useWebpack || this.useBrowserify) && !this.noPreprocessor;
 
             var bower = {
                 name: _.camelCase(this.appname),
@@ -735,14 +747,10 @@ module.exports = AppGenerator.extend({
                     bs += '-stylus';
                     bower.dependencies[bs] = '~4.0.0';
                 }
-            } else if (this.useFoundation) {
+            } else if (this.useFoundation && !fromNpm) {
                 bower.dependencies.foundation = '~5.5.1';
                 bower.dependencies.jquery = '~2.1.3';
-            } else if (this.usePure) {
-                bower.dependencies.pure = '~0.5.0';
-                bower.dependencies.suit = '~0.6.0';
-                bower.dependencies.jquery = '~2.1.3';
-            } else if (this.useUikit) {
+            } else if (this.useUikit && !fromNpm) {
                 bower.dependencies.uikit = '~2.18.0';
             } else if (this.useInuit) {
                 bower.dependencies['inuit-starter-kit'] = '~0.2.9';
@@ -767,7 +775,7 @@ module.exports = AppGenerator.extend({
                 bower.dependencies['inuit-list-inline'] = '~0.3.2';
                 bower.dependencies['inuit-list-ui'] = '~0.4.1';
                 bower.dependencies.jquery = '~2.1.3';
-            } else {
+            } else if (!fromNpm) {
                 bower.dependencies.jquery = '~2.1.3';
             }
 
@@ -783,7 +791,9 @@ module.exports = AppGenerator.extend({
                 bower.dependencies['appcache-nanny'] = '~1.0.3';
             }
 
-            bower.dependencies.picturefill = '~3.0.1';
+            if (!fromNpm) {
+                bower.dependencies.picturefill = '~3.0.1';
+            }
             bower.dependencies.modernizr = '~2.8.3';
 
             this.fs.copy(
@@ -852,6 +862,9 @@ module.exports = AppGenerator.extend({
                 } else if (this.useWebpack) {
                     this.template('grunt/webpack.js', 'grunt/webpack.js');
                     this.template('webpack.config.js', 'webpack.config.js');
+                } else if (this.useBrowserify) {
+                    this.template('grunt/browserify.js', 'grunt/browserify.js');
+                    this.template('grunt/uglify.js', 'grunt/uglify.js');
                 }
             }
         },
@@ -912,6 +925,11 @@ module.exports = AppGenerator.extend({
             } else if (this.useWebpack) {
                 fse.copySync(
                     this.templatePath(path.join('test', 'webpack')),
+                    this.destinationPath(dest)
+                );
+            } else if (this.useBrowserify) {
+                fse.copySync(
+                    this.templatePath(path.join('test', 'browserify')),
                     this.destinationPath(dest)
                 );
             }

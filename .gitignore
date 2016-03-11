@@ -1,4 +1,5 @@
 node_modules/
+test/temp/
 test/fixtures/bin/
 test/fixtures/bower_components/
 test/fixtures/jspm_packages/

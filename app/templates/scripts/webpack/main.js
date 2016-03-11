@@ -5,6 +5,7 @@ import UI from 'uikit/js/uikit';<% } else if (useFoundation) { %>
 import 'foundation';<% } %>
 import picturefill from 'picturefill';
 import * as SW from './modules/service-worker';
+import {msg} from './modules/dummy';
 
 let debug = debugFn('<%= safeProjectName %>:main');
 picturefill();
@@ -13,7 +14,7 @@ debug('\'Allo \'Allo');
 debug('Running jQuery:', $().jquery);<% if (useBootstrap) { %>
 debug('Running Bootstrap:', $.fn.scrollspy ? '~3.3.0' : false);<% } else if (useUikit) { %>
 debug('Running UIkit:', UI.version);<% } else if (useFoundation) { %>
-/* global Foundation */
-debug('Running Foundation:', Foundation.version);<% } %>
+debug('Running Foundation:', window.Foundation.version);<% } %>
+debug(msg);
 
 SW.init();

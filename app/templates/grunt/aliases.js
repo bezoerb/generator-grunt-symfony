@@ -44,21 +44,27 @@ module.exports = function (grunt, options) {
                     'cssmin'<% if (useCritical) { %>,
                     'critical'<% } %>
                 ]);
-            } else {
+            } else if (target === 'assets') {
                 grunt.task.run(['copy:assets-css']);
             }
         },
-        js: function (<% if (useRequirejs || useJspm) { %>target<% } %>) {
+        js: function (<% if (useRequirejs || useJspm || useBrowserify) { %>target<% } %>) {
             grunt.task.run([
                 'clean:js'<% if (useRequirejs) { %>,
                 'bowerRequirejs:dist'<% } else if (useWebpack) { %>,
                 'webpack'<% } else if (useJspm) { %>,
                 'exec:jspm'<% } %>
-            ]);<% if (useRequirejs || useJspm) { %>
+            ]);<% if (useRequirejs || useJspm || useBrowserify) { %>
             if (target === 'dist') {
-                grunt.task.run([<% if (useRequirejs) { %>'requirejs:dist'<% } else { %>'uglify:dist'<% } %>]);
+                grunt.task.run([<% if (useRequirejs) {
+                    %>'requirejs:dist'<% } else if (useJspm) {
+                    %>'uglify:dist'<% } else if (useBrowserify) {
+                    %>'browserify:dist','uglify:dist'<% } %>]);
             } else {
-                grunt.task.run([<% if (useRequirejs) { %>'requirejs:assets'<% } else { %>'copy:assets-js'<% } %>]);
+                grunt.task.run([<% if (useRequirejs) {
+                    %>'requirejs:assets'<% } else if (useJspm){
+                    %>'copy:assets-js'<% } else if (useBrowserify) {
+                    %>'browserify:dev','copy:assets-js'<% } %>]);
             }<% } %>
         },
         img: function (target) {
@@ -132,7 +138,7 @@ module.exports = function (grunt, options) {
                 grunt.task.run(['build']);
             } else {
                 target = 'dev';
-                grunt.task.run(['<% if (useLess) { %>less<% } else if (useStylus) { %>stylus<% } else if (useSass) { %>sass<% } else if (noPreprocessor) { %>concat:css<% } %>','autoprefixer']);
+                grunt.task.run(['css:serve'<% if (useBrowserify) { %>, 'browserify:dev'<% } %>]);
             }
 
             // start php middleware

@@ -12,7 +12,7 @@ module.exports = {
                 'fonts/**/*'
             ]
         }]
-    },<% if (useJspm) { %>
+    },<% if (useJspm || useBrowserify) { %>
     // copy unminified js because optimization is skipped when using grunt assets
     'assets-js': {
         files: [
