@@ -3,7 +3,5 @@
 /* global require */
 var $ = require('jquery');
 window.jQuery = window.$ = $;
-require('foundation-sites');
-
-export default window.Foundation;
+require('bootstrap');
 

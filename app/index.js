@@ -396,6 +396,13 @@ var AppGenerator = yeoman.Base.extend({
             folder = 'jspm';
         } else if (this.useWebpack) {
             files = ['main.js', 'modules/dummy.js', 'modules/service-worker.js'];
+            if (this.useBootstrap) {
+                files.push('shim/bootstrap.js');
+            } else if (this.useFoundation) {
+                files.push('shim/foundation.js');
+            } else if (this.useUikit) {
+                files.push('shim/uikit.js');
+            }
             folder = 'webpack';
         } else if (this.useBrowserify) {
             files = ['main.js', 'modules/dummy.js', 'modules/service-worker.js'];

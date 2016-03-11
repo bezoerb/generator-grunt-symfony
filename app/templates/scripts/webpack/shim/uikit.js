@@ -3,7 +3,7 @@
 /* global require */
 var $ = require('jquery');
 window.jQuery = window.$ = $;
-require('foundation-sites');
+require('uikit');
 
-export default window.Foundation;
+export default window.UIkit;
 

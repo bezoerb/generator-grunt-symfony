@@ -1,8 +1,8 @@
 import debugFn from 'debug';
 import $ from 'jquery';<% if (useBootstrap) { %>
-import 'bootstrap';<% } else if (useUikit) { %>
-import UI from 'uikit/js/uikit';<% } else if (useFoundation) { %>
-import 'foundation';<% } %>
+import './shim/bootstrap';<% } else if (useUikit) { %>
+import UIkit from './shim/uikit';<% } else if (useFoundation) { %>
+import Foundation from './shim/foundation';<% } %>
 import picturefill from 'picturefill';
 import * as SW from './modules/service-worker';
 import {msg} from './modules/dummy';
