@@ -7,8 +7,8 @@ import picturefill from 'picturefill';
 import * as SW from './modules/service-worker';
 
 let debug = debugFn('<%= safeProjectName %>:main');
-picturefill();
-<% if (useFoundation) { %>$(document).foundation();<% } %>
+picturefill();<% if (useFoundation) { %>
+$(document).foundation();<% } %>
 
 debug('\'Allo \'Allo');
 debug('Running jQuery:', $().jquery);<% if (useBootstrap) { %>
