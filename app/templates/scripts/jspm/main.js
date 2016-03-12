@@ -10,7 +10,6 @@ let debug = debugFn('<%= safeProjectName %>:main');
 picturefill();
 <% if (useFoundation) { %>$(document).foundation();<% } %>
 
-
 debug('\'Allo \'Allo');
 debug('Running jQuery:', $().jquery);<% if (useBootstrap) { %>
 debug('Running Bootstrap:', $.fn.scrollspy ? '~3.3.0' : false);<% } else if (useUikit) { %>
