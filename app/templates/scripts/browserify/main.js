@@ -9,6 +9,7 @@ import {msg} from './modules/dummy';
 
 let debug = debugFn('<%= safeProjectName %>:main');
 picturefill();
+<% if (useFoundation) { %>$(document).foundation();<% } %>
 
 debug('\'Allo \'Allo');
 debug('Running jQuery:', $().jquery);<% if (useBootstrap) { %>

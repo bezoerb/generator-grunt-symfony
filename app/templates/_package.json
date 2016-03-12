@@ -110,7 +110,7 @@
         "configFile": "app/Resources/public/scripts/config.js",
         "dependencies": {<% if (useBootstrap) { %>
             "bootstrap": "github:twbs/bootstrap@^3.3.4",<% } else if (useFoundation) { %>
-            "foundation": "github:zurb/bower-foundation@5.5.1",<% } %>
+            "foundation-sites": "npm:foundation-sites@^6.2.0",<% } %>
             "debug": "npm:debug@^2.2.0",
             "appcache-nanny": "npm:appcache-nanny@^1.0.3",
             "jquery": "npm:jquery@^2.2.1",

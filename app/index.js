@@ -755,7 +755,7 @@ module.exports = AppGenerator.extend({
                     bower.dependencies[bs] = '~4.0.0';
                 }
             } else if (this.useFoundation && !fromNpm) {
-                bower.dependencies.foundation = '~5.5.1';
+                bower.dependencies['foundation-sites'] = '^6.2.0';
                 bower.dependencies.jquery = '~2.1.3';
             } else if (this.useUikit && !fromNpm) {
                 bower.dependencies.uikit = '~2.18.0';

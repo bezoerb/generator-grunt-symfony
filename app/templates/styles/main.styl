@@ -1,4 +1,4 @@
-<% if (useBootstrap) { %> @import "/bootstrap-stylus/bootstrap" <% } else if (useFoundation) { %>@import "/foundation/css/foundation.css";<% } else if (usePure) { %>@import "/pure/pure.css";
+<% if (useBootstrap) { %> @import "/bootstrap-stylus/bootstrap" <% } else if (useFoundation) { %>@import "/foundation-sites/dist/foundation.css";<% } else if (usePure) { %>@import "/pure/pure.css";
 @import "/suit-utils-layout/lib/layout.css";<% } else if (useUikit) { %>
 @import "/uikit/css/uikit.almost-flat.css";
 
@@ -6,8 +6,16 @@ a {
     transition: all 100ms ease-in-out;
 } <% } %>
 <% if (!useBootstrap && !useUikit) { %> @import "/sass-bootstrap-glyphicons/css/bootstrap-glyphicons.css"; <% } %>
+<% if (useFoundation) { %>
+.panel {
+    background: #eee;
+    padding: 2em;
+    margin-bottom: 2em;
+}
 
-<% if (usePure) { %>
+.header {
+    margin-bottom: 2em;
+}<% } else if (usePure) { %>
 .pure-g
     padding: 15px 20px;
 
@@ -21,7 +29,7 @@ a {
     max-width: 1024px;
     margin: 0 auto;
 <% } %>
-<% if (!useUikit) { %>
+<% if (!useUikit && !useFoundation) { %>
 .header
     height: 50px; <% } %>
 

@@ -13,8 +13,9 @@ define(function (require, exports) {
     var serviceWorker = require('./modules/service-worker');
     var debug = require('visionmedia-debug')('<%= safeProjectName %>:main');<% if (useUikit) { %>
     var UI = require('uikit');<% } else if (useFoundation) { %>
-    var Foundation = require('foundation/core');<% } else if (useBootstrap) { %>
-    require('bootstrap');<% } %>
+    var Foundation = require('foundation');<% } else if (useBootstrap) { %>
+    require('bootstrap');<% } %><% if (useFoundation) { %>
+    $(document).foundation();<% } %>
 
     exports.init = function init() {
         debug('\'Allo \'Allo');

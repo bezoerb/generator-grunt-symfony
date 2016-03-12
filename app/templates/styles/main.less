@@ -1,4 +1,4 @@
-<% if (useBootstrap) { %>@import "bootstrap/less/bootstrap"; <% } else if (useFoundation) { %>@import (inline) "/foundation/css/foundation.css";<% }  else if (usePure) { %>@import (inline) "pure/pure.css";
+<% if (useBootstrap) { %>@import "bootstrap/less/bootstrap"; <% } else if (useFoundation) { %>@import (inline) "foundation-sites/dist/foundation.css";<% }  else if (usePure) { %>@import (inline) "pure/pure.css";
 @import (inline) "suit-utils-layout/lib/layout.css";<% } else if (useUikit) { %>
 @import "uikit/less/uikit-variables";
 @navbar-background:                              #444;
@@ -33,7 +33,7 @@ a {
     max-width: 1024px;
     margin: 0 auto;
 }<% } %>
-<% if (!useUikit) { %>
+<% if (!useUikit && !useFoundation) { %>
 .header {
     height: 50px;
 }<% } %>

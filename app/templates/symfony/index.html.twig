@@ -65,126 +65,64 @@
 
     </div>
     <% } else if (useFoundation) { %>
-    <div class="container">
-            <div class="header">
-                <nav class="top-bar" data-topbar role="navigation" itemscope itemtype="http://schema.org/SiteNavigationElement">
-                    <ul class="title-area">
-                        <li itemprop="url" class="name">
-                            <a href="#"><h1><%= appname %></h1></a>
-                        </li>
-                        <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
-                        <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
-                    </ul>
-
-                    <section class="top-bar-section">
-                        <!-- Right Nav Section -->
-                        <ul class="right">
-                            <li itemprop="url" class="active"><a href="#" title="Home" itemprop="name">Home</a></li>
-                            <li itemprop="url"><a href="#" title="About" itemprop="name">About</a></li>
-                            <li itemprop="url"><a href="#" title="Contact" itemprop="name">Contact</a></li>
-                        </ul>
-
-                        <!-- Left Nav Section -->
-                        <ul class="left">
-
-                        </ul>
-                    </section>
-                </nav>
-
+        <div class="header">
+            <div class="title-bar" data-responsive-toggle="main-menu" data-hide-for="medium">
+                <button class="menu-icon" type="button" data-toggle></button>
+                <div class="title-bar-title">Menu</div>
             </div>
+            <nav class="top-bar" id="main-menu" role="navigation" itemscope
+                 itemtype="http://schema.org/SiteNavigationElement">
+                <div class="top-bar-left">
+                    <ul class="dropdown menu" data-dropdown-menu>
+                        <li class="menu-text"><%= appname %></li>
+                    </ul>
+                </div>
+                <div class="top-bar-right">
+                    <ul class="menu" data-responsive-menu="drilldown medium-dropdown">
+                        <li itemprop="url"><a href="#" title="Home" itemprop="name">Home</a></li>
+                        <li itemprop="url"><a href="#" title="About" itemprop="name">About</a></li>
+                        <li itemprop="url"><a href="#" title="Contact" itemprop="name">Contact</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
 
-            <div class="panel">
-                <div class="row">
+        <div class="row">
+            <div class="small-10 small-push-1 columns ">
+                <div class="row callout panel">
                     <div class="medium-6 medium-push-6 columns">
                         <img class="yeoman-team" src="{{ asset('img/yo-grunt-bower-symfony.png') }}" alt=""/>
                     </div>
                     <div class="medium-6 medium-pull-6 columns">
                         <h1>'Allo, 'Allo!</h1>
                         <p class="lead">Always a pleasure scaffolding your apps.</p>
-                        <p><a class="button success" href="#">Splendid! <span class="glyphicon glyphicon-ok"></span></a></p>
+                        <p><a class="button alert" href="#">Splendid! <span class="glyphicon glyphicon-ok"></span></a>
+                        </p>
                     </div>
                 </div>
 
+
+                <b>Symfony</b>
+                <p>High Performance PHP Framework for Web Development</p>
+                <b>Browsersync</b>
+                <p>Keep multiple browsers & devices in sync when building websites.</p>
+
+                <% if (useLess) { %><b>Less</b>
+                <p>Less is a mature, stable, and powerful professional grade CSS extension language.</p>
+                <% } else if (useSass) { %><b>Sass</b>
+                <p>Sass is a mature, stable, and powerful professional grade CSS extension language.</p>
+                <% } else if (useStylus) { %><b>Stylus</b>
+                <p>Stylus is a revolutionary new language, providing an efficient, dynamic, and expressive way to generate CSS. Supporting both an indented syntax and regular CSS style.</p>
+                <% } %>
+                <% if (useCritical) { %><b>Critical</b>
+                <p>Extracts & inlines critical-path (above-the-fold) CSS from HTML.</p><% } %>
+                <b>Foundation</b>
+                <p>Sleek, intuitive, and powerful mobile first front-end framework for faster and easier web development.</p>
+                <% if (useRequirejs) { %><b>RequireJS</b>
+                <p>A JavaScript file and module loader optimized for in-browser use.</p><% } %>
+                <% if (useJspm) { %><b>JSPM</b>
+                <p>jspm is a package manager for the SystemJS universal module loader, built on top of the dynamic ES6 module loader</p><% } %>
             </div>
-
-            <div class="row marketing">
-                <div class="col-lg-6">
-                    <h4>Symfony</h4>
-                    <p>High Performance PHP Framework for Web Development</p>
-                    <h4>Browsersync</h4>
-                    <p>Keep multiple browsers & devices in sync when building websites.</p>
-
-                    <% if (useLess) { %><h4>Less</h4>
-                    <p>Less is a mature, stable, and powerful professional grade CSS extension language.</p>
-                    <% } else if (useSass) { %><h4>Sass</h4>
-                    <p>Sass is a mature, stable, and powerful professional grade CSS extension language.</p>
-                    <% } else if (useStylus) { %><h4>Stylus</h4>
-                    <p>Stylus is a revolutionary new language, providing an efficient, dynamic, and expressive way to generate CSS. Supporting both an indented syntax and regular CSS style.</p>
-                    <% } %>
-                    <% if (useCritical) { %><h4>Critical</h4>
-                    <p>Extracts & inlines critical-path (above-the-fold) CSS from HTML.</p><% } %>
-                    <h4>Foundation</h4>
-                    <p>Sleek, intuitive, and powerful mobile first front-end framework for faster and easier web development.</p>
-                    <% if (useRequirejs) { %><h4>RequireJS</h4>
-                    <p>A JavaScript file and module loader optimized for in-browser use.</p><% } %>
-                    <% if (useJspm) { %><h4>JSPM</h4>
-                    <p>jspm is a package manager for the SystemJS universal module loader, built on top of the dynamic ES6 module loader</p><% } %>
-                </div>
-            </div>
-
-        </div>
-    <% } else if (usePure) { %>
-        <div class="container">
-            <div class="header">
-                <div class="pure-menu pure-menu-open pure-menu-horizontal u-cf">
-                    <a href="#" class="pure-menu-heading"><%= appname %></a>
-
-                    <ul class="u-floatRight" role="navigation" itemscope itemtype="http://schema.org/SiteNavigationElement">
-                        <li itemprop="url" class="pure-menu-selected"><a href="#" title="Home" itemprop="name">Home</a></li>
-                        <li itemprop="url"><a href="#" title="About" itemprop="name">About</a></li>
-                        <li itemprop="url"><a href="#" title="Contact" itemprop="name">Contact</a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="pure-g hero">
-                <div class="pure-u-1-2">
-                    <h1>'Allo, 'Allo!</h1>
-                    <p class="lead">Always a pleasure scaffolding your apps.</p>
-                    <p><a class="button-success pure-button" href="#">Splendid! <span class="glyphicon glyphicon-ok"></span></a></p>
-                </div>
-                <div class="pure-u-1-2">
-                    <img class="yeoman-team" src="{{ asset('img/yo-grunt-bower-symfony.png') }}" alt=""/>
-                </div>
-            </div>
-
-            <div class="pure-g marketing">
-                <div class="pure-u-1-2">
-                    <h4>Symfony</h4>
-                    <p>High Performance PHP Framework for Web Development</p>
-                    <h4>Browsersync</h4>
-                    <p>Keep multiple browsers & devices in sync when building websites.</p>
-
-                    <% if (useLess) { %><h4>Less</h4>
-                    <p>Less is a mature, stable, and powerful professional grade CSS extension language.</p>
-                    <% } else if (useSass) { %><h4>Sass</h4>
-                    <p>Sass is a mature, stable, and powerful professional grade CSS extension language.</p>
-                    <% } else if (useStylus) { %><h4>Stylus</h4>
-                    <p>Stylus is a revolutionary new language, providing an efficient, dynamic, and expressive way to generate CSS. Supporting both an indented syntax and regular CSS style.</p>
-                    <% } %>
-                    <% if (useCritical) { %><h4>Critical</h4>
-                    <p>Extracts & inlines critical-path (above-the-fold) CSS from HTML.</p><% } %>
-                    <h4>PureCSS</h4>
-                    <p>A set of small, responsive CSS modules with a minimal footprint</p>
-                    <h4>Suit</h4>
-                    <p>Modular style tools for UI components</p>
-                    <% if (useRequirejs) { %><h4>RequireJS</h4>
-                    <p>A JavaScript file and module loader optimized for in-browser use.</p><% } %>
-                    <% if (useJspm) { %><h4>JSPM</h4>
-                    <p>jspm is a package manager for the SystemJS universal module loader, built on top of the dynamic ES6 module loader</p><% } %>
-                </div>
-            </div>
-
         </div>
     <% } else if (useUikit) { %>
         <div class="uk-navbar uk-navbar-attached uk-margin-large-bottom">
