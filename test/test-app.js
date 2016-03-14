@@ -8,6 +8,31 @@ describe('grunt-symfony generator', function () {
 
     var tests = [
         // jspm no framework
+        {loader: 'browserify'},
+        {loader: 'browserify', preprocessor: 'less'},
+        {loader: 'browserify', preprocessor: 'sass', libsass: false},
+        {loader: 'browserify', preprocessor: 'sass', libsass: true},
+        {loader: 'browserify', preprocessor: 'stylus'},
+        // browserify uikit
+        {loader: 'browserify', framework: 'uikit'},
+        {loader: 'browserify', framework: 'uikit', preprocessor: 'less'},
+        {loader: 'browserify', framework: 'uikit', preprocessor: 'sass', libsass: false},
+        {loader: 'browserify', framework: 'uikit', preprocessor: 'sass', libsass: true},
+        {loader: 'browserify', framework: 'uikit', preprocessor: 'stylus'},
+        // browserify bootstrap
+        {loader: 'browserify', framework: 'bootstrap'},
+        {loader: 'browserify', framework: 'bootstrap', preprocessor: 'less'},
+        {loader: 'browserify', framework: 'bootstrap', preprocessor: 'sass', libsass: false},
+        {loader: 'browserify', framework: 'bootstrap', preprocessor: 'sass', libsass: true},
+        {loader: 'browserify', framework: 'bootstrap', preprocessor: 'stylus'},
+        // browserify foundation
+        {loader: 'browserify', framework: 'foundation'},
+        {loader: 'browserify', framework: 'foundation', preprocessor: 'less'},
+        {loader: 'browserify', framework: 'foundation', preprocessor: 'sass', libsass: false},
+        {loader: 'browserify', framework: 'foundation', preprocessor: 'sass', libsass: true},
+        {loader: 'browserify', framework: 'foundation', preprocessor: 'stylus'},
+        
+        // jspm no framework
         {loader: 'jspm'},
         {loader: 'jspm', preprocessor: 'less'},
         {loader: 'jspm', preprocessor: 'sass', libsass: false},
