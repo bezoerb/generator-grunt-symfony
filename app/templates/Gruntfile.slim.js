@@ -13,6 +13,13 @@ module.exports = function(grunt) {
         app: 'app/Resources/public',
         dist: 'web'
     };
+    
+    // Define routes which should be processed by critical & uncss
+    // critical-path css will be located in 'app/Resources/public/styles/critical'
+    // The files are named with the routes key. e.g. index.css
+    var routes = {
+    //   'index': '/'
+    };
 
     require('jit-grunt')(grunt,{
         availabletasks: 'grunt-available-tasks'
@@ -29,7 +36,8 @@ module.exports = function(grunt) {
         // data passed into config.
         data: {
             paths: paths,
-            env: env
+            env: env,
+            routes: routes
         },
 
         jitGrunt: true

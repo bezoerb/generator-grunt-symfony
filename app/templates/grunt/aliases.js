@@ -1,5 +1,6 @@
 module.exports = function (grunt, options) {
-    var _ = require('lodash');
+    var reduce = require('lodash/reduce');
+    var size = require('lodash/size');
     var fs = require('fs-extra');
     var path = require('path');
     var slash = require('slash');
@@ -38,12 +39,9 @@ module.exports = function (grunt, options) {
                 'autoprefixer'
             ]);
             if (target === 'dist') {
-                grunt.task.run([<% if (useUncss || useCritical) { %>
-                    'fetch',<% } if (useUncss) { %>
-                    'uncss',<% } %>
-                    'cssmin'<% if (useCritical) { %>,
-                    'critical'<% } %>
-                ]);
+                <% if (useUncss || useCritical) { %>// configure routes inside gruntfile if you'd like to use <% if (useCritical) { %>critical <% } if (useCritical && useUncss) { %>and <% } if (useUncss) { %>uncss<% } %>
+                grunt.task.run(size(options.routes) ? ['fetch',<% if (useCritical) { %> 'critical',<% } if (useUncss) { %> 'uncss',<% } %> 'cssmin'] : ['cssmin']);<% } else { 
+                %>grunt.task.run('cssmin');<% } %>
             } else if (target === 'assets') {
                 grunt.task.run(['copy:assets-css']);
             }
@@ -125,7 +123,7 @@ module.exports = function (grunt, options) {
         },<% } %>
         revdump: function(){
             var file = 'app/config/filerev.json';
-            fs.outputJsonSync(file, _.reduce(grunt.filerev.summary, function(acc,val,key){
+            fs.outputJsonSync(file, reduce(grunt.filerev.summary, function(acc,val,key){
                 acc[slash(key.replace('web',''))] = slash(val.replace('web',''));
                 return acc;
             },{}));
