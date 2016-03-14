@@ -752,11 +752,11 @@ module.exports = AppGenerator.extend({
                 bower.dependencies[bs] = '~3.3.0';
                 if (this.useStylus) {
                     bs += '-stylus';
-                    bower.dependencies[bs] = '~4.0.0';
+                    bower.dependencies[bs] = '~5.0.2';
                 }
             } else if (this.useFoundation && !fromNpm) {
                 bower.dependencies['foundation-sites'] = '^6.2.0';
-                bower.dependencies.jquery = '~2.1.3';
+                bower.dependencies.jquery = '~2.2.1';
             } else if (this.useUikit && !fromNpm) {
                 bower.dependencies.uikit = '~2.18.0';
             } else if (this.useInuit) {
@@ -781,9 +781,9 @@ module.exports = AppGenerator.extend({
                 bower.dependencies['inuit-tabs'] = '~0.2.1';
                 bower.dependencies['inuit-list-inline'] = '~0.3.2';
                 bower.dependencies['inuit-list-ui'] = '~0.4.1';
-                bower.dependencies.jquery = '~2.1.3';
+                bower.dependencies.jquery = '~2.2.1';
             } else if (!fromNpm) {
-                bower.dependencies.jquery = '~2.1.3';
+                bower.dependencies.jquery = '~2.2.1';
             }
 
             // add standalone glyphicons if bootstrap is not used
@@ -801,7 +801,7 @@ module.exports = AppGenerator.extend({
             if (!fromNpm) {
                 bower.dependencies.picturefill = '~3.0.1';
             }
-            bower.dependencies.modernizr = '~2.8.3';
+            bower.dependencies.modernizr = '~3.3.1';
 
             this.fs.copy(
                 this.templatePath('bowerrc'),
