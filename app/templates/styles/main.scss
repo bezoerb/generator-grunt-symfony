@@ -9,9 +9,9 @@ $navbar-brand-color:                             #eee;
 $navbar-brand-hover-color:                       #eee;
 $icon-font-path:                                 "../fonts";
 
-@import "uikit/scss/uikit-variables";
-@import "uikit/scss/uikit-mixins";
-@import "uikit/scss/uikit";
+@import "uikit/<% if (frameworkFromNpm) { %>dist/<% } %>scss/uikit-variables";
+@import "uikit/<% if (frameworkFromNpm) { %>dist/<% } %>scss/uikit-mixins";
+@import "uikit/<% if (frameworkFromNpm) { %>dist/<% } %>scss/uikit";
 
 a {
     transition: all 100ms ease-in-out;

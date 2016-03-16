@@ -3,12 +3,14 @@
     "version": "0.0.0",
     "scripts": {
         "test": "grunt test"
-    },<% if (useWebpack || useBrowserify) { %>
+    },<% if (frameworkFromNpm) { %>
     "dependencies": {
         "jquery": "^2.1.4",
-        "picturefill": "^3.0.2"<% if (useBootstrap) { %>,
-        "bootstrap": "^3.3.5"<% } if (useBrowserify && useUikit) { %>,
-        "uikit": "^2.25.0"<% } if (useBrowserify && useFoundation) { %>,
+        "picturefill": "^3.0.2"<% if (useBootstrap && useSass) { %>,
+        "bootstrap-sass": "^3.3.6"<% } else if (useBootstrap && useStylus) { %>,
+        "bootstrap-styl": "^5.0.5"<% } if (useBootstrap) { %>,
+        "bootstrap": "^3.3.5"<% } if (useUikit) { %>,
+        "uikit": "^2.25.0"<% } if (useFoundation) { %>,
         "foundation-sites": "^6.2.0"<% } %>
     },<% } %>
     "devDependencies": {

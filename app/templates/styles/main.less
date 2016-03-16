@@ -1,6 +1,6 @@
 <% if (useBootstrap) { %>@import "bootstrap/less/bootstrap"; <% } else if (useFoundation) { %>@import (inline) "foundation-sites/dist/foundation.css";<% }  else if (usePure) { %>@import (inline) "pure/pure.css";
 @import (inline) "suit-utils-layout/lib/layout.css";<% } else if (useUikit) { %>
-@import "uikit/less/uikit-variables";
+@import "uikit/<% if (frameworkFromNpm) { %>dist/<% } %>less/uikit-variables";
 @navbar-background:                              #444;
 @navbar-color:                                   #eee;
 @navbar-link-color:                              #eee;
@@ -9,7 +9,7 @@
 @navbar-brand-color:                             #eee;
 @navbar-brand-hover-color:                       #eee;
 @icon-font-path:                                 "../fonts";
-@import "uikit/less/uikit";
+@import "uikit/<% if (frameworkFromNpm) { %>dist/<% } %>less/uikit";
 
 a {
     transition: all 100ms ease-in-out;

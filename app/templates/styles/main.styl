@@ -1,6 +1,6 @@
-<% if (useBootstrap) { %> @import "/bootstrap-stylus/bootstrap" <% } else if (useFoundation) { %>@import "/foundation-sites/dist/foundation.css";<% } else if (usePure) { %>@import "/pure/pure.css";
+<% if (useBootstrap) { %> @import "/bootstrap-styl<% if (!frameworkFromNpm) { %>us<% } %>/bootstrap" <% } else if (useFoundation) { %>@import "/foundation-sites/dist/foundation.css";<% } else if (usePure) { %>@import "/pure/pure.css";
 @import "/suit-utils-layout/lib/layout.css";<% } else if (useUikit) { %>
-@import "/uikit/css/uikit.almost-flat.css";
+@import "/uikit/<% if (frameworkFromNpm) { %>dist/<% } %>css/uikit.almost-flat.css";
 
 a {
     transition: all 100ms ease-in-out;

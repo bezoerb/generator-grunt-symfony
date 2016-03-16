@@ -723,6 +723,8 @@ module.exports = AppGenerator.extend({
 
             this.useGit = !!props.initGit;
             this.loadGruntConfig = true;//!!props.loadGruntConfig;
+            
+            this.frameworkFromNpm = (this.useWebpack || this.useBrowserify);
 
             done();
         }.bind(this));
@@ -735,16 +737,14 @@ module.exports = AppGenerator.extend({
                 this.destinationPath('package.json'),
                 _.assign(this, {safeProjectName: _.camelCase(this.appname)})
             );
-
-            var fromNpm = (this.useWebpack || this.useBrowserify) && !this.noPreprocessor;
-
+            
             var bower = {
                 name: _.camelCase(this.appname),
                 private: true,
                 dependencies: {}
             };
 
-            if (this.useBootstrap) {
+            if (this.useBootstrap && !this.frameworkFromNpm) {
                 var bs = 'bootstrap';
                 if (this.useSass) {
                     bs += '-sass-official';
@@ -754,10 +754,10 @@ module.exports = AppGenerator.extend({
                     bs += '-stylus';
                     bower.dependencies[bs] = '~5.0.2';
                 }
-            } else if (this.useFoundation && !fromNpm) {
+            } else if (this.useFoundation && !this.frameworkFromNpm) {
                 bower.dependencies['foundation-sites'] = '^6.2.0';
                 bower.dependencies.jquery = '~2.2.1';
-            } else if (this.useUikit && !fromNpm) {
+            } else if (this.useUikit && !this.frameworkFromNpm) {
                 bower.dependencies.uikit = '~2.18.0';
             } else if (this.useInuit) {
                 bower.dependencies['inuit-starter-kit'] = '~0.2.9';
@@ -782,7 +782,7 @@ module.exports = AppGenerator.extend({
                 bower.dependencies['inuit-list-inline'] = '~0.3.2';
                 bower.dependencies['inuit-list-ui'] = '~0.4.1';
                 bower.dependencies.jquery = '~2.2.1';
-            } else if (!fromNpm) {
+            } else if (!this.frameworkFromNpm) {
                 bower.dependencies.jquery = '~2.2.1';
             }
 
@@ -798,7 +798,7 @@ module.exports = AppGenerator.extend({
                 bower.dependencies['appcache-nanny'] = '~1.0.3';
             }
 
-            if (!fromNpm) {
+            if (!this.frameworkFromNpm) {
                 bower.dependencies.picturefill = '~3.0.1';
             }
             bower.dependencies.modernizr = '~3.3.1';
