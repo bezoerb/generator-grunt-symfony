@@ -2,6 +2,7 @@
 /*jshint expr: true*/
 var testPrompts = require('./helper/testHelper').testPrompts;
 var assign = require('lodash/assign');
+var clone = require('lodash/clone');
 
 describe('grunt-symfony generator', function () {
     this.timeout(300000);
@@ -108,14 +109,20 @@ describe('grunt-symfony generator', function () {
         {loader: 'requirejs', framework: 'foundation', preprocessor: 'stylus'}
     ];
 
-    // need to inject symfony 2.7 to tests as travis node does not support min php version for symfony 3.0
-    var sf2_7 = {
-        symfonyStandard: false, symfonyCommit: '2.7'
+    var defaults = {
+        // need to inject symfony 2.7 to tests as travis node does not support min php version for symfony 3.0
+        symfonyStandard: false, 
+        symfonyCommit: '2.7',
+        continue: true,
+        framework: 'noframework',
+        preprocessor: 'nopreprocessor',
+        loader: 'requirejs',
+        additional: []
     };
 
     tests.forEach(function(test) {
         it('test passed', function (done) {
-            testPrompts(assign(sf2_7,test), done);
+            testPrompts(assign(clone(defaults),test), done);
         });
     });
 });

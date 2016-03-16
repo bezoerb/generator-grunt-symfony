@@ -25,15 +25,6 @@ var fs = require('fs-extra');
 var base = path.join(__dirname, '..', 'fixtures');
 var target = path.join(__dirname, '..', 'temp');
 
-var defaultOptions = {
-    symfonyStandard: true,
-    continue: true,
-    framework: 'noframework',
-    preprocessor: 'nopreprocessor',
-    loader: 'requirejs',
-    additional: []
-};
-
 function log(text) {
     process.stdout.write(indentString(chalk.grey(text), chalk.grey('      ')));
 }
@@ -263,9 +254,7 @@ function checkServiceWorker() {
 }
 
 
-module.exports.testPrompts = function (opts, done) {
-    var prompts = _.defaults(opts, defaultOptions);
-
+module.exports.testPrompts = function (prompts, done) {
     install(prompts)
         .then(installDeps(prompts))
         .then(checkFiles(prompts))
