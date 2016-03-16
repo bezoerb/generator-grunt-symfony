@@ -1,4 +1,4 @@
-<% if (useBootstrap) { %> @import "bootstrap-sass-official/assets/stylesheets/_bootstrap";<% } else if (useFoundation) { %>@import "foundation-sites/scss/foundation";<% }  else if (usePure) { %>@import "/pure/pure.css";
+<% if (useBootstrap) { %> @import "bootstrap-sass<% if (!frameworkFromNpm) { %>-official<% } %>/assets/stylesheets/_bootstrap";<% } else if (useFoundation) { %>@import "foundation-sites/scss/foundation";<% }  else if (usePure) { %>@import "/pure/pure.css";
 @import "/suit-utils-layout/lib/layout.css";<% } else if (useUikit) { %>
 $navbar-background:                              #444;
 $navbar-color:                                   #eee;
