@@ -48,7 +48,7 @@ describe('grunt-symfony generator', function () {
         // jspm bootstrap
         {loader: 'jspm', framework: 'bootstrap'},
         {loader: 'jspm', framework: 'bootstrap', preprocessor: 'less'},
-            {loader: 'jspm', framework: 'bootstrap', preprocessor: 'sass', libsass: false},
+        {loader: 'jspm', framework: 'bootstrap', preprocessor: 'sass', libsass: false},
         {loader: 'jspm', framework: 'bootstrap', preprocessor: 'sass', libsass: true},
         {loader: 'jspm', framework: 'bootstrap', preprocessor: 'stylus'},
         // jspm foundation
