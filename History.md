@@ -1,4 +1,40 @@
 
+0.10.0 / 2016-03-16
+==================
+
+  * fix paths for bootstrap-stylus
+  * tweaked travis setup
+  * fix path for npm bootstrap-sass
+  * minor style tweak
+  * update readme
+  * update fixtures
+  * minor test tweaks
+  * minor fix for webpack + uikit
+  * use css kits from npm for webpack & browserify
+  * routes config for critical & uncss
+  * add browserify tests
+  * bump tests
+  * update bower components & resolve jquery issue
+  * eslint fix
+  * bump foundation to 6.2.0
+  * minor webpack tweaks
+  * add browserify
+  * node 0.12 fix
+  * local composer for tests
+  * webpck update to babel 6
+  * fixed eslint issues
+  * bump tests
+  * enable jshint
+  * bump deps
+  * fix post-merge hook for local composer
+  * more lightweight assets task
+  * default to symfony 3.0
+  * minor fix for requirejs
+  * Fixed kernel env for SF3
+  * Update .travis.yml
+  * renamed travis environment var
+  * new composer token
+
 0.9.2 / 2016-01-21
 ==================
 
@@ -117,13 +153,13 @@
 0.3.6 / 2015-05-19
 ==================
 
-  * Better generator tests including phpunit 
+  * Better generator tests including phpunit
   * Phpunit integration
   * Karma integration
-  
+
 0.3.5 / 2015-04-28
 ==================
-  
+
   * Fixed wrong allocated bootstrap js
 
 0.3.4 / 2015-04-25
@@ -144,7 +180,7 @@
 0.3.2 / 2015-03-31
 ==================
 
-  * Smarter tests to speed up travis 
+  * Smarter tests to speed up travis
   * Added optional 'load-grunt-config'
 
 0.3.1 / 2015-03-30
@@ -163,7 +199,7 @@
 ==================
 
   * Added uikit support
-  * Added css framework support for jspm 
+  * Added css framework support for jspm
 
 0.2.3 / 2015-03-19
 ==================
@@ -173,7 +209,7 @@
 0.2.2 / 2015-03-19
 ==================
 
-  * composer cmd fix 
+  * composer cmd fix
 
 0.2.1 / 2015-03-19
 ==================
@@ -196,7 +232,7 @@
 ==================
 
   * Added 'git init' option + post-merge hook for composer, node, jspm & bower
-  
+
 0.1.1 / 2015-03-06
 ==================
 
@@ -251,5 +287,5 @@
 
 0.0.3 / 2015-02-11
 ==================
-  
+
   * Initial release
