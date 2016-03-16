@@ -14,8 +14,8 @@ $(document).foundation();<% } %>
 debug('\'Allo \'Allo');
 debug('Running jQuery:', $().jquery);<% if (useBootstrap) { %>
 debug('Running Bootstrap:', $.fn.scrollspy ? '~3.3.0' : false);<% } else if (useUikit) { %>
-debug('Running UIkit:', UI.version);<% } else if (useFoundation) { %>
-debug('Running Foundation:', window.Foundation.version);<% } %>
+debug('Running UIkit:', UIkit.version);<% } else if (useFoundation) { %>
+debug('Running Foundation:', Foundation.version);<% } %>
 debug(msg);
 
 SW.init();
