@@ -32,7 +32,7 @@
     "stylus"
   ],
   "dependencies": {
-    "chalk": "1.1.1",
+    "chalk": "1.1.2",
     "fs-extra": "0.26.7",
     "html-wiring": "1.2.0",
     "inquirer": "0.12.0",
