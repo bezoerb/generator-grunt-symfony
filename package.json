@@ -46,7 +46,7 @@
   },
   "devDependencies": {
     "chai": "3.5.0",
-    "cross-spawn": "2.1.5",
+    "cross-spawn": "2.2.3",
     "debug": "2.2.0",
     "es6-promise": "3.1.2",
     "glob": "7.0.3",
