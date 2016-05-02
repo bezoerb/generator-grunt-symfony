@@ -42,7 +42,7 @@
     "update-notifier": "0.6.3",
     "yeoman-generator": "0.22.5",
     "yo": "1.7.0",
-    "yosay": "1.1.0"
+    "yosay": "1.1.1"
   },
   "devDependencies": {
     "chai": "3.5.0",
