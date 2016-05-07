@@ -20,15 +20,17 @@ function inArray (arr) {
 /**
  * symlink npm dependencies
  */
-function prepareNpmDeps (configFile, base, target) {
+function prepareNpmDeps (configFile, baseConfigFile,  base, target) {
     var config = fs.readJsonSync(configFile);
+    var baseConfig = fs.readJsonSync(baseConfigFile);
     var modules = _.keys(_.merge(config.dependencies || {}, config.devDependencies));
-
+    var baseModules =  _.keys(_.merge(baseConfig.dependencies || {}, baseConfig.devDependencies));
+    var diff = _.difference(baseModules,modules);
     fs.removeSync(target);
 
     // link deps
     return _.chain(glob.sync(base + '/*'))
-        .filter(inArray(modules))
+        .reject(diff)
         .forEach(function (fp) {
             fs.ensureSymlinkSync(fp, path.join(target, path.basename(fp)));
         }).value();
@@ -67,7 +69,7 @@ function prepareBowerDeps (configFile, base, target) {
  */
 function linkDeps (base, target, done) {
     return function () {
-        prepareNpmDeps(path.join(target, 'package.json'), path.join(base, 'node_modules'), path.join(target, 'node_modules'));
+        prepareNpmDeps(path.join(target, 'package.json'), path.join(base, 'package.json'), path.join(base, 'node_modules'), path.join(target, 'node_modules'));
         prepareBowerDeps(path.join(target, 'bower.json'), path.join(base, 'bower_components'), path.join(target, 'bower_components'));
 
         fs.ensureSymlinkSync(path.join(base, 'node_modules', '.bin'), path.join(target, 'node_modules', '.bin'));
