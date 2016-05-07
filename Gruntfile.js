@@ -78,8 +78,13 @@ module.exports = function (grunt) {
         shell.cd('test/fixtures');
         grunt.log.ok('installing npm dependencies for generated app');
         exec('npm install', {cwd: '../fixtures'}, function () {
-            shell.cd('../../');
-            done();
+            grunt.log.ok('installing npm dependencies for generated app (2nd run)');
+            exec('npm install', {cwd: '../fixtures'}, function () {
+                shell.cd('../../');
+                done();
+            }).stdout.on('data', function(data) {
+                console.log(data);
+            });
         }).stdout.on('data', function(data) {
             console.log(data);
         });
@@ -123,18 +128,18 @@ module.exports = function (grunt) {
         exec('php -r "readfile(\'https://getcomposer.org/installer\');" | php', function() {
             grunt.log.ok('installing composer dependencies for generated app');
             exec('php composer.phar update --prefer-source --no-interaction --dev ', {cwd: '../fixtures'}, function (error, stdout, stderr) {
-                debug('stdout: jspm config -> ', stdout);
-                debug('stderr: jspm config -> ', stderr);
+                debug('stdout: composer.phar update -> ', stdout);
+                debug('stderr: composer.phar update -> ', stderr);
 
                 if (error) {
-                    debug('stderr: jspm config -> ', stderr);
+                    debug('stderr: composer.phar update -> ', stderr);
                 }
                 exec('php composer.phar run-script post-update-cmd --no-interaction ', {cwd: '../fixtures'}, function (error, stdout, stderr) {
-                    debug('stdout: jspm config -> ', stdout);
-                    debug('stderr: jspm config -> ', stderr);
+                    debug('stdout: composer.phar run-script -> ', stdout);
+                    debug('stderr: composer.phar run-script -> ', stderr);
 
                     if (error) {
-                        debug('stderr: jspm config -> ', stderr);
+                        debug('stderr: composer.phar run-script -> ', stderr);
                     }
                     shell.cd('../../');
                     done();
@@ -169,9 +174,12 @@ module.exports = function (grunt) {
 
                     grunt.log.ok('installing comnposer dependencies for generated app');
                     exec('composer install --no-interaction', {cwd: '../fixtures'}, function () {
+                        grunt.log.ok('installing npm dependencies for generated app (2nd run)');
+                        exec('npm install', {cwd: '../fixtures'}, function () {
 
-                        shell.cd('../../');
-                        done();
+                            shell.cd('../../');
+                            done();
+                        });
                     });
                 });
             });
