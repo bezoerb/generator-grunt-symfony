@@ -32,7 +32,7 @@ describe('grunt-symfony generator', function () {
         {loader: 'browserify', framework: 'foundation', preprocessor: 'sass', libsass: false},
         {loader: 'browserify', framework: 'foundation', preprocessor: 'sass', libsass: true},
         {loader: 'browserify', framework: 'foundation', preprocessor: 'stylus'},
-        
+
         // jspm no framework
         {loader: 'jspm'},
         {loader: 'jspm', preprocessor: 'less'},
@@ -111,7 +111,7 @@ describe('grunt-symfony generator', function () {
 
     var defaults = {
         // need to inject symfony 2.7 to tests as travis node does not support min php version for symfony 3.0
-        symfonyStandard: false, 
+        symfonyStandard: false,
         symfonyCommit: '2.7',
         continue: true,
         framework: 'noframework',
@@ -120,9 +120,9 @@ describe('grunt-symfony generator', function () {
         additional: []
     };
 
-    tests.forEach(function(test) {
+    tests.forEach(function (test) {
         it('test passed', function (done) {
-            testPrompts(assign(clone(defaults),test), done);
+            testPrompts(assign(clone(defaults), test), done);
         });
     });
 });

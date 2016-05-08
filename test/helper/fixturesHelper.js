@@ -9,7 +9,7 @@ var path = require('path');
 var exec = require('child_process').exec;
 var debug = require('debug')('yeoman:generator-grunt-symfony');
 
-function inArray (arr) {
+function inArray(arr) {
     return function (fp) {
         var name = path.basename(fp);
         var suit = _.indexOf(arr, 'suit') !== -1 && /^suit-/.test(name);
@@ -20,26 +20,27 @@ function inArray (arr) {
 /**
  * symlink npm dependencies
  */
-function prepareNpmDeps (configFile, baseConfigFile,  base, target) {
+function prepareNpmDeps(configFile, baseConfigFile, base, target) {
     var config = fs.readJsonSync(configFile);
     var baseConfig = fs.readJsonSync(baseConfigFile);
     var modules = _.keys(_.merge(config.dependencies || {}, config.devDependencies));
-    var baseModules =  _.keys(_.merge(baseConfig.dependencies || {}, baseConfig.devDependencies));
-    var diff = _.difference(baseModules,modules);
+    var baseModules = _.keys(_.merge(baseConfig.dependencies || {}, baseConfig.devDependencies));
+    var drop = _.difference(baseModules, modules);
+
     fs.removeSync(target);
 
-    // link deps
-    return _.chain(glob.sync(base + '/*'))
-        .reject(diff)
-        .forEach(function (fp) {
-            fs.ensureSymlinkSync(fp, path.join(target, path.basename(fp)));
-        }).value();
+    _.forEach(glob.sync(base + '/*'), function(fp) {
+        var module = path.basename(fp);
+        if (drop.indexOf(module) === -1) {
+            fs.ensureSymlinkSync(fp, path.join(target, module));
+        }
+    });
 }
 
 /**
  * symlink bower dependencies
  */
-function prepareBowerDeps (configFile, base, target) {
+function prepareBowerDeps(configFile, base, target) {
     var config = fs.readJsonSync(configFile);
     var dependencies = _.keys(_.merge(config.dependencies || {}, config.devDependencies));
 
@@ -67,7 +68,7 @@ function prepareBowerDeps (configFile, base, target) {
 /**
  * link dependencies
  */
-function linkDeps (base, target, done) {
+function linkDeps(base, target, done) {
     return function () {
         prepareNpmDeps(path.join(target, 'package.json'), path.join(base, 'package.json'), path.join(base, 'node_modules'), path.join(target, 'node_modules'));
         prepareBowerDeps(path.join(target, 'bower.json'), path.join(base, 'bower_components'), path.join(target, 'bower_components'));
@@ -84,7 +85,6 @@ function linkDeps (base, target, done) {
         fs.copySync(path.join(base, 'app/config/parameters.yml'), path.join(target, 'app/config/parameters.yml'));
         fs.copySync(path.join(base, 'app/config/parameters.yml.dist'), path.join(target, 'app/config/parameters.yml.dist'));
 
-
         var pkg = fs.readJsonSync(path.join(target, 'package.json'));
         if (pkg.jspm) {
             fs.ensureSymlinkSync(path.join(base, 'jspm_packages'), path.join(target, 'jspm_packages'));
@@ -96,14 +96,13 @@ function linkDeps (base, target, done) {
 
 module.exports.linkDeps = linkDeps;
 
-
 module.exports.withComposer = function (cb) {
     if (!cb) {
         cb = function () {
         };
     }
 
-    debug('process.cwd() -> ',process.cwd());
+    debug('process.cwd() -> ', process.cwd());
 
     exec('php -r "readfile(\'https://getcomposer.org/installer\');" | php', function (error) {
         if (error) {
@@ -112,14 +111,14 @@ module.exports.withComposer = function (cb) {
         }
 
         var cmd = process.env.COMPOSER_AUTH ? 'config github-oauth.github.com ' + process.env.COMPOSER_AUTH : ' --version';
-        exec('php composer.phar ' + cmd, function(error, stdout, stderr) {
+        exec('php composer.phar ' + cmd, function (error, stdout, stderr) {
             debug('stdout: composer config -> ', stdout);
             debug('stderr: composer config -> ', stderr);
             if (error) {
                 debug('error: composer config -> ', error);
             }
 
-            exec('php composer.phar clear-cache', function(error, stdout, stderr) {
+            exec('php composer.phar clear-cache', function (error, stdout, stderr) {
                 debug('stdout: composer clear-cache  -> ', stdout);
                 debug('stderr: composer clear-cache  -> ', stderr);
                 if (error) {
@@ -152,7 +151,8 @@ module.exports.withComposer = function (cb) {
 
 module.exports.withJspm = function (cb) {
     if (!cb) {
-        cb = function () {};
+        cb = function () {
+        };
     }
 
     var cmd = process.env.JSPM_AUTH ? 'config registries.github.auth ' + process.env.JSPM_AUTH : ' --version';
