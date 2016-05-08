@@ -1,25 +1,35 @@
 sudo: false
 language: node_js
 node_js:
-- stable
-- '0.12'
+  - stable
+  - '0.12'
 addons:
   apt:
     packages:
-    - php5
-    - php5-curl
-    - php5-cli
-    - php5-intl
-    - rubygems
+      - php5
+      - php5-curl
+      - php5-cli
+      - php5-intl
 
 before_install:
-- php --version
-- php -r "readfile('https://getcomposer.org/installer');" | php && php composer.phar config -g github-oauth.github.com $GH_AUTH
-- gem update --system
-- gem install sass
-- npm update -g npm
-- npm install -g bower grunt-cli jspm
-- jspm config registries.github.auth $JSPM_AUTH
-- currentfolder=${PWD##*/}
-- if [ "$currentfolder" != 'generator-grunt-symfony' ]; then cd .. && eval "mv $currentfolder generator-grunt-symfony" && cd generator-grunt-symfony; fi
-- npm install
+  - gem update --system
+  - gem install sass
+  - php --version
+  - php -r "readfile('https://getcomposer.org/installer');" | php && php composer.phar config -g github-oauth.github.com $GH_AUTH
+  - npm update -g npm
+  - npm install -g bower grunt-cli jspm
+  - jspm config registries.github.auth $JSPM_AUTH
+  - currentfolder=${PWD##*/}
+  - if [ "$currentfolder" != 'generator-grunt-symfony' ]; then cd .. && eval "mv $currentfolder generator-grunt-symfony" && cd generator-grunt-symfony; fi
+  - npm install
+
+matrix:
+  fast_finish: true
+
+cache:
+  directories:
+    - node_modules
+    - test/fixtures/bower_components
+    - test/fixtures/jspm_packages
+    - test/fixtures/node_modules
+    - test/fixtures/vendor
