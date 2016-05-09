@@ -8,12 +8,12 @@
         "bootstrap-stylus": "~5.0.2",
         "sass-bootstrap-glyphicons": "~1.0.0",
         "foundation-sites": "~6.2.0",
-        "uikit": "~2.18.0",
+        "uikit": "~2.26.2",
         "visionmedia-debug": "~2.2.0",
-        "requirejs": "2.1.15",
+        "requirejs": "2.2.0",
         "almond": "~0.3.0",
         "picturefill": "~3.0.1",
-        "modernizr": "~2.8.3",
+        "modernizr": "~3.3.1",
         "appcache-nanny": "~1.0.3"
     }
 }

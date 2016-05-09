@@ -758,7 +758,7 @@ module.exports = AppGenerator.extend({
                 bower.dependencies['foundation-sites'] = '^6.2.0';
                 bower.dependencies.jquery = '~2.2.1';
             } else if (this.useUikit && !this.frameworkFromNpm) {
-                bower.dependencies.uikit = '~2.18.0';
+                bower.dependencies.uikit = '~2.26.2';
             } else if (this.useInuit) {
                 bower.dependencies['inuit-starter-kit'] = '~0.2.9';
                 bower.dependencies['inuit-widths'] = '~0.4.2';
@@ -792,7 +792,7 @@ module.exports = AppGenerator.extend({
             }
 
             if (this.useRequirejs) {
-                bower.dependencies.requirejs = '2.1.15';
+                bower.dependencies.requirejs = '~2.2.0';
                 bower.dependencies.almond = '~0.3.0';
                 bower.dependencies['visionmedia-debug'] = '~2.2.0';
                 bower.dependencies['appcache-nanny'] = '~1.0.3';
