@@ -64,7 +64,7 @@ function runTask(task) {
 
             /*jshint expr: true*/
             expect(error).to.be.null;
-            expect(stdout).to.contain('Done, without errors.');
+            expect(stdout).to.contain('Done.');
             resolve(stdout);
         });
     });
