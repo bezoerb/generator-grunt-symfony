@@ -723,7 +723,7 @@ module.exports = AppGenerator.extend({
 
             this.useGit = !!props.initGit;
             this.loadGruntConfig = true;//!!props.loadGruntConfig;
-            
+
             this.frameworkFromNpm = (this.useWebpack || this.useBrowserify);
 
             done();
@@ -737,7 +737,7 @@ module.exports = AppGenerator.extend({
                 this.destinationPath('package.json'),
                 _.assign(this, {safeProjectName: _.camelCase(this.appname)})
             );
-            
+
             var bower = {
                 name: _.camelCase(this.appname),
                 private: true,
