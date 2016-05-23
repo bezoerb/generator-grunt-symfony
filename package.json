@@ -57,7 +57,7 @@
     "indent-string": "2.1.0",
     "jshint-stylish": "2.2.0",
     "load-grunt-tasks": "3.5.0",
-    "mocha": "2.4.5",
+    "mocha": "2.5.1",
     "shelljs": "0.7.0",
     "yeoman-assert": "2.2.1",
     "yeoman-test": "1.4.0"
