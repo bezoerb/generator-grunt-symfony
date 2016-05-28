@@ -41,7 +41,7 @@
     "string-length": "1.0.1",
     "update-notifier": "0.7.0",
     "yeoman-generator": "^0.22.5",
-    "yo": "1.7.1",
+    "yo": "1.8.2",
     "yosay": "1.1.1"
   },
   "devDependencies": {
