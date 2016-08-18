@@ -19,6 +19,11 @@
     // for more details on how this handler is defined and what the toolbox.fastest strategy does.
     global.toolbox.router.get('.*.(' + assets.join('|') + ')', global.toolbox.fastest);
 
+    // store google fonts
+    global.toolbox.router.get('/(.*)', global.toolbox.fastest, {
+        origin: /\.(?:googleapis|gstatic)\.com$/
+    });
+
     // default
     global.toolbox.router.default = global.toolbox.networkFirst;
 })(self);
