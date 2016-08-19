@@ -26,7 +26,7 @@ module.exports = function(config) {
             // Edit this to your needs
             config: 'app/Resources/public/scripts/config.js',
             loadFiles: ['tests/Frontend/**/*Spec.js'],
-            serveFiles : ['app/Resources/public/scripts/**/*.js'],
+            serveFiles : ['app/Resources/public/scripts/**/*.js', 'jspm_packages/**/*.js'],
             paths: {
                 '*': 'base/app/Resources/public/scripts/*',
                 'tests\/*': 'base/tests/*',
