@@ -29,7 +29,7 @@ define(function (require, exports) {
 
         debug('initializing service worker');
         if ('serviceWorker' in navigator && (window.location.protocol === 'https:' || isLocalhost)) {
-            navigator.serviceWorker.register('service-worker.js')
+            navigator.serviceWorker.register('/service-worker.js')
                 .then(function (registration) {
                     debug('service worker registration', registration);
 
