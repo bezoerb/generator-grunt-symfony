@@ -1,5 +1,6 @@
 'use strict';
 var yeoman = require('yeoman-generator');
+var download = require('download');
 var chalk = require('chalk');
 var yosay = require('yosay');
 var os = require('os');
@@ -522,7 +523,31 @@ var AppGenerator = yeoman.Base.extend({
             this.destinationPath('.gitignore'),
             this
         );
-    }
+    },
+
+    unzip: function (archive, destination, opts, cb) {
+        if (_.isFunction(opts) && !cb) {
+            cb = opts;
+            opts = { extract: true };
+        }
+
+        opts = _.assign({ extract: true }, opts);
+
+        var log = this.log.write()
+            .info('... Fetching %s ...', archive)
+            .info(chalk.yellow('This might take a few moments'));
+
+
+        download(archive, destination, opts).then(function (err) {
+            if (err) {
+                console.log(chalk.red('A problem occurred'), err);
+                return cb (err);
+            }
+
+            log.write().ok('Done in ' + destination).write();
+            cb();
+        });
+    },
 });
 
 
@@ -688,7 +713,7 @@ module.exports = AppGenerator.extend({
             default: false
         }];
 
-        this.prompt(prompts, function (props) {
+        return this.prompt(prompts).then(function (props) {
             var has = _.partial(hasFeature, props);
 
             // set symfony repository and demoBundle option
@@ -731,6 +756,23 @@ module.exports = AppGenerator.extend({
     },
 
     writing: {
+
+
+        symfonyBase: function symfonyBase() {
+            var done = this.async();
+            var appPath = this.destinationRoot();
+
+            var repo = [
+                'https://github.com',
+                this.symfonyDistribution.username,
+                this.symfonyDistribution.repository,
+                'archive',
+                this.symfonyDistribution.commit + '.zip'
+            ].join('/');
+
+            this.unzip(repo,this.destinationRoot(), done);
+        },
+
         app: function () {
             this.fs.copyTpl(
                 this.templatePath('_package.json'),
@@ -895,24 +937,6 @@ module.exports = AppGenerator.extend({
             this.template('public/manifest.webapp', 'app/Resources/public/manifest.webapp');
 
 
-        },
-
-        symfonyBase: function symfonyBase() {
-            var done = this.async();
-            var appPath = this.destinationRoot();
-
-            this.remote(
-                this.symfonyDistribution.username,
-                this.symfonyDistribution.repository,
-                this.symfonyDistribution.commit,
-                function (err, remote) {
-                    if (err) {
-                        return done(err);
-                    }
-                    remote.directory('.', path.join(appPath, '.'));
-                    done();
-                }
-            );
         },
 
         testFiles: function () {
