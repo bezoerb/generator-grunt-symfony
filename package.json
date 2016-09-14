@@ -47,7 +47,7 @@
   "devDependencies": {
     "chai": "3.5.0",
     "debug": "2.2.0",
-    "es6-promise": "3.2.1",
+    "es6-promise": "3.3.1",
     "glob": "7.0.3",
     "grunt": "1.0.1",
     "grunt-contrib-clean": "1.0.0",
