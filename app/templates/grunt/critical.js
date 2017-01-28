@@ -4,7 +4,7 @@
  */
 module.exports = {
     options: {
-        base: '<%%= paths.dist %>',
+        base: '.tmp',
         minify: true,
         css: ['.tmp/styles/main.css']
     },
