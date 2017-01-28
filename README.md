@@ -4,7 +4,7 @@
 This [Yeoman](http://yeoman.io) generator scaffolds a symfony app with full featured frontend tooling. 
 Just scaffold your app, run `grunt serve` and you are ready to go. 
 
-## DEPRECATED Use [generator-fs](https://github.com/bezoerb/generator-sf) instead
+## DEPRECATED Use [generator-sf](https://github.com/bezoerb/generator-sf) instead
 
 ![The Team](https://raw.github.com/bezoerb/generator-grunt-symfony/master/app/templates/img/yo-grunt-bower-symfony.png)
 
